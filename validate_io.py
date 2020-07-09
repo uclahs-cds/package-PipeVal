@@ -10,7 +10,7 @@ def file_exists(path):
 # check validity of file for file type
 def file_is_valid(path):
     return True
-    # TODO: add detailed validation of specific file types
+    # TODO: add detailed validation of specific file types: bams, vcfs, fastqs
 
 ### MAIN FUNCTION
 
