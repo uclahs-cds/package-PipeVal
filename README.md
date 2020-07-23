@@ -49,3 +49,6 @@ Invalid input or error
 Error: path/to/input Error Message
 ```
 If the input is invalid in any way, validate_io will exit and throw an exception which can be detected by Nextflow and handled accordingly.
+
+### references
+Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
