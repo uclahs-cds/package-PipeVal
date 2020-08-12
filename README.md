@@ -29,7 +29,7 @@ Directories (read or read-write)
 *~git submodule instructions coming soon~*
 
 ```
-python3 validate_io.py -t file-bam path/to/file.bam [-o]
+python3 -m validate -t file-bam path/to/file.bam [-o]
 ```
 
 Required arg
@@ -48,4 +48,4 @@ Invalid input or error
 ```
 Error: path/to/input Error Message
 ```
-If the input is invalid in any way, validate_io will exit and throw an exception which can be detected by Nextflow and handled accordingly.
+If the input is invalid in any way, validate_io will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.

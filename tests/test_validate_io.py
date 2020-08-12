@@ -1,0 +1,79 @@
+from pathlib import Path
+import argparse
+import pytest
+import mock
+import validate
+
+# @mock.patch('validate.argparse._sys.argv', ['path.vcf', 'file-vcf'])
+# def test_parse(mock_sys_argv):
+#     args = validate.parse_args(mock_sys_argv)
+#     assert args.type == 'file-vcf'
+# TODO: Fix unit test for argparse
+
+@mock.patch('validate.Path', autospec=True)
+def test_validate_file_value_error(mock_path):
+    mock_path.suffix.return_value = ".no"
+
+    with pytest.raises(ValueError):
+        validate.validate_file(mock_path, 'file-py')
+
+@mock.patch('validate.path_readable')
+def test_validate_dir_readable_io_error(mock_path_readable):
+    mock_path_readable.side_effect = IOError('oh no')
+    test_dir = Path('unreadable/dir')
+
+    with pytest.raises(IOError):
+        validate.validate_dir(test_dir, 'directory-w')
+
+@mock.patch('validate.path_readable')
+@mock.patch('validate.path_writable')
+def test_validate_dir_writable_io_error(mock_path_readable, mock_path_writable):
+    mock_path_readable.return_value = True
+    mock_path_writable.side_effect = IOError('oh no')
+    test_dir = Path('unreadable/unwritable/dir')
+
+    with pytest.raises(IOError):
+        validate.validate_dir(test_dir, 'directory-rw')
+
+@mock.patch('validate.Path', autospec=True)
+def test_path_exists(mock_path):
+    mock_path.exists.return_value = True
+
+    assert validate.path_exists(mock_path)
+
+@mock.patch('validate.Path', autospec=True)
+def test_path_exists_io_error(mock_path):
+    mock_path.exists.return_value = False
+
+    with pytest.raises(IOError):
+        validate.path_exists(mock_path)
+
+@mock.patch('validate.os.access')
+def test_path_readable(mock_os_access):
+    mock_os_access.return_value = True
+    test_path = Path('readable/path')
+
+    assert validate.path_readable(test_path)
+
+@mock.patch('validate.os.access')
+def test_path_readable_io_error(mock_os_access):
+    mock_os_access.return_value = False
+    test_path = Path('not/readable/path')
+
+    with pytest.raises(IOError):
+        validate.path_readable(test_path)
+
+@mock.patch('validate.os.access')
+def test_path_writable(mock_os_access):
+    mock_os_access.return_value = True
+    test_path = Path('writable/path')
+
+    assert validate.path_writable(test_path)
+
+@mock.patch('validate.os.access')
+def test_path_writable_io_error(mock_os_access):
+    mock_os_access.return_value = False
+    test_path = Path('not/writable/path')
+
+    with pytest.raises(IOError):
+        validate.path_writable(test_path)
