@@ -1,5 +1,6 @@
 from pathlib import Path
 import argparse
+import hashlib
 import os
 import sys
 
@@ -25,9 +26,9 @@ def validate_main():
         elif input_type in dir_types:
             validate_dir(path, input_type)
         else:
-            path_readable(path)
+            path_readable(path) # TODO: expand case when no type is given
     except TypeError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit("Error: " + args.path + " " + str(e)) # raise errors, has implicit exit code
     except ValueError as e:
         sys.exit("Error: " + args.path + " " + str(e))
     except IOError as e:
@@ -52,7 +53,6 @@ def validate_file(path, file_type):
     # TODO: Fix handling of no-extension files
     if not file_extension:
         raise TypeError('File does not have a valid extension.')
-
     if not file_extension in file_types_dict.get(file_type):
         raise ValueError('File type does not match extension')
 
@@ -86,3 +86,28 @@ def path_writable(path):
         return True
     else:
         raise IOError('File or directory is not writable.')
+
+# checksum methods
+def generate_md5_for_file(path):
+    md5_hash = hashlib.md5()
+
+    try:
+        with open(path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                md5_hash.update(byte_block)
+    except OSError:
+        raise
+
+    return md5_hash.hexdigest() # returns string
+
+def generate_sha512_for_file(path):
+    sha512_hash = hashlib.sha512()
+
+    try:
+        with open(path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha512_hash.update(byte_block)
+    except OSError:
+        raise
+
+    return sha512_hash.hexdigest() # returns string

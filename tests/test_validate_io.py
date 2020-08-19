@@ -4,12 +4,6 @@ import pytest
 import mock
 import validate
 
-# @mock.patch('validate.argparse._sys.argv', ['path.vcf', 'file-vcf'])
-# def test_parse(mock_sys_argv):
-#     args = validate.parse_args(mock_sys_argv)
-#     assert args.type == 'file-vcf'
-# TODO: Fix unit test for argparse
-
 @mock.patch('validate.Path', autospec=True)
 def test_validate_file_value_error(mock_path):
     mock_path.suffix.return_value = ".no"
@@ -77,3 +71,19 @@ def test_path_writable_io_error(mock_os_access):
 
     with pytest.raises(IOError):
         validate.path_writable(test_path)
+
+def generate_md5_for_file_success(path):
+    return
+    #TODO: implement unit test
+
+def generate_md5_for_file_error(path):
+    return
+    #TODO: implement unit test
+
+def generate_sha512_for_file_success(path):
+    return
+    #TODO: implement unit test
+
+def generate_sha512_for_file_error(path):
+    return
+    #TODO: implement unit test
