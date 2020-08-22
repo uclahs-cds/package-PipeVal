@@ -33,6 +33,8 @@ def validate_main():
         sys.exit("Error: " + args.path + " " + str(e))
     except IOError as e:
         sys.exit("Error: " + args.path + " " + str(e))
+    except OSError as e:
+        sys.exit("Error: " + args.path + " " + str(e))
 
     print("Input " + args.path + " is valid")
     sys.exit(0)
@@ -46,19 +48,42 @@ def parse_args(args):
 
     return parser.parse_args()
 
-# type validation
+# file validation
 def validate_file(path, file_type):
     file_extension = path.suffix
 
-    # TODO: Fix handling of no-extension files
+    # TODO: Check handling of no-extension files
     if not file_extension:
         raise TypeError('File does not have a valid extension.')
     if not file_extension in file_types_dict.get(file_type):
         raise ValueError('File type does not match extension')
 
-    # TODO: Add more detailed file validation
+    # Check hashes
+    md5_file_path = path.with_suffix(path.suffix + '.md5')
+    if md5_file_path.exists():
+        try:
+            if not compare_hash('md5', path, md5_file_path):
+                raise IOError('File is corrupted, md5 checksum failed.')
+        except IOError:
+            raise
+        except OSError:
+            raise
+
+    sha512_file_path = path.with_suffix(path.suffix + '.sha512')
+    if sha512_file_path.exists():
+        try:
+            if not compare_hash('sha512', path, sha512_file_path):
+                raise IOError('File is corrupted, sha512 checksum failed.')
+        except IOError:
+            raise
+        except OSError:
+            raise
+
+    # TODO: Add file level validation
+
     return True
 
+# directory validation
 def validate_dir(path, dir_type):
     try:
         path_readable(path)
@@ -69,6 +94,7 @@ def validate_dir(path, dir_type):
 
     return True
 
+# path methods
 def path_exists(path):
     if path.exists():
         return True
@@ -88,7 +114,17 @@ def path_writable(path):
         raise IOError('File or directory is not writable.')
 
 # checksum methods
-def generate_md5_for_file(path):
+def compare_hash(hash_type, path, hash_path):
+    existing_hash = hash_path.read_text().strip()
+
+    if hash_type == 'md5':
+        return existing_hash == generate_md5(path)
+    if hash_type == 'sha512':
+        return existing_hash == generate_sha512(path)
+    else:
+        raise IOError('Incorrect hash parameters')
+
+def generate_md5(path):
     md5_hash = hashlib.md5()
 
     try:
@@ -100,7 +136,7 @@ def generate_md5_for_file(path):
 
     return md5_hash.hexdigest() # returns string
 
-def generate_sha512_for_file(path):
+def generate_sha512(path):
     sha512_hash = hashlib.sha512()
 
     try:
