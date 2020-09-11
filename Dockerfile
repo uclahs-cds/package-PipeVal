@@ -1,5 +1,9 @@
-FROM python:3.7.9
+FROM continuumio/miniconda3:4.8.2
 
 MAINTAINER Gina Kim <ginakim@mednet.ucla.edu>
 
-COPY validate/ /validate/
+COPY . /validate
+
+WORKDIR /validate
+
+RUN pip install -r requirements.txt
