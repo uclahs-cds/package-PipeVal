@@ -43,7 +43,7 @@ docker run -it validate:1.0.0 /bin/bash
 
 _Running as Nextflow process with docker_
 ```
-more info soon
+check the example under /example/ or the pipeline-align-DNA repository
 ```
 ### parameters:
 
