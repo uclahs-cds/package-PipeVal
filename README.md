@@ -25,8 +25,10 @@ Directories (read or read-write)
 |file-fasta|
 |file-bed|
 |file-py|
+|file-input|
 
 If an input type is not specified with the -t tag, it will only check readability.
+If an input type is specified as "file-input", it will automatically try to match the input type.
 
 ### usage:
 
@@ -38,7 +40,7 @@ _Running as interactive docker session_
 
 ```
 docker run -it validate:1.0.0 /bin/bash
-(bash): python -m validate -t file-bam path/to/file.bam [-o]
+(bash): python -m validate -t file-input path/to/file.bam [-o]
 ```
 
 _Running as Nextflow process with docker_

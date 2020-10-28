@@ -8,12 +8,14 @@ import sys
 dir_types = ['directory-r', 'directory-rw']
 file_types_dict = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf'],
     'file-fasta': ['.fasta', '.fastq'], 'file-bed': ['.bed'], 'file-py': ['.py']}
+generic_input_type = 'file-input'
 
 # main function and command line tool
 def validate_main():
     args = parse_args(sys.argv[1:])
     path = Path(args.path)
     input_type = args.type
+    file_type = input_type
 
     try:
         path_exists(path)
@@ -23,10 +25,11 @@ def validate_main():
     try:
         if input_type in file_types_dict:
             validate_file(path, input_type)
+        elif input_type == generic_input_type:
+            file_type = detect_file_type(path)
+            validate_file(path, file_type)
         elif input_type in dir_types:
             validate_dir(path, input_type)
-        else:
-            path_readable(path) # TODO: expand case when no type is given
     except TypeError as e:
         sys.exit("Error: " + args.path + " " + str(e)) # raise errors, has implicit exit code
     except ValueError as e:
@@ -36,8 +39,7 @@ def validate_main():
     except OSError as e:
         sys.exit("Error: " + args.path + " " + str(e))
 
-    print("Input " + args.path + " is valid")
-    sys.exit(0)
+    print("Input " + args.path + " is a valid " + file_type)
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
@@ -82,6 +84,17 @@ def validate_file(path, file_type):
     # TODO: Add file level validation
 
     return True
+
+# detect file type for generic 'file-input'
+def detect_file_type(path):
+    extension = path.suffix
+
+    for file_type in file_types_dict:
+        if extension in file_types_dict.get(file_type):
+            return file_type
+
+    return ""
+    # TODO: raise error if file-type not found
 
 # directory validation
 def validate_dir(path, dir_type):
@@ -147,3 +160,12 @@ def generate_sha512(path):
         raise
 
     return sha512_hash.hexdigest() # returns string
+
+# specific type validation
+def validate_bam_file(path):
+    # TODO: decide what type validation
+    return True
+
+def validate_vcf_file(path):
+    # TODO: decide what type validation
+    return True
