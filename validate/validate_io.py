@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import os
 import sys
+import subprocess
 
 # currently supported data types
 dir_types = ['directory-r', 'directory-rw']
@@ -163,7 +164,13 @@ def generate_sha512(path):
 
 # specific type validation
 def validate_bam_file(path):
-    # TODO: decide what type validation
+    samtools_command = "samtools quickcheck " + path
+
+    try:
+        subprocess.check_call(samtools_command, shell=True)
+    except subprocess.CalledProcessError:
+        raise # TODO: handle error
+
     return True
 
 def validate_vcf_file(path):
