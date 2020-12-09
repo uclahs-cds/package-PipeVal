@@ -1,17 +1,21 @@
+# Main validation script
+
 from pathlib import Path
 import argparse
 import hashlib
 import os
 import sys
-import subprocess
 
-# currently supported data types
+from validate import bam
+from validate import vcf
+
+# Currently supported data types
 dir_types = ['directory-r', 'directory-rw']
 file_types_dict = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf'],
     'file-fasta': ['.fasta', '.fastq'], 'file-bed': ['.bed'], 'file-py': ['.py']}
 generic_input_type = 'file-input'
 
-# main function and command line tool
+# Main function and CLI tool
 def validate_main():
     args = parse_args(sys.argv[1:])
     path = Path(args.path)
@@ -42,6 +46,7 @@ def validate_main():
 
     print("Input " + args.path + " is a valid " + file_type)
 
+# Argument parser
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='path of file to validate', type=str)
@@ -51,7 +56,7 @@ def parse_args(args):
 
     return parser.parse_args()
 
-# file validation
+# File validation
 def validate_file(path, file_type):
     file_extension = path.suffix
 
@@ -61,7 +66,7 @@ def validate_file(path, file_type):
     if not file_extension in file_types_dict.get(file_type):
         raise ValueError('File type does not match extension')
 
-    # Check hashes
+    # Checksum validation
     md5_file_path = path.with_suffix(path.suffix + '.md5')
     if md5_file_path.exists():
         try:
@@ -82,11 +87,16 @@ def validate_file(path, file_type):
         except OSError:
             raise
 
-    # TODO: Add file level validation
+    #TODO: Add file level validation
+    if file_type == 'file-bam':
+        try:
+            bam.validate_bam_file(path)
+        except ValueError:
+            raise
 
     return True
 
-# detect file type for generic 'file-input'
+# File type detection for generic 'file-input'
 def detect_file_type(path):
     extension = path.suffix
 
@@ -95,9 +105,9 @@ def detect_file_type(path):
             return file_type
 
     return ""
-    # TODO: raise error if file-type not found
+    # TODO: Raise error if file-type not found
 
-# directory validation
+# Directory validation
 def validate_dir(path, dir_type):
     try:
         path_readable(path)
@@ -108,7 +118,7 @@ def validate_dir(path, dir_type):
 
     return True
 
-# path methods
+# Path helper methods
 def path_exists(path):
     if path.exists():
         return True
@@ -127,7 +137,7 @@ def path_writable(path):
     else:
         raise IOError('File or directory is not writable.')
 
-# checksum methods
+# Checksum methods
 def compare_hash(hash_type, path, hash_path):
     existing_hash = hash_path.read_text().strip()
 
@@ -161,18 +171,3 @@ def generate_sha512(path):
         raise
 
     return sha512_hash.hexdigest() # returns string
-
-# specific type validation
-def validate_bam_file(path):
-    samtools_command = "samtools quickcheck " + path
-
-    try:
-        subprocess.check_call(samtools_command, shell=True)
-    except subprocess.CalledProcessError:
-        raise # TODO: handle error
-
-    return True
-
-def validate_vcf_file(path):
-    # TODO: decide what type validation
-    return True
