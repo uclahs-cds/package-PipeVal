@@ -6,8 +6,8 @@ import hashlib
 import os
 import sys
 
-from validate import bam
-from validate import vcf
+from validate.validators import bam
+from validate.validators import vcf
 
 # Currently supported data types
 dir_types = ['directory-r', 'directory-rw']
