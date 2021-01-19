@@ -30,6 +30,9 @@ Directories (read or read-write)
 If an input type is not specified with the -t tag, it will only check readability.
 If an input type is specified as "file-input", it will automatically try to match the input type.
 
+### additional file validation:
+Currently file specific validation is supported for bam files, using samtools quickcheck.
+
 ### usage:
 
 _Running the python script_
