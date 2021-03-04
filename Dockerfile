@@ -4,6 +4,8 @@ MAINTAINER Gina Kim <ginakim@mednet.ucla.edu>
 
 # ps and command for reporting metrics
 RUN apt-get update && apt-get install -y \
+        curl \
+        pkg-config \
         bzip2 \
         g++ \
         libbz2-dev \
@@ -31,12 +33,18 @@ WORKDIR /
 RUN ln -s $SAMTOOLS_INSTALL_DIR/bin/samtools /usr/bin/samtools && \
   rm -rf /tmp/samtools-1.9
 
+# install vcftools
+WORKDIR /opt
+RUN curl -L -O https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
+RUN tar xvzf vcftools-0.1.16.tar.gz && cd vcftools-0.1.16 && ./configure && make && make install
+RUN apt autoclean -y && apt autoremove -y
+
 # create directory for python script
 RUN mkdir -p /tool/validate/
 
 # install all requirements, including validate module
 COPY requirements.txt /tool
-COPY /validate/* /tool/validate/
+COPY /validate/ /tool/validate/
 WORKDIR /tool
 RUN pip install -r requirements.txt
 
