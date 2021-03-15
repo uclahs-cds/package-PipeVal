@@ -10,10 +10,11 @@ from validate.validators import bam
 from validate.validators import vcf
 
 # Currently supported data types
-dir_types = ['directory-r', 'directory-rw']
-file_types_dict = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf'],
-    'file-fasta': ['.fasta', '.fastq'], 'file-bed': ['.bed'], 'file-py': ['.py']}
-generic_input_type = 'file-input'
+DIR_TYPES = ['directory-r', 'directory-rw']
+FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
+    'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', 'fastq.gz'], 'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
+GENERIC_FILE_TYPE = 'file-input'
+CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 
 # Main function and CLI tool
 def validate_main():
@@ -25,34 +26,36 @@ def validate_main():
     try:
         path_exists(path)
     except IOError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
 
     try:
-        if input_type in file_types_dict:
+        if input_type in FILE_TYPES_DICT:
             validate_file(path, input_type)
-        elif input_type == generic_input_type:
+        elif input_type == GENERIC_FILE_TYPE:
             file_type = detect_file_type(path)
             validate_file(path, file_type)
-        elif input_type in dir_types:
+        elif input_type in DIR_TYPES:
             validate_dir(path, input_type)
+        elif input_type in CHECKSUM_GEN_TYPES:
+            create_checksum_file(path, input_type)
     except TypeError as e:
-        sys.exit("Error: " + args.path + " " + str(e)) # raise errors, has implicit exit code
+        sys.exit(f"Error: {args.path} {str(e)}") # raise errors, has implicit exit code
     except ValueError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
     except IOError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
     except OSError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
 
-    print("Input " + args.path + " is a valid " + file_type)
+    print(f"Input: {args.path} is valid {file_type}")
 
 # Argument parser
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='path of file to validate', type=str)
     parser.add_argument('-t', '--type', help='input data type',
-        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta',
-        'file-bed', 'file-py', 'directory-rw', 'directory-r'])
+        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq'
+        'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'])
 
     return parser.parse_args()
 
@@ -63,7 +66,7 @@ def validate_file(path, file_type):
     # TODO: Check handling of no-extension files
     if not file_extension:
         raise TypeError('File does not have a valid extension.')
-    if not file_extension in file_types_dict.get(file_type):
+    if not file_extension in FILE_TYPES_DICT.get(file_type):
         raise ValueError('File type does not match extension')
 
     # Checksum validation
@@ -94,14 +97,20 @@ def validate_file(path, file_type):
         except ValueError:
             raise
 
+    if file_type == 'file-vcf':
+        try:
+            vcf.validate_vcf_file(path)
+        except ValueError:
+            raise
+
     return True
 
 # File type detection for generic 'file-input'
 def detect_file_type(path):
     extension = path.suffix
 
-    for file_type in file_types_dict:
-        if extension in file_types_dict.get(file_type):
+    for file_type in FILE_TYPES_DICT:
+        if extension in FILE_TYPES_DICT.get(file_type):
             return file_type
 
     return ""
@@ -171,3 +180,20 @@ def generate_sha512(path):
         raise
 
     return sha512_hash.hexdigest() # returns string
+
+def create_checksum_file(path, hash_type):
+    size = len(hash_type)
+    ext = "." + hash_type[:size-4]
+    try:
+        file = open(str(path) +  ext, "w")
+        if hash_type == 'md5-gen':
+            file.write(generate_md5(path))  
+        elif hash_type == 'sha512-gen':
+            file.write(generate_sha512(path))
+        else:
+            raise IOError('Incorrect hash parameters')
+        file.close()
+    except OSError:
+        raise
+
+    print(f"{hash_type}erated for {str(path)}")
