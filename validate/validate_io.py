@@ -11,8 +11,8 @@ from validate.validators import vcf
 
 # Currently supported data types
 DIR_TYPES = ['directory-r', 'directory-rw']
-FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf'],
-    'file-fasta': ['.fasta', '.fastq', '.fa'], 'file-bed': ['.bed'], 'file-py': ['.py']}
+FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
+    'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', 'fastq.gz'], 'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
 GENERIC_FILE_TYPE = 'file-input'
 CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 
@@ -26,7 +26,7 @@ def validate_main():
     try:
         path_exists(path)
     except IOError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
 
     try:
         if input_type in FILE_TYPES_DICT:
@@ -38,24 +38,23 @@ def validate_main():
             validate_dir(path, input_type)
         elif input_type in CHECKSUM_GEN_TYPES:
             create_checksum_file(path, input_type)
-            # TODO: add two types
     except TypeError as e:
-        sys.exit("Error: " + args.path + " " + str(e)) # raise errors, has implicit exit code
+        sys.exit(f"Error: {args.path} {str(e)}") # raise errors, has implicit exit code
     except ValueError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
     except IOError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
     except OSError as e:
-        sys.exit("Error: " + args.path + " " + str(e))
+        sys.exit(f"Error: {args.path} {str(e)}")
 
-    print("Input: " + args.path + " is valid " + file_type)
+    print(f"Input: {args.path} is valid {file_type}")
 
 # Argument parser
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='path of file to validate', type=str)
     parser.add_argument('-t', '--type', help='input data type',
-        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta',
+        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq'
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'])
 
     return parser.parse_args()
@@ -197,4 +196,4 @@ def create_checksum_file(path, hash_type):
     except OSError:
         raise
 
-    print(hash_type + "erated for " + str(path))
+    print(f"{hash_type}erated for {str(path)}")

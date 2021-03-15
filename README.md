@@ -30,6 +30,8 @@ The input type/function can be specified using the -t tag.
 |file-py|
 |file-input|
 
+.gz files are currently buggy
+
 If an input type is not specified with the -t tag, it will only check readability.
 If an input type is specified as "file-input", it will automatically try to match the file type.
 If an input type is one of the checksum types, it will create a new checksum file based on the input file path.
@@ -40,8 +42,8 @@ When used as a standalone command line tool, the following dependencies must be 
 |tool|
 |----|
 |python 3.8|
-|bamtools|
-|vcftools|
+|samtools 1.11|
+|vcftools 0.1.16|
 
 Otherwise, it's recommended to use the docker to keep dependencies bundled.
 
