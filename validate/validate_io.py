@@ -12,8 +12,9 @@ from validate.validators import vcf
 # Currently supported data types
 DIR_TYPES = ['directory-r', 'directory-rw']
 FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
-    'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', 'fastq.gz'], 'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
-GENERIC_FILE_TYPE = 'file-input'
+    'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'], 'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
+GENERIC_FILE_TYPE = 'file-input' # file type needs to be detected
+UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 
 # Main function and CLI tool
@@ -61,7 +62,10 @@ def parse_args(args):
 
 # File validation
 def validate_file(path, file_type):
-    file_extension = path.suffix
+    file_extension = detect_file_ext(path)
+
+    if file_type == UNKNOWN_FILE_TYPE: # no further specific validation for unlisted file types
+        return True
 
     # TODO: Check handling of no-extension files
     if not file_extension:
@@ -70,7 +74,7 @@ def validate_file(path, file_type):
         raise ValueError('File type does not match extension')
 
     # Checksum validation
-    md5_file_path = path.with_suffix(path.suffix + '.md5')
+    md5_file_path = path.with_suffix(file_extension + '.md5')
     if md5_file_path.exists():
         try:
             if not compare_hash('md5', path, md5_file_path):
@@ -80,7 +84,7 @@ def validate_file(path, file_type):
         except OSError:
             raise
 
-    sha512_file_path = path.with_suffix(path.suffix + '.sha512')
+    sha512_file_path = path.with_suffix(file_extension + '.sha512')
     if sha512_file_path.exists():
         try:
             if not compare_hash('sha512', path, sha512_file_path):
@@ -107,14 +111,20 @@ def validate_file(path, file_type):
 
 # File type detection for generic 'file-input'
 def detect_file_type(path):
-    extension = path.suffix
+    extension = detect_file_ext(path)
 
     for file_type in FILE_TYPES_DICT:
         if extension in FILE_TYPES_DICT.get(file_type):
             return file_type
 
-    return ""
-    # TODO: Raise error if file-type not found
+    return UNKNOWN_FILE_TYPE
+
+# Extracting complete file extension from path
+def detect_file_ext(path):
+    extensions = path.suffixes
+    extension = ''.join(extensions)
+
+    return extension
 
 # Directory validation
 def validate_dir(path, dir_type):

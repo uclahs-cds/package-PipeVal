@@ -3,23 +3,23 @@
 
 ## specs
 
-### functions:
-> Validates your input files and directories for the following characteristics.
+### function:
+> A. Validates your input files and directories for the following characteristics.
 
 Files (bam, vcf, fasta, bed, python)
 - Existence of file at given path
 - File extension type
-- Validity of file for file type (i.e. a vcf file is a vcf file)
+- Validity of file for specific file type (i.e. a vcf file is a vcf file)
 - Checksums (generates checksum comparison if .md5 or .sha512 file exists)
 
 Directories (read or read-write)
 - Existence of directory at given path
 - Readability, writability
 
-> Generates checksum files and compares checksum files.
+> B. Generates checksum files and compares checksum files.
 
 ### input types:
-The input type/function can be specified using the -t tag.
+The validation action can be specified using the -t tag.
 
 |file types|directory types|checksum types|
 |----------|---------------|--------------|
@@ -30,11 +30,9 @@ The input type/function can be specified using the -t tag.
 |file-py|
 |file-input|
 
-.gz files are currently buggy
-
-If an input type is not specified with the -t tag, it will only check readability.
-If an input type is specified as "file-input", it will automatically try to match the file type.
+If an input type is specified as "file-input", it will automatically try to match the file type or simply check for existence/readability.
 If an input type is one of the checksum types, it will create a new checksum file based on the input file path.
+All input types regardless will be checked for existence.
 
 ### requirements:
 When used as a standalone command line tool, the following dependencies must be installed:
@@ -58,7 +56,7 @@ Optional args
 - _-t, --type_ specific input type
 - _-h, --help_ show this help message and exit
 
-### general usage:
+### how to use:
 
 _Running the standalone command line tool_
 ```
@@ -76,13 +74,24 @@ _Running as Nextflow process with docker_
 check the example under /example/ or the pipeline-align-DNA repository
 ```
 
-### specific usage:
+### usage commands:
 #### file specific validation
-Currently file specific validation is supported for the following:
+Currently file type specific validation is supported for the following:
 | type | tool |
 |------|------|
 | bam | samtools |
 | vcf | vcftools |
+
+To explicitly check a single file type, run
+```
+python3 -m validate -t file-py path/to/file.py
+```
+Where file-py can be replaced with any file type listed in the input types table.
+To automatically detect any or multiple file types, run
+```
+python3 -m validate -t file-input path/to/file.ext
+```
+The tool will try to automatically detect the file type and do file specific validation, and if the file type is unsupported, will just do a simple existence check.
 
 #### directory specific validation
 To run validation for checking basic directory permissions you can run the following
