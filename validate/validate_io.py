@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import os
 import sys
+import warnings
 
 from validate.validators import bam
 from validate.validators import vcf
@@ -56,7 +57,7 @@ def parse_args(args):
     parser.add_argument('path', help='path of file to validate', type=str)
     parser.add_argument('-t', '--type', help='input data type',
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq'
-        'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'])
+        'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'], required=True)
 
     return parser.parse_args()
 
@@ -94,7 +95,7 @@ def validate_file(path, file_type):
         except OSError:
             raise
 
-    #TODO: Add file level validation
+    # File level validation
     if file_type == 'file-bam':
         try:
             bam.validate_bam_file(path)
@@ -106,6 +107,10 @@ def validate_file(path, file_type):
             vcf.validate_vcf_file(path)
         except ValueError:
             raise
+
+    if file_type == 'file-fastq':
+        if file_extension == '.fastq' or file_extension == '.fq':
+            warnings.warn('Warning: fastq or fq file is not zipped')
 
     return True
 
