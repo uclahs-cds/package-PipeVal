@@ -1,5 +1,5 @@
-# Validation CLI Tool 
-> An easy to use CLI tool that can be used to validate different parameters in your NF script. Can be used standalone or using a Docker container.
+# PipeVal
+> An easy to use CLI tool that can be used to validate different parameters in your NF script/pipeline. Can be used standalone or using a Docker container.
 
 ## specs
 
