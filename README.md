@@ -134,3 +134,10 @@ If the input is invalid in any way, validate_io will sys.exit and throw an excep
 
 ## references:
 Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
+
+## license:
+Author: Gina Kim (ginakim@mednet.ucla.edu)
+
+Pipeval is currently free to use under the GPL 2 license, terms of which are under the "COPYING" file.
+
+Copyright (C) 2021 University of California Los Angeles ("Boutros Lab"). All rights reserved.
