@@ -116,18 +116,16 @@ def validate_file(path, file_type):
 
 # File type and extension detection for generic 'file-input'
 def detect_file_type_and_ext(path):
-    extension_parts = path.suffixes
-
     # Starting from the end, build up extension with each '.' separated part and try matching resulting extension
-    for i in range(len(extension_parts) - 1, -1, -1):
-        curr_ext = ''.join(extension_parts[i:len(extension_parts)])
-        curr_type = detect_file_type(curr_ext)
+    full_extension = ''
+    for suffix in path.suffixes[::-1]:
+        full_extension = suffix + full_extension
+        extension_type = detect_file_type(full_extension)
         
-        if curr_type != UNKNOWN_FILE_TYPE:
-            return curr_type, curr_ext
+        if extension_type != UNKNOWN_FILE_TYPE:
+            return extension_type, full_extension
         
     # No matching extension found so return unknown type and full extension
-    full_extension = '.'.join(extension_parts)
     return UNKNOWN_FILE_TYPE, full_extension
 
 # File type detection for generic 'file-input'
