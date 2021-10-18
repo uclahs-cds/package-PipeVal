@@ -34,7 +34,7 @@ def validate_main():
         if input_type in FILE_TYPES_DICT:
             validate_file(path, input_type)
         elif input_type == GENERIC_FILE_TYPE:
-            file_type = detect_file_type(path)
+            file_type, _ = detect_file_type_and_ext(path)
             validate_file(path, file_type)
         elif input_type in DIR_TYPES:
             validate_dir(path, input_type)
@@ -56,17 +56,17 @@ def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='path of file to validate', type=str)
     parser.add_argument('-t', '--type', help='input data type',
-        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq'
+        choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'], required=True)
 
     return parser.parse_args()
 
 # File validation
 def validate_file(path, file_type):
-    file_extension = detect_file_ext(path)
-
     if file_type == UNKNOWN_FILE_TYPE: # no further specific validation for unlisted file types
         return True
+
+    _, file_extension = detect_file_type_and_ext(path)
 
     # TODO: Check handling of no-extension files
     if not file_extension:
@@ -75,7 +75,7 @@ def validate_file(path, file_type):
         raise ValueError('File type does not match extension')
 
     # Checksum validation
-    md5_file_path = path.with_suffix(file_extension + '.md5')
+    md5_file_path = path.with_suffix(path.suffix + '.md5')
     if md5_file_path.exists():
         try:
             if not compare_hash('md5', path, md5_file_path):
@@ -85,7 +85,7 @@ def validate_file(path, file_type):
         except OSError:
             raise
 
-    sha512_file_path = path.with_suffix(file_extension + '.sha512')
+    sha512_file_path = path.with_suffix(path.suffix + '.sha512')
     if sha512_file_path.exists():
         try:
             if not compare_hash('sha512', path, sha512_file_path):
@@ -114,22 +114,27 @@ def validate_file(path, file_type):
 
     return True
 
-# File type detection for generic 'file-input'
-def detect_file_type(path):
-    extension = detect_file_ext(path)
+# File type and extension detection for generic 'file-input'
+def detect_file_type_and_ext(path):
+    # Starting from the end, build up extension with each '.' separated part and try matching resulting extension
+    full_extension = ''
+    for suffix in path.suffixes[::-1]:
+        full_extension = suffix + full_extension
+        extension_type = detect_file_type(full_extension)
+        
+        if extension_type != UNKNOWN_FILE_TYPE:
+            return extension_type, full_extension
+        
+    # No matching extension found so return unknown type and full extension
+    return UNKNOWN_FILE_TYPE, full_extension
 
+# File type detection for generic 'file-input'
+def detect_file_type(extension):
     for file_type in FILE_TYPES_DICT:
         if extension in FILE_TYPES_DICT.get(file_type):
             return file_type
 
     return UNKNOWN_FILE_TYPE
-
-# Extracting complete file extension from path
-def detect_file_ext(path):
-    extensions = path.suffixes
-    extension = ''.join(extensions)
-
-    return extension
 
 # Directory validation
 def validate_dir(path, dir_type):
@@ -163,7 +168,8 @@ def path_writable(path):
 
 # Checksum methods
 def compare_hash(hash_type, path, hash_path):
-    existing_hash = hash_path.read_text().strip()
+    # Read only the hash and not the filename for comparison
+    existing_hash = hash_path.read_text().split(' ')[0].strip()
 
     if hash_type == 'md5':
         return existing_hash == generate_md5(path)
