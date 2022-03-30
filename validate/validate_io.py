@@ -208,9 +208,9 @@ def create_checksum_file(path, hash_type):
     try:
         file = open(str(path) +  ext, "w")
         if hash_type == 'md5-gen':
-            file.write(generate_md5(path))  
+            file.write(generate_md5(path)+'  '+str(path)+'\n')  
         elif hash_type == 'sha512-gen':
-            file.write(generate_sha512(path))
+            file.write(generate_sha512(path)+'  '+str(path)+'\n')
         else:
             raise IOError('Incorrect hash parameters')
         file.close()
