@@ -1,15 +1,16 @@
-# Helper methods for vcf file validation
+'''Helper methods for vcf file validation'''
 
 import subprocess
 
 def validate_vcf_file(path):
+    '''Validate vcf file'''
     vcf_command = "vcf-validator " + str(path)
 
     try:
         subprocess.check_call(vcf_command, shell=True)
-    except subprocess.CalledProcessError as e:
-        raise ValueError("vcftools validation check failed. " + str(e))
-    
+    except subprocess.CalledProcessError as err:
+        raise ValueError("vcftools validation check failed. " + str(err)) from err
+
     print("Ran command: " + vcf_command)
 
     return True
