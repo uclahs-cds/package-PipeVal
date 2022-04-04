@@ -1,11 +1,13 @@
+'''Test functions in validate_io.py'''
 from pathlib import Path
-import argparse
+# import argparse
 import pytest
 import mock
 import validate
 
 @mock.patch('validate.validate_io.Path', autospec=True)
 def test_validate_file_value_error(mock_path):
+    '''Tests value error for validate_file'''
     mock_path.suffix.return_value = ".no"
 
     with pytest.raises(TypeError):
@@ -13,6 +15,7 @@ def test_validate_file_value_error(mock_path):
 
 @mock.patch('validate.validate_io.path_readable')
 def test_validate_dir_readable_io_error(mock_path_readable):
+    '''Tests readable IO error for validate_dir'''
     mock_path_readable.side_effect = IOError('oh no')
     test_dir = Path('unreadable/dir')
 
@@ -22,6 +25,7 @@ def test_validate_dir_readable_io_error(mock_path_readable):
 @mock.patch('validate.validate_io.path_readable')
 @mock.patch('validate.validate_io.path_writable')
 def test_validate_dir_writable_io_error(mock_path_readable, mock_path_writable):
+    '''Tests writable IO error for validate_dir'''
     mock_path_readable.return_value = True
     mock_path_writable.side_effect = IOError('oh no')
     test_dir = Path('unreadable/unwritable/dir')
@@ -31,12 +35,14 @@ def test_validate_dir_writable_io_error(mock_path_readable, mock_path_writable):
 
 @mock.patch('validate.validate_io.Path', autospec=True)
 def test_path_exists(mock_path):
+    '''Tests path_exits'''
     mock_path.exists.return_value = True
 
     assert validate.validate_io.path_exists(mock_path)
 
 @mock.patch('validate.validate_io.Path', autospec=True)
 def test_path_exists_io_error(mock_path):
+    '''Tests IO error for path_exists'''
     mock_path.exists.return_value = False
 
     with pytest.raises(IOError):
@@ -44,6 +50,7 @@ def test_path_exists_io_error(mock_path):
 
 @mock.patch('validate.validate_io.os.access')
 def test_path_readable(mock_os_access):
+    '''Tests path_readable'''
     mock_os_access.return_value = True
     test_path = Path('readable/path')
 
@@ -51,6 +58,7 @@ def test_path_readable(mock_os_access):
 
 @mock.patch('validate.validate_io.os.access')
 def test_path_readable_io_error(mock_os_access):
+    '''Tests IO error for path_readable'''
     mock_os_access.return_value = False
     test_path = Path('not/readable/path')
 
@@ -59,6 +67,7 @@ def test_path_readable_io_error(mock_os_access):
 
 @mock.patch('validate.validate_io.os.access')
 def test_path_writable(mock_os_access):
+    '''Tests path_writable'''
     mock_os_access.return_value = True
     test_path = Path('writable/path')
 
@@ -66,24 +75,25 @@ def test_path_writable(mock_os_access):
 
 @mock.patch('validate.validate_io.os.access')
 def test_path_writable_io_error(mock_os_access):
+    '''Tests IO error for path_writable'''
     mock_os_access.return_value = False
     test_path = Path('not/writable/path')
 
     with pytest.raises(IOError):
         validate.validate_io.path_writable(test_path)
 
-def generate_md5_for_file_success(path):
+def generate_md5_for_file_success():
+    '''Tests successful generate_md5'''
     return
-    #TODO: implement unit test
 
-def generate_md5_for_file_error(path):
+def generate_md5_for_file_error():
+    '''Tests generate_md5 error'''
     return
-    #TODO: implement unit test
 
-def generate_sha512_for_file_success(path):
+def generate_sha512_for_file_success():
+    '''Tests successful generate_sha512'''
     return
-    #TODO: implement unit test
 
-def generate_sha512_for_file_error(path):
+def generate_sha512_for_file_error():
+    '''Tests generate_sha512 error'''
     return
-    #TODO: implement unit test
