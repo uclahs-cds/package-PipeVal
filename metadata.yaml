@@ -1,0 +1,9 @@
+---
+Category: 'tool'
+Description: 'PipeVal'
+Maintainers: ['abeshlikyan@mednet.ucla.edu']
+Contributors: ['Arpi Beshlikyan']
+Languages: ['python', 'Dockerfile']
+Version: ['2.1.6']
+Purpose of tool: 'Validates different parameters in NF scripts/pipelines'
+References: 'https://github.com/uclahs-cds/public-tool-PipeVal/'

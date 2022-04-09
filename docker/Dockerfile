@@ -28,4 +28,4 @@ RUN pip install -r requirements.txt
 # add tool folder to path
 ENV PYTHONPATH "${PYTHONPATH}:/tool/"
 
-LABEL maintainer="Gina Kim <ginakim@mednet.ucla.edu>"
+LABEL maintainer="Arpi Beshlikyan <abeshlikyan@mednet.ucla.edu>"
