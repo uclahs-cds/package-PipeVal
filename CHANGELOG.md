@@ -8,8 +8,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ---
 
 ## [Unreleased]
-### Changed
-- Changed something but it is not part of the last release.
+### Updated
+- Updated bl-base to 1.1.0
+- Installed tools using `mamba`
+
+### Added
+- Add `bldocker` user and group to Dockerfile
 
 ---
 
