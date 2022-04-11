@@ -1,6 +1,3 @@
-PipeVal is licensed under the GNU General Public License
-version 2, which is reproduced below.
-
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
