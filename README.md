@@ -60,13 +60,13 @@ Optional args
 
 _Running the standalone command line tool_
 ```
-python3 -m validate -t file-bam path/to/file.bam [-o]
+python3 -m validate -t file-bam path/to/file.bam
 ```
 
 _Running as interactive docker session_
 ```
 docker run -it validate:1.0.0 /bin/bash
-(bash): python -m validate -t file-input path/to/file.bam [-o]
+(bash): python -m validate -t file-input path/to/file.bam
 ```
 
 _Running as Nextflow process with docker_
