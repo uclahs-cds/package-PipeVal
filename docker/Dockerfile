@@ -28,4 +28,11 @@ RUN pip install -r requirements.txt
 # add tool folder to path
 ENV PYTHONPATH "${PYTHONPATH}:/tool/"
 
+# Add a new user/group called bldocker
+RUN groupadd -g 500001 bldocker && \
+    useradd -r -u 500001 -g bldocker bldocker
+
+# Change the default user to bldocker from root
+USER bldocker
+
 LABEL maintainer="Arpi Beshlikyan <abeshlikyan@mednet.ucla.edu>"
