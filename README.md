@@ -138,6 +138,12 @@ Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
 ## license:
 Author: Gina Kim (ginakim@mednet.ucla.edu)
 
-Pipeval is currently free to use under the GPL 2 license, terms of which are under the "COPYING" file.
+PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
-Copyright (C) 2021 University of California Los Angeles ("Boutros Lab"). All rights reserved.
+PipeVal is a tool which can be used to validate the inputs and outputs of various bioinformatic pipelines.
+
+Copyright (C) 2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
