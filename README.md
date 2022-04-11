@@ -136,13 +136,13 @@ If the input is invalid in any way, validate_io will sys.exit and throw an excep
 Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
 
 ## license:
-Author: Gina Kim (ginakim@mednet.ucla.edu)
+Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
 PipeVal is a tool which can be used to validate the inputs and outputs of various bioinformatic pipelines.
 
-Copyright (C) 2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
