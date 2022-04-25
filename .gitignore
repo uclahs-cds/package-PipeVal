@@ -20,6 +20,14 @@ pip-delete-this-directory.txt
 venv
 .venv
 .env
+# setup.py working directory
+build
+# setup.py dist directory
+dist
+# Egg metadata
+*.egg-info
+.eggs
+.pypirc
 
 # VScode
 .vscode
