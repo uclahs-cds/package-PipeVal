@@ -20,10 +20,14 @@ COPY --from=builder /usr/local /usr/local
 RUN mkdir -p /tool/validate/
 
 # install all requirements, including validate module
-COPY requirements.txt /tool
+# COPY requirements.txt /tool
+COPY setup.py /tool
+COPY setup.cfg /tool
+COPY pyproject.toml /tool
 COPY /validate/ /tool/validate/
 WORKDIR /tool
-RUN pip install -r requirements.txt
+RUN pip install build && \
+    pip install .
 
 # add tool folder to path
 ENV PYTHONPATH "${PYTHONPATH}:/tool/"
