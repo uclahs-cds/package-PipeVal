@@ -9,6 +9,7 @@ import warnings
 
 from validate.validators import bam
 from validate.validators import vcf
+from validate import __version__
 
 # Currently supported data types
 DIR_TYPES = ['directory-r', 'directory-rw']
@@ -60,6 +61,7 @@ def parse_args(args):
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'],
         required=True)
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
 
     return parser.parse_args(args)
 
