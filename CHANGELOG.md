@@ -17,7 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 - Convert module to Python CLI package; now runs directly from commandline with `validate`.
-- Single source package version from __init__.py
+- Single source package version from \_\_init__.py
 
 ---
 
