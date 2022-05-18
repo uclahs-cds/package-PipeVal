@@ -15,6 +15,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - Add `bldocker` user and group to Dockerfile
 
+### Changed
+- Convert module to Python CLI package; now runs directly from commandline with `validate`.
+- Single source package version from \_\_init__.py
+
 ---
 
 ## [2.1.6] - 2021-10-18

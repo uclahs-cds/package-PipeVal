@@ -62,7 +62,7 @@ process validate_inputs {
     """
     set -euo pipefail
 
-    python -m validate -t file-input ${file_to_validate}
+    validate -t file-input ${file_to_validate}
     """
 }
 

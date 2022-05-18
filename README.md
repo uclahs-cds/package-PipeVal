@@ -60,13 +60,13 @@ Optional args
 
 _Running the standalone command line tool_
 ```
-python3 -m validate -t file-bam path/to/file.bam
+validate -t file-bam path/to/file.bam
 ```
 
 _Running as interactive docker session_
 ```
 docker run -it validate:1.0.0 /bin/bash
-(bash): python -m validate -t file-input path/to/file.bam
+(bash): validate -t file-input path/to/file.bam
 ```
 
 _Running as Nextflow process with docker_
@@ -130,7 +130,7 @@ Invalid input or error
 Error: path/to/input Error Message
 ```
 
-If the input is invalid in any way, validate_io will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
+If the input is invalid in any way, `validate` will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
 
 ## references:
 Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
