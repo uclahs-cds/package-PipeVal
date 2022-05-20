@@ -1,16 +1,15 @@
 '''Helper methods for bam file validation'''
 
 import subprocess
+import pysam
 
 def validate_bam_file(path):
     '''Validates bam file'''
-    samtools_command = "samtools quickcheck " + str(path)
-
     try:
-        subprocess.check_call(samtools_command, shell=True)
-    except subprocess.CalledProcessError as err:
+        pysam.quickcheck(str(path))
+    except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
-    print("Ran command: " + samtools_command)
+    print("Ran command: pysam.quickcheck()")
 
     return True
