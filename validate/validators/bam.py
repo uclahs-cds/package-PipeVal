@@ -1,6 +1,5 @@
 '''Helper methods for bam file validation'''
 
-import subprocess
 import pysam
 
 def validate_bam_file(path):
