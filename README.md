@@ -40,7 +40,6 @@ When used as a standalone command line tool, the following dependencies must be 
 |tool|
 |----|
 |python 3.8|
-|samtools 1.11|
 |vcftools 0.1.16|
 
 Otherwise, it's recommended to use the docker to keep dependencies bundled.
@@ -79,7 +78,7 @@ check the example under /example/ or the pipeline-align-DNA repository
 Currently file type specific validation is supported for the following:
 | type | tool |
 |------|------|
-| bam | samtools |
+| bam | pysam |
 | vcf | vcftools |
 
 To explicitly check a single file type, run

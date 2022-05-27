@@ -1,12 +1,10 @@
 FROM blcdsdockerregistry/bl-base:1.1.0 AS builder
 
 # Use conda to install tools and dependencies into /usr/local
-ARG SAMTOOLS_VERSION=1.11
 ARG VCFTOOLS_VERSION=0.1.16
 RUN mamba create -qy -p /usr/local \
     -c bioconda \
     -c conda-forge \
-    samtools==${SAMTOOLS_VERSION} \
     vcftools==${VCFTOOLS_VERSION} \
     perl-vcftools-vcf==${VCFTOOLS_VERSION} \
     tabix \
