@@ -27,9 +27,9 @@ def main():
     paths = [Path(i) for i in args.path]
     input_type = args.type
     file_type = input_type
-    
+
     for path in paths:
-        try: 
+        try:
             path_exists(path)
         except IOError as err:
             sys.exit(f"Error: {str(path)} {str(err)}")
@@ -38,7 +38,7 @@ def main():
             if input_type in FILE_TYPES_DICT:
                 validate_file(path, input_type)
             elif input_type == GENERIC_FILE_TYPE:
-                file_type, _ = detect_file_type_and_ext(path) #TODO
+                file_type, _ = detect_file_type_and_ext(path)
                 validate_file(path, file_type)
             elif input_type in DIR_TYPES:
                 validate_dir(path, input_type)
