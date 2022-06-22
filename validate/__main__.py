@@ -38,7 +38,7 @@ def main():
             if input_type in FILE_TYPES_DICT:
                 validate_file(path, input_type)
             elif input_type == GENERIC_FILE_TYPE:
-                file_type, _ = detect_file_type_and_ext(paths) #TODO
+                file_type, _ = detect_file_type_and_ext(path) #TODO
                 validate_file(path, file_type)
             elif input_type in DIR_TYPES:
                 validate_dir(path, input_type)
@@ -51,7 +51,7 @@ def main():
         except (IOError, OSError) as err:
             sys.exit(f"Error: {path} {str(err)}")
 
-        print(f"Input: {args.path} is valid {file_type}")
+        print(f"Input: {path} is valid {file_type}")
 
 # Argument parser
 def parse_args(args):
