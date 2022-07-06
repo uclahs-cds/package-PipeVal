@@ -60,7 +60,7 @@ def main():
 def parse_args(args):
     '''Argument parser'''
     parser = argparse.ArgumentParser()
-    parser.add_argument('path', help='path of file to validate', type=str, nargs='+')
+    parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
     parser.add_argument('-t', '--type', help='input data type',
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'],
