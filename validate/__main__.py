@@ -215,7 +215,7 @@ def create_checksum_file(path, hash_type):
 
     print(f"{hash_type}erated for {str(path)}")
 
-# Exception Handling
+# Logging validation results
 def print_error(path, err):
     '''Prints error message'''
     print(f"Error: {str(path)} {str(err)}")
