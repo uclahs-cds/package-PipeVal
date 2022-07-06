@@ -24,12 +24,11 @@ CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 def main():
     '''Main function and CLI tool'''
     args = parse_args(sys.argv[1:])
-    paths = [Path(i) for i in args.path]
     input_type = args.type
     file_type = input_type
     err_flag = False
 
-    for path in paths:
+    for path in [Path(pathname) for pathname in args.path]:
         try:
             path_exists(path)
         except IOError as err:
