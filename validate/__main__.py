@@ -33,7 +33,7 @@ def main():
             path_exists(path)
         except IOError as err:
             err_flag = True
-            print_error(path, err)# sys.exit(f"Error: {str(path)} {str(err)}") 
+            print_error(path, err)# sys.exit(f"Error: {str(path)} {str(err)}")
             continue
 
         try:
@@ -48,11 +48,11 @@ def main():
                 create_checksum_file(path, input_type)
         except (TypeError, ValueError, IOError, OSError) as err:
             err_flag = True
-            print_error(path, err) # sys.exit(f"Error: {path} {str(err)}") # raise errors, has implicit exit code
+            print_error(path, err)
             continue
 
         print_success(path, file_type)
-    
+
     if err_flag:
         sys.exit(1)
 
@@ -217,7 +217,9 @@ def create_checksum_file(path, hash_type):
 
 # Exception Handling
 def print_error(path, err):
+    '''Prints error message'''
     print(f"Error: {str(path)} {str(err)}")
 
 def print_success(path, file_type):
+    '''Prints success message'''
     print(f"Input: {path} is valid {file_type}")
