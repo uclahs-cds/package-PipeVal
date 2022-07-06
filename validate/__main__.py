@@ -27,12 +27,15 @@ def main():
     paths = [Path(i) for i in args.path]
     input_type = args.type
     file_type = input_type
+    err_flag = False
 
     for path in paths:
         try:
             path_exists(path)
         except IOError as err:
-            sys.exit(f"Error: {str(path)} {str(err)}")
+            err_flag = True
+            print_error(path, err)# sys.exit(f"Error: {str(path)} {str(err)}") 
+            continue
 
         try:
             if input_type in FILE_TYPES_DICT:
@@ -44,14 +47,15 @@ def main():
                 validate_dir(path, input_type)
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
-        except TypeError as err:
-            sys.exit(f"Error: {path} {str(err)}") # raise errors, has implicit exit code
-        except ValueError as err:
-            sys.exit(f"Error: {path} {str(err)}")
-        except (IOError, OSError) as err:
-            sys.exit(f"Error: {path} {str(err)}")
+        except (TypeError, ValueError, IOError, OSError) as err:
+            err_flag = True
+            print_error(path, err) # sys.exit(f"Error: {path} {str(err)}") # raise errors, has implicit exit code
+            continue
 
-        print(f"Input: {path} is valid {file_type}")
+        print_success(path, file_type)
+    
+    if err_flag:
+        sys.exit(1)
 
 # Argument parser
 def parse_args(args):
@@ -211,3 +215,10 @@ def create_checksum_file(path, hash_type):
         file.close()
 
     print(f"{hash_type}erated for {str(path)}")
+
+# Exception Handling
+def print_error(path, err):
+    print(f"Error: {str(path)} {str(err)}")
+
+def print_success(path, file_type):
+    print(f"Input: {path} is valid {file_type}")

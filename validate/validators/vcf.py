@@ -11,6 +11,6 @@ def validate_vcf_file(path):
     except subprocess.CalledProcessError as err:
         raise ValueError("vcftools validation check failed. " + str(err)) from err
 
-    print("Ran command: " + vcf_command)
+    # print("Ran command: " + vcf_command)
 
     return True
