@@ -24,39 +24,43 @@ CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 def main():
     '''Main function and CLI tool'''
     args = parse_args(sys.argv[1:])
-    path = Path(args.path)
     input_type = args.type
     file_type = input_type
+    errored = False
 
-    try:
-        path_exists(path)
-    except IOError as err:
-        sys.exit(f"Error: {args.path} {str(err)}")
+    for path in [Path(pathname) for pathname in args.path]:
+        try:
+            path_exists(path)
+        except IOError as err:
+            errored = True
+            print_error(path, err)# sys.exit(f"Error: {str(path)} {str(err)}")
+            continue
 
-    try:
-        if input_type in FILE_TYPES_DICT:
-            validate_file(path, input_type)
-        elif input_type == GENERIC_FILE_TYPE:
-            file_type, _ = detect_file_type_and_ext(path)
-            validate_file(path, file_type)
-        elif input_type in DIR_TYPES:
-            validate_dir(path, input_type)
-        elif input_type in CHECKSUM_GEN_TYPES:
-            create_checksum_file(path, input_type)
-    except TypeError as err:
-        sys.exit(f"Error: {args.path} {str(err)}") # raise errors, has implicit exit code
-    except ValueError as err:
-        sys.exit(f"Error: {args.path} {str(err)}")
-    except (IOError, OSError) as err:
-        sys.exit(f"Error: {args.path} {str(err)}")
+        try:
+            if input_type in FILE_TYPES_DICT:
+                validate_file(path, input_type)
+            elif input_type == GENERIC_FILE_TYPE:
+                file_type, _ = detect_file_type_and_ext(path)
+                validate_file(path, file_type)
+            elif input_type in DIR_TYPES:
+                validate_dir(path, input_type)
+            elif input_type in CHECKSUM_GEN_TYPES:
+                create_checksum_file(path, input_type)
+        except (TypeError, ValueError, IOError, OSError) as err:
+            errored = True
+            print_error(path, err)
+            continue
 
-    print(f"Input: {args.path} is valid {file_type}")
+        print_success(path, file_type)
+
+    if errored:
+        sys.exit(1)
 
 # Argument parser
 def parse_args(args):
     '''Argument parser'''
     parser = argparse.ArgumentParser()
-    parser.add_argument('path', help='path of file to validate', type=str)
+    parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
     parser.add_argument('-t', '--type', help='input data type',
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'],
@@ -210,3 +214,12 @@ def create_checksum_file(path, hash_type):
         file.close()
 
     print(f"{hash_type}erated for {str(path)}")
+
+# Logging validation results
+def print_error(path, err):
+    '''Prints error message'''
+    print(f"Error: {str(path)} {str(err)}")
+
+def print_success(path, file_type):
+    '''Prints success message'''
+    print(f"Input: {path} is valid {file_type}")

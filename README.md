@@ -49,7 +49,7 @@ Otherwise, it's recommended to use the docker to keep dependencies bundled.
 ### parameters:
 
 Required arg
-- _path_ path of file or directory to validate or generate checksum for
+- _path_ path of one or more files or directories to validate or generate checksum for
 
 Optional args
 - _-t, --type_ specific input type
@@ -83,12 +83,12 @@ Currently file type specific validation is supported for the following:
 
 To explicitly check a single file type, run
 ```
-python3 -m validate -t file-py path/to/file.py
+validate -t file-py path/to/file.py
 ```
 Where file-py can be replaced with any file type listed in the input types table.
 To automatically detect any or multiple file types, run
 ```
-python3 -m validate -t file-input path/to/file.ext
+validate -t file-input path/to/file.ext
 ```
 The tool will try to automatically detect the file type and do file specific validation, and if the file type is unsupported, will just do a simple existence check.
 
@@ -96,10 +96,10 @@ The tool will try to automatically detect the file type and do file specific val
 To run validation for checking basic directory permissions you can run the following
 
 ```
-python3 -m validate -t directory-rw path/to/directory/
+validate -t directory-rw path/to/directory/
 ```
 ```
-python3 -m validate -t directory-r path/to/directory/
+validate -t directory-r path/to/directory/
 ```
 
 Using "directory-r" for read permissions, and "directory-rw" for read and write permissions.
@@ -108,11 +108,11 @@ Using "directory-r" for read permissions, and "directory-rw" for read and write 
 To generate a sha512 or md5 checksum file using this tool, run the following
 
 ```
-python3 -m validate -t md5-gen path/to/file.ext
+validate -t md5-gen path/to/file.ext
 ```
 
 ```
-python3 -m validate -t sha512-gen path/to/file.ext
+validate -t sha512-gen path/to/file.ext
 ```
 
 It should create a checksum file at the path/to/file.ext.{checksum_ext}

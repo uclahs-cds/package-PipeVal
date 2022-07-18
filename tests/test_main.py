@@ -1,6 +1,5 @@
 '''Test functions in __main__.py'''
 from pathlib import Path
-# import argparse
 import pytest
 import mock
 import validate

@@ -9,6 +9,4 @@ def validate_bam_file(path):
     except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
-    print("Ran command: pysam.quickcheck()")
-
     return True
