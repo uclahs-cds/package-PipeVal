@@ -26,13 +26,13 @@ def main():
     args = parse_args(sys.argv[1:])
     input_type = args.type
     file_type = input_type
-    err_flag = False
+    errored = False
 
     for path in [Path(pathname) for pathname in args.path]:
         try:
             path_exists(path)
         except IOError as err:
-            err_flag = True
+            errored = True
             print_error(path, err)# sys.exit(f"Error: {str(path)} {str(err)}")
             continue
 
@@ -47,13 +47,13 @@ def main():
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
         except (TypeError, ValueError, IOError, OSError) as err:
-            err_flag = True
+            errored = True
             print_error(path, err)
             continue
 
         print_success(path, file_type)
 
-    if err_flag:
+    if errored:
         sys.exit(1)
 
 # Argument parser
