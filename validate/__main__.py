@@ -104,6 +104,9 @@ def validate_file(path, file_type):
     def fastq_case():
         if file_extension in ('.fastq', '.fq'):
             warnings.warn('Warning: fastq or fq file is not zipped')
+    
+    def unsupported_case():
+        raise TypeError('File type not yet supported by PipeVal.')
 
     file_type_switcher ={
         'file-bam': bam_case,
@@ -111,7 +114,7 @@ def validate_file(path, file_type):
         'file-fastq': fastq_case
     }
 
-    file_type_switcher[file_type]()
+    file_type_switcher.get(file_type, unsupported_case)()
 
     return True
 
