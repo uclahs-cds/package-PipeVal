@@ -21,6 +21,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Single source package version from \_\_init__.py
 - Use `pysam` instead of `samtools` in bam file validation.
 
+### Fixed
+- Add handling for valid file types whose validation is not yet implemented.
+
 ---
 
 ## [2.1.6] - 2021-10-18
