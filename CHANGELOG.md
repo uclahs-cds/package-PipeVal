@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 ### Updated
+
+---
+
+## [3.0.0] - 2022-08-03
+### Updated
 - Updated bl-base to 1.1.0
 - Installed tools using `mamba`
 
