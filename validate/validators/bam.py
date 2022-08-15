@@ -9,4 +9,8 @@ def validate_bam_file(path):
     except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
+    numLines = int(pysam.view("-c", str(path)).strip())
+    if 0 >= numLines:
+        raise ValueError("pysam bam check failed. No reads in " + str(path))
+
     return True
