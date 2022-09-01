@@ -9,8 +9,8 @@ def validate_bam_file(path):
     except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
-    num_lines = int(pysam.view("-c", str(path)).strip())
-    if num_lines <= 0:
+    bam_it = pysam.AlignmentFile(str(path)).head(1)
+    if next(bam_it, None) == None:
         raise ValueError("pysam bam check failed. No reads in " + str(path))
 
     return True
