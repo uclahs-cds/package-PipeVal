@@ -10,7 +10,7 @@ def validate_bam_file(path):
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
     bam_it = pysam.AlignmentFile(str(path)).head(1)
-    if next(bam_it, None) == None:
+    if next(bam_it, None) is None:
         raise ValueError("pysam bam check failed. No reads in " + str(path))
 
     return True
