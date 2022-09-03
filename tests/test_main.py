@@ -1,5 +1,6 @@
 '''Test functions in __main__.py'''
 from pathlib import Path
+from unittest.mock import Mock
 import pytest
 import mock
 import validate
@@ -81,12 +82,12 @@ def test_path_writable_io_error(mock_os_access):
     with pytest.raises(IOError):
         validate.__main__.path_writable(test_path)
 
-@mock.patch('validate.validators.bam.pysam.quickcheck')
-@mock.patch('validate.validators.bam.pysam.view')
-def test_file_bam_empty(mock_pysam_quickcheck, mock_pysam_view):
+@mock.patch('validate.validators.bam.pysam')
+def test_file_bam_empty(mock_pysam):
     '''Tests Value error for valid BAM header with no reads'''
-    mock_pysam_quickcheck.return_value = ''
-    mock_pysam_view.return_value = '0\n'
+    mock_alignment_file = Mock()
+    mock_alignment_file.head.return_value = iter([])
+    mock_pysam.AlignmentFile.return_value = mock_alignment_file
     test_path = Path('empty/valid/bam')
 
     with pytest.raises(ValueError):
