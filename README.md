@@ -19,7 +19,7 @@ Directories (read or read-write)
 > B. Generates checksum files and compares checksum files.
 
 ### input types:
-The validation action can be specified using the -t tag. If not specified, it defaults to "file-input".
+The validation action can be specified using the `-t` tag. If not specified, it defaults to `file-input`.
 
 |file types|directory types|checksum types|
 |----------|---------------|--------------|
