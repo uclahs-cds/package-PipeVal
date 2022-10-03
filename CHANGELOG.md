@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Updated
 ### Added
 - Add check for empty BAM files (valid header but no reads).
+### Changed
+- Make `-t` optional, default to `file-input`
 
 ---
 

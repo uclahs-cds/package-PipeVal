@@ -64,7 +64,7 @@ def parse_args(args):
     parser.add_argument('-t', '--type', help='input data type',
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
         'file-bed', 'file-py', 'directory-rw', 'directory-r', 'md5-gen', 'sha512-gen'],
-        required=True)
+        default='file-input')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
 
     return parser.parse_args(args)
