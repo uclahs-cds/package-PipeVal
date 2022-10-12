@@ -37,4 +37,5 @@ RUN groupadd -g 500001 bldocker && \
 # Change the default user to bldocker from root
 USER bldocker
 
-LABEL maintainer="Arpi Beshlikyan <abeshlikyan@mednet.ucla.edu>"
+LABEL   maintainer="Arpi Beshlikyan <abeshlikyan@mednet.ucla.edu>" \
+        org.opencontainers.image.source=https://github.com/uclahs-cds/public-tool-PipeVal
