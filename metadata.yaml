@@ -7,4 +7,4 @@ languages: ['python', 'Dockerfile']
 version: ['3.0.0']
 purpose_of_tool: 'Validates different parameters in NF scripts/pipelines'
 references: 'https://github.com/uclahs-cds/public-tool-PipeVal/'
-image_name: 'src-util'
+image_name: 'pipeval'
