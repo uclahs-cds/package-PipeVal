@@ -50,6 +50,8 @@ def main():
             errored = True
             print_error(path, err)
             continue
+        except AttributeError as err:
+            print_warning(path, err)
 
         print_success(path, file_type)
 
@@ -97,6 +99,7 @@ def validate_file(path, file_type):
     # File level validation
     def bam_case():
         bam.validate_bam_file(path)
+        bam.check_bam_index(path)
 
     def vcf_case():
         vcf.validate_vcf_file(path)
@@ -226,3 +229,7 @@ def print_error(path, err):
 def print_success(path, file_type):
     '''Prints success message'''
     print(f"Input: {path} is valid {file_type}")
+
+def print_warning(path, file_type):
+    '''Prints success message'''
+    print(f"Warning: {path} does not have an index file")
