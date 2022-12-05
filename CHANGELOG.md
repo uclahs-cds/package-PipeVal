@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add check for empty BAM files (valid header but no reads).
 - Add auto-build workflow to push image to `uclahs-cds` registry
 - Add repo source label to Dockerfile
+- Add check for existence of index file
 ### Changed
 - Make `-t` optional, default to `file-input`
 ### Fixed
