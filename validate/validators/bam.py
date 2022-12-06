@@ -19,8 +19,8 @@ def check_bam_index(path):
     '''Checks if index file is present and can be opened'''
     try:
         pysam.AlignmentFile(str(path)).check_index()
-    except ValueError:
-        raise FileNotFoundError(f'''pysam bam index check failed. Index file for {str(path)} could not
-            be opened or does not exist.''')
+    except ValueError as err:
+        raise FileNotFoundError(f'''pysam bam index check failed. Index file for {str(path)}
+            could not be opened or does not exist.''') from err
 
     return True

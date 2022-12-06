@@ -47,8 +47,7 @@ def main():
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
         except FileNotFoundError as err:
-            print_warning(path, err)
-            pass
+            print_index_warning(path, err)
         except (TypeError, ValueError, IOError, OSError) as err:
             errored = True
             print_error(path, err)
@@ -231,6 +230,6 @@ def print_success(path, file_type):
     '''Prints success message'''
     print(f"Input: {path} is valid {file_type}")
 
-def print_warning(path, file_type):
+def print_index_warning(path):
     '''Prints success message'''
-    print(f"Warning: {path} does not have an index file")
+    print(f"Warning: {path} does not have an index file in directory.")
