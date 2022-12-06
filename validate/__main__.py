@@ -46,12 +46,13 @@ def main():
                 validate_dir(path, input_type)
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
+        except FileNotFoundError as err:
+            print_warning(path, err)
+            pass
         except (TypeError, ValueError, IOError, OSError) as err:
             errored = True
             print_error(path, err)
             continue
-        except AttributeError as err:
-            print_warning(path, err)
 
         print_success(path, file_type)
 

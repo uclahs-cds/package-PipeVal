@@ -1,6 +1,5 @@
 '''Helper methods for bam file validation'''
 
-from xml.dom import ValidationErr
 import pysam
 
 def validate_bam_file(path):
@@ -21,7 +20,7 @@ def check_bam_index(path):
     try:
         pysam.AlignmentFile(str(path)).check_index()
     except ValueError:
-        raise AttributeError(f'''pysam bam index check failed. Index file for {str(path)} could not
+        raise FileNotFoundError(f'''pysam bam index check failed. Index file for {str(path)} could not
             be opened or does not exist.''')
 
     return True
