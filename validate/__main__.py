@@ -47,7 +47,7 @@ def main():
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
         except FileNotFoundError as err:
-            print_index_warning(path, err)
+            print_index_warning(path)
         except (TypeError, ValueError, IOError, OSError) as err:
             errored = True
             print_error(path, err)
