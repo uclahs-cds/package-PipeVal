@@ -231,5 +231,5 @@ def print_success(path, file_type):
     print(f"Input: {path} is valid {file_type}")
 
 def print_index_warning(path, err):
-    '''Prints success message'''
+    '''Prints warning message'''
     print(f"Warning: {str(path)} {str(err)}")
