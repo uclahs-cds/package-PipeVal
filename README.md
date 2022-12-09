@@ -39,7 +39,7 @@ When used as a standalone command line tool, the following dependencies must be 
 
 |tool|
 |----|
-|python 3.8|
+|python 3.10|
 |vcftools 0.1.16|
 
 Otherwise, it's recommended to use the docker to keep dependencies bundled.
