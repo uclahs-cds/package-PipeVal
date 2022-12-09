@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add repo source label to Dockerfile
 ### Changed
 - Make `-t` optional, default to `file-input`
+- Explicitly set python version to `3.10`
 ### Fixed
 
 ---
