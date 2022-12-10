@@ -14,3 +14,13 @@ def validate_bam_file(path):
         raise ValueError("pysam bam check failed. No reads in " + str(path))
 
     return True
+
+def check_bam_index(path):
+    '''Checks if index file is present and can be opened'''
+    try:
+        pysam.AlignmentFile(str(path)).check_index()
+    except ValueError as err:
+        raise FileNotFoundError(f'''pysam bam index check failed. Index file for {str(path)}
+            could not be opened or does not exist.''') from err
+
+    return True

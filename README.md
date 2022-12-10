@@ -8,6 +8,7 @@
 
 Files (bam, vcf, fasta, bed, python)
 - Existence of file at given path
+- If BAM, existence of index file in same directory as BAM file
 - File extension type
 - Validity of file for specific file type (i.e. a vcf file is a vcf file)
 - Checksums (generates checksum comparison if .md5 or .sha512 file exists)
@@ -130,6 +131,7 @@ Error: path/to/input Error Message
 ```
 
 If the input is invalid in any way, `validate` will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
+If a BAM input is missing an accompanying BAM index file in the same directory, `validate` will not throw an exception but will print a warning.
 
 ## references:
 Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp

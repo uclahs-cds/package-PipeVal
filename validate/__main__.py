@@ -46,6 +46,8 @@ def main():
                 validate_dir(path, input_type)
             elif input_type in CHECKSUM_GEN_TYPES:
                 create_checksum_file(path, input_type)
+        except FileNotFoundError as err:
+            print_index_warning(path, err)
         except (TypeError, ValueError, IOError, OSError) as err:
             errored = True
             print_error(path, err)
@@ -97,6 +99,7 @@ def validate_file(path, file_type):
     # File level validation
     def bam_case():
         bam.validate_bam_file(path)
+        bam.check_bam_index(path)
 
     def vcf_case():
         vcf.validate_vcf_file(path)
@@ -226,3 +229,7 @@ def print_error(path, err):
 def print_success(path, file_type):
     '''Prints success message'''
     print(f"Input: {path} is valid {file_type}")
+
+def print_index_warning(path, err):
+    '''Prints warning message'''
+    print(f"Warning: {str(path)} {str(err)}")
