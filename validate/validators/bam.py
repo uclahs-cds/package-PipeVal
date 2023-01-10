@@ -24,3 +24,8 @@ def check_bam_index(path):
             could not be opened or does not exist.''') from err
 
     return True
+
+def check_bam(path:Path):
+    ''' Validation for BAMs '''
+    bam.validate_bam_file(path)
+    bam.check_bam_index(path)

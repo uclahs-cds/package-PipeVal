@@ -12,3 +12,7 @@ def validate_vcf_file(path):
         raise ValueError("vcftools validation check failed. " + str(err)) from err
 
     return True
+
+def check_vcf(path:Path):
+    ''' Validation for VCFs '''
+    vcf.validate_vcf_file(path)
