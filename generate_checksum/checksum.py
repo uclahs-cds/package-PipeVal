@@ -47,17 +47,17 @@ def generate_sha512(path:Path):
 
     return sha512_hash.hexdigest() # returns string
 
-def write_checksum_file(path:Path, hash_type:str, hash:str):
+def write_checksum_file(path:Path, hash_type:str, computed_hash:str):
     ''' Write checksum to file '''
     with open(str(path) + '.' + hash_type, 'w') as checksum_file:
-        checksum_file.write(hash + '  ' + str(path) + '\n')
+        checksum_file.write(computed_hash + '  ' + str(path) + '\n')
 
     print(f'{hash_type} checksum generated for {str(path)}')
 
 def generate_checksum(args):
     ''' Function to generate checksum(s) '''
 
-    CHECKSUM_GEN_FUNCTIONS = {
+    checksum_gen_functions = {
         'md5': generate_md5,
         'sha512': generate_sha512
     }
@@ -66,7 +66,7 @@ def generate_checksum(args):
 
     for path in [Path(pathname) for pathname in args.path]:
         try:
-            checksum = CHECKSUM_GEN_FUNCTIONS[args.type](path)
+            checksum = checksum_gen_functions[args.type](path)
             write_checksum_file(path, args.type, checksum)
         except KeyError as key_err:
             all_checksums_generated = False
