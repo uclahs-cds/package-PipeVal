@@ -1,9 +1,26 @@
 ''' Console script main entrance '''
 import argparse
 import sys
+from generate_checksum import __version__
+from generate_checksum.checksum import generate_checksum
+
+def parse_args():
+    """ Parse arguments """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
+    parser.add_argument('-t', '--type', help='Checksum type',
+        choices=['md5', 'sha512'],
+        default='sha512')
+    parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
+
+    parser.set_defaults(func=run_validate)
+
+    return parser.parse_args()
 
 def main():
     ''' Main entrance '''
+    args = parse_args()
+    args.func(args)
 
 if __name__=='__main__':
     main()

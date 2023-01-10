@@ -1,6 +1,5 @@
 ''' Console script main entrance '''
 import argparse
-import sys
 from validate import __version__
 from validate.validate import run_validate
 

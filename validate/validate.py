@@ -1,5 +1,7 @@
 from pathlib import Path
 import sys
+import os
+import hashlib
 import warnings
 
 from validate.validators.bam import check_bam
@@ -49,7 +51,7 @@ def validate_file(path:Path, file_type:str):
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
     if (detected_file_type != UNKNOWN_FILE_TYPE and 
-        detect_file_type != GENERIC_FILE_TYPE and
+        file_type != GENERIC_FILE_TYPE and
         detected_file_type != file_type):
         raise ValueError(f'Indicated and detected file types do not match. '\
             f'Indicated: {file_type}, detected: {detected_file_type}'
@@ -60,12 +62,12 @@ def validate_file(path:Path, file_type:str):
 
     validate_checksums(path)
 
-    CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: pass)(path)
+    CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: None)(path)
 
 def validate_dir(path:Path, dir_type:str):
     ''' Validate directory '''
     path_readable(path)
-    if dir_type == 'directory-w':
+    if dir_type == 'directory-rw':
         path_writable(path)
 
 def validate_checksums(path:Path):
@@ -81,9 +83,44 @@ def validate_checksums(path:Path):
         if not compare_hash('sha512', path, sha512_file_path):
             raise IOError('File is corrupted, sha512 checksum failed.')
 
+def compare_hash(hash_type:str, path:Path, hash_path:Path):
+    ''' Compares existing hash to generated hash '''
+    # Read only the hash and not the filename for comparison
+    existing_hash = hash_path.read_text().split(' ')[0].strip()
+
+    if hash_type == 'md5':
+        return existing_hash == generate_md5(path)
+    if hash_type == 'sha512':
+        return existing_hash == generate_sha512(path)
+    raise IOError('Incorrect hash parameters')
+
+def generate_md5(path:Path):
+    ''' Generates md5 hash '''
+    md5_hash = hashlib.md5()
+
+    with open(path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            md5_hash.update(byte_block)
+
+    return md5_hash.hexdigest() # returns string
+
+def generate_sha512(path:Path):
+    ''' Generates sah512 hash '''
+    sha512_hash = hashlib.sha512()
+
+    with open(path, "rb") as file:
+        for byte_block in iter(lambda: file.read(4096), b""):
+            sha512_hash.update(byte_block)
+
+    return sha512_hash.hexdigest() # returns string
+
 def print_error(path:Path, err:BaseException):
     ''' Prints error message '''
-    print(f"Error: {str(path)} {str(err)}")
+    print(f'Error: {str(path)} {str(err)}')
+
+def print_success(path:Path, file_type:str):
+    ''' Prints success message '''
+    print(f'Input: {path} is valid {file_type}')
 
 def detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
@@ -127,7 +164,7 @@ def run_validate(args):
             print_error(path, err)
             continue
 
-    print(args)
+        print_success(path, args.type)
 
     if not all_files_pass:
         sys.exit(1)

@@ -1,5 +1,7 @@
 '''Helper methods for vcf file validation'''
 
+from pathlib import Path
+
 import subprocess
 
 def validate_vcf_file(path):
@@ -15,4 +17,4 @@ def validate_vcf_file(path):
 
 def check_vcf(path:Path):
     ''' Validation for VCFs '''
-    vcf.validate_vcf_file(path)
+    validate_vcf_file(path)
