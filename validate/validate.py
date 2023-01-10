@@ -1,11 +1,12 @@
+''' File validation functions '''
 from pathlib import Path
 import sys
 import os
-import hashlib
 import warnings
 
 from validate.validators.bam import check_bam
 from validate.validators.vcf import check_vcf
+from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
 DIR_TYPES = ['directory-r', 'directory-rw']
@@ -14,7 +15,6 @@ FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '
     'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
 GENERIC_FILE_TYPE = 'file-input' # file type needs to be detected
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
-CHECKSUM_GEN_TYPES = ['md5-gen', 'sha512-gen']
 CHECK_FUNCTION_SWITCH = {
     'file-bam': check_bam,
     'file-vcf': check_vcf
@@ -69,50 +69,6 @@ def validate_dir(path:Path, dir_type:str):
     path_readable(path)
     if dir_type == 'directory-rw':
         path_writable(path)
-
-def validate_checksums(path:Path):
-    ''' Validate MD5 and/or SHA512 checksums '''
-    # Checksum validation
-    md5_file_path = path.with_suffix(path.suffix + '.md5')
-    if md5_file_path.exists():
-        if not compare_hash('md5', path, md5_file_path):
-            raise IOError('File is corrupted, md5 checksum failed.')
-
-    sha512_file_path = path.with_suffix(path.suffix + '.sha512')
-    if sha512_file_path.exists():
-        if not compare_hash('sha512', path, sha512_file_path):
-            raise IOError('File is corrupted, sha512 checksum failed.')
-
-def compare_hash(hash_type:str, path:Path, hash_path:Path):
-    ''' Compares existing hash to generated hash '''
-    # Read only the hash and not the filename for comparison
-    existing_hash = hash_path.read_text().split(' ')[0].strip()
-
-    if hash_type == 'md5':
-        return existing_hash == generate_md5(path)
-    if hash_type == 'sha512':
-        return existing_hash == generate_sha512(path)
-    raise IOError('Incorrect hash parameters')
-
-def generate_md5(path:Path):
-    ''' Generates md5 hash '''
-    md5_hash = hashlib.md5()
-
-    with open(path, "rb") as file:
-        for byte_block in iter(lambda: file.read(4096), b""):
-            md5_hash.update(byte_block)
-
-    return md5_hash.hexdigest() # returns string
-
-def generate_sha512(path:Path):
-    ''' Generates sah512 hash '''
-    sha512_hash = hashlib.sha512()
-
-    with open(path, "rb") as file:
-        for byte_block in iter(lambda: file.read(4096), b""):
-            sha512_hash.update(byte_block)
-
-    return sha512_hash.hexdigest() # returns string
 
 def print_error(path:Path, err:BaseException):
     ''' Prints error message '''

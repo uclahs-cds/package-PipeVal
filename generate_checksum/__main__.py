@@ -1,6 +1,5 @@
 ''' Console script main entrance '''
 import argparse
-import sys
 from generate_checksum import __version__
 from generate_checksum.checksum import generate_checksum
 
@@ -13,7 +12,7 @@ def parse_args():
         default='sha512')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
 
-    parser.set_defaults(func=run_validate)
+    parser.set_defaults(func=generate_checksum)
 
     return parser.parse_args()
 
