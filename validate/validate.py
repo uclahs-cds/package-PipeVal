@@ -32,7 +32,7 @@ def validate_file(path:Path, file_type:str):
     detected_file_type, file_extension = detect_file_type_and_extension(path)
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
-    if (detected_file_type != UNKNOWN_FILE_TYPE and 
+    if (detected_file_type != UNKNOWN_FILE_TYPE and
         file_type != GENERIC_FILE_TYPE and
         detected_file_type != file_type):
         raise ValueError(f'Indicated and detected file types do not match. '\
