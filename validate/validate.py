@@ -1,11 +1,15 @@
 ''' File validation functions '''
 from pathlib import Path
 import sys
-import os
-import warnings
 
 from validate.validators.bam import check_bam
 from validate.validators.vcf import check_vcf
+from validate.files import (
+    check_compressed,
+    path_exists,
+    path_readable,
+    path_writable
+)
 from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
@@ -20,28 +24,6 @@ CHECK_FUNCTION_SWITCH = {
     'file-vcf': check_vcf
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
-
-def check_compressed(path:Path, file_extension:str):
-    ''' Check file is compressed '''
-    if not file_extension.endswith('.gz'):
-        warnings.warn(f'Warning: file {path} is not zipped.')
-
-def path_exists(path:Path):
-    ''' Check if path exists '''
-    if not path.exists():
-        raise IOError('File or directory does not exist.')
-
-def path_readable(path:Path):
-    '''Checks if path is readable'''
-    if os.access(path, os.R_OK):
-        return True
-    raise IOError('File or directory is not readable.')
-
-def path_writable(path:Path):
-    '''Checks if path is writable'''
-    if os.access(path, os.W_OK):
-        return True
-    raise IOError('File or directory is not writable.')
 
 def validate_file(path:Path, file_type:str):
     ''' Validate a single file '''
