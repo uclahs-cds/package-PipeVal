@@ -1,8 +1,8 @@
 ---
 category: 'tool'
 description: 'PipeVal'
-maintainers: ['abeshlikyan@mednet.ucla.edu']
-contributors: ['Arpi Beshlikyan']
+maintainers: ['yashpatel@mednet.ucla.edu']
+contributors: ['Arpi Beshlikyan', 'Yash Patel']
 languages: ['python', 'Dockerfile']
 version: ['3.0.0']
 purpose_of_tool: 'Validates different parameters in NF scripts/pipelines'
