@@ -22,10 +22,10 @@ Directories (read or read-write)
 ### input types:
 The validation action can be specified using the `-t` tag. If not specified, it defaults to `file-input`.
 
-|file types|directory types|checksum types|
-|----------|---------------|--------------|
-|file-bam| directory-r | sha512-gen |
-|file-vcf| directory-rw | md5-gen |
+|file types|directory types|
+|----------|---------------|
+|file-bam| directory-r |
+|file-vcf| directory-rw |
 |file-fasta|
 |file-bed|
 |file-py|
@@ -109,12 +109,14 @@ Using "directory-r" for read permissions, and "directory-rw" for read and write 
 To generate a sha512 or md5 checksum file using this tool, run the following
 
 ```
-validate -t md5-gen path/to/file.ext
+generate-checksum -t md5 path/to/file.ext
 ```
 
 ```
-validate -t sha512-gen path/to/file.ext
+generate-checksum -t sha512 path/to/file.ext
 ```
+
+Available types: `md5`, `sha512`
 
 It should create a checksum file at the path/to/file.ext.{checksum_ext}
 
