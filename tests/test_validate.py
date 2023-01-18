@@ -1,4 +1,4 @@
-import pytest
+import unittest
 from pathlib import Path
 from validate import validate
 
@@ -47,6 +47,9 @@ def test__detect_file_type__bam():
 
 def test__detect_file_type__unknown():
     assert validate.detect_file_type('.something.vcf') == 'file-unknown'
+
+def test__detect_file_type__py():
+    assert validate.detect_file_type('.py') == 'file-py'
 
 def test__detect_file_type__unsupported_compression():
     assert validate.detect_file_type('.bam.gz') == 'file-unknown'

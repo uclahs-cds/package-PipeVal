@@ -26,7 +26,7 @@ CHECK_FUNCTION_SWITCH = {
 CHECK_COMPRESSED = ['file-vcf', 'file-fastq', 'file-bed']
 COMPRESSION_TYPES = ['.gz']
 
-def validate_file(path:Path):
+def validate_file(path:Path, file_type:str):
     ''' Validate a single file '''
     path_exists(path)
     file_extension = detect_extension(path)
@@ -34,6 +34,12 @@ def validate_file(path:Path):
 
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
+    if (detected_file_type != UNKNOWN_FILE_TYPE and
+        file_type != GENERIC_FILE_TYPE and
+        detected_file_type != file_type):
+        raise ValueError(f'Indicated and detected file types do not match. '\
+            f'Indicated: {file_type}, detected: {detected_file_type}'
+        )
     if detected_file_type == UNKNOWN_FILE_TYPE:
         raise TypeError(f'File {file_extension} is not supported')
     if detected_file_type in CHECK_COMPRESSED:
