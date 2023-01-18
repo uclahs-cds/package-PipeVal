@@ -72,7 +72,7 @@ def generate_checksum(args):
             all_checksums_generated = False
             print(f'Invalid checksum type. {str(key_err)}')
             continue
-        except (IOError, PermissionError, OSError) as err:
+        except (IOError, PermissionError, OSError, FileNotFoundError) as err:
             all_checksums_generated = False
             print(f'Failed to write checksum for {str(path)}: {str(err)}')
             continue
