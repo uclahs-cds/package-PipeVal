@@ -1,5 +1,7 @@
 '''Helper methods for vcf file validation'''
 
+from pathlib import Path
+
 import subprocess
 
 def validate_vcf_file(path):
@@ -12,3 +14,7 @@ def validate_vcf_file(path):
         raise ValueError("vcftools validation check failed. " + str(err)) from err
 
     return True
+
+def check_vcf(path:Path):
+    ''' Validation for VCFs '''
+    validate_vcf_file(path)

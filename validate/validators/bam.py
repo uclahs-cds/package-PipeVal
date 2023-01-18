@@ -1,5 +1,7 @@
 '''Helper methods for bam file validation'''
 
+from pathlib import Path
+
 import pysam
 
 def validate_bam_file(path):
@@ -20,7 +22,12 @@ def check_bam_index(path):
     try:
         pysam.AlignmentFile(str(path)).check_index()
     except ValueError as err:
-        raise FileNotFoundError(f'''pysam bam index check failed. Index file for {str(path)}
-            could not be opened or does not exist.''') from err
+        raise FileNotFoundError(f'pysam bam index check failed. Index file for {str(path)}'\
+            'could not be opened or does not exist.') from err
 
     return True
+
+def check_bam(path:Path):
+    ''' Validation for BAMs '''
+    validate_bam_file(path)
+    check_bam_index(path)
