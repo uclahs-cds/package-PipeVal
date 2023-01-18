@@ -23,27 +23,23 @@ CHECK_FUNCTION_SWITCH = {
     'file-bam': check_bam,
     'file-vcf': check_vcf
 }
-CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
+CHECK_COMPRESSED = ['file-vcf', 'file-fastq', 'file-bed']
+COMPRESSION_TYPES = ['.gz']
 
-def validate_file(path:Path, file_type:str):
+def validate_file(path:Path):
     ''' Validate a single file '''
     path_exists(path)
+    file_extension = detect_extension(path)
+    detected_file_type = detect_file_type(file_extension)
 
-    detected_file_type, file_extension = detect_file_type_and_extension(path)
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
-    if (detected_file_type != UNKNOWN_FILE_TYPE and
-        file_type != GENERIC_FILE_TYPE and
-        detected_file_type != file_type):
-        raise ValueError(f'Indicated and detected file types do not match. '\
-            f'Indicated: {file_type}, detected: {detected_file_type}'
-        )
-
-    if detected_file_type in CHECK_COMPRESSION_TYPES:
+    if detected_file_type == UNKNOWN_FILE_TYPE:
+        raise TypeError(f'File {file_extension} is not supported')
+    if detected_file_type in CHECK_COMPRESSED:
         check_compressed(path, file_extension)
 
     validate_checksums(path)
-
     CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: None)(path)
 
 def validate_dir(path:Path, dir_type:str):
@@ -60,22 +56,19 @@ def print_success(path:Path, file_type:str):
     ''' Prints success message '''
     print(f'Input: {path} is valid {file_type}')
 
-def detect_file_type_and_extension(path:Path):
-    ''' File type and extension detection '''
+def detect_extension(path:Path):
+    ''' File extension detection '''
     # Starting from the end, build up extension with each '.' separated part and try matching
     # resulting extension
     full_extension = ''
     for suffix in path.suffixes[::-1]:
         full_extension = suffix + full_extension
-        extension_type = check_extension(full_extension)
-
-        if extension_type != UNKNOWN_FILE_TYPE:
-            return extension_type, full_extension
-
+        if full_extension not in COMPRESSION_TYPES:
+            return full_extension
     # No matching extension found so return unknown type and full extension
-    return UNKNOWN_FILE_TYPE, full_extension
+    return full_extension
 
-def check_extension(extension:str):
+def detect_file_type(extension:str):
     ''' Check for matching file type for extension '''
     for file_type in FILE_TYPES_DICT:
         if extension in FILE_TYPES_DICT.get(file_type):
