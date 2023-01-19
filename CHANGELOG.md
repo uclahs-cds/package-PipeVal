@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Make `-t` optional. Auto-detect file-types by default.
 - Explicitly set python version to `3.10`
 - Split validation and checksum generation into different CLI commands
+- Split detect extension and detect file type into separate commands
 - Re-organize functions
 ### Fixed
 
