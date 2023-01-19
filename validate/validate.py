@@ -17,7 +17,6 @@ DIR_TYPES = ['directory-r', 'directory-rw']
 FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
     'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
     'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
-GENERIC_FILE_TYPE = 'file-input' # file type needs to be detected
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECK_FUNCTION_SWITCH = {
     'file-bam': check_bam,
