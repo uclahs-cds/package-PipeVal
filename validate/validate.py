@@ -81,13 +81,12 @@ def run_validate(args):
 
     all_files_pass = True
 
-    validation_function = validate_file
-    if args.type in DIR_TYPES:
-        validation_function = validate_dir
-
     for path in [Path(pathname) for pathname in args.path]:
         try:
-            validation_function(path)
+            if args.type in DIR_TYPES:
+                validate_dir(path, args.type)
+            else:
+                validate_file(path)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
