@@ -4,15 +4,15 @@ from validate import validate
 
 def test__detect_extension__uncompressed_files():
     '''Tests detection of all supported uncompressed extensions'''
-    assert validate.detect_extension(Path('file.something.vcf')) == '.vcf'
-    assert validate.detect_extension(Path('file.something.bed')) == '.bed'
-    assert validate.detect_extension(Path('file.something.fastq')) == '.fastq'
-    assert validate.detect_extension(Path('file.something.fq')) == '.fq'
-    assert validate.detect_extension(Path('file.something.fasta')) == '.fasta'
-    assert validate.detect_extension(Path('file.something.fa')) == '.fa'
-    assert validate.detect_extension(Path('file.something.bam')) == '.bam'
-    assert validate.detect_extension(Path('file.something.cram')) == '.cram'
-    assert validate.detect_extension(Path('file.something.sam')) == '.sam'
+    assert validate.detect_extension(Path('file.name.vcf')) == '.vcf'
+    assert validate.detect_extension(Path('file.name.bed')) == '.bed'
+    assert validate.detect_extension(Path('file.name.fastq')) == '.fastq'
+    assert validate.detect_extension(Path('file.name.fq')) == '.fq'
+    assert validate.detect_extension(Path('file.name.fasta')) == '.fasta'
+    assert validate.detect_extension(Path('file.name.fa')) == '.fa'
+    assert validate.detect_extension(Path('file.name.bam')) == '.bam'
+    assert validate.detect_extension(Path('file.name.cram')) == '.cram'
+    assert validate.detect_extension(Path('file.name.sam')) == '.sam'
 
 def test__detect_extension__script():
     '''Tests detection of script extension'''
@@ -20,10 +20,10 @@ def test__detect_extension__script():
 
 def test__detect_extension__compressed_files():
     '''Tests detection of all supported compressed full extensions'''
-    assert validate.detect_extension(Path('file.something.vcf.gz')) == '.vcf.gz'
-    assert validate.detect_extension(Path('file.something.bed.gz')) ==  '.bed.gz'
-    assert validate.detect_extension(Path('file.something.fastq.gz')) ==  '.fastq.gz'
-    assert validate.detect_extension(Path('file.something.fq.gz')) == '.fq.gz'
+    assert validate.detect_extension(Path('file.name.vcf.gz')) == '.vcf.gz'
+    assert validate.detect_extension(Path('file.name.bed.gz')) ==  '.bed.gz'
+    assert validate.detect_extension(Path('file.name.fastq.gz')) ==  '.fastq.gz'
+    assert validate.detect_extension(Path('file.name.fq.gz')) == '.fq.gz'
 
 def test__detect_file_type__vcf():
     '''Tests detection of file type from supported vcf extensions'''
@@ -55,7 +55,7 @@ def test__detect_file_type__bam():
 
 def test__detect_file_type__unknown():
     '''Tests detection of unsupported file type'''
-    assert validate.detect_file_type('.something.vcf') == 'file-unknown'
+    assert validate.detect_file_type('.name.vcf') == 'file-unknown'
 
 def test__detect_file_type__py():
     '''Tests detection of .py file type'''
