@@ -14,7 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add repo source label to Dockerfile
 - Add check for existence of index file
 ### Changed
-- Make `-t` optional, default to `file-input`
+- Make `-t` optional. Auto-detect file-types by default.
 - Explicitly set python version to `3.10`
 - Split validation and checksum generation into different CLI commands
 - Re-organize functions
