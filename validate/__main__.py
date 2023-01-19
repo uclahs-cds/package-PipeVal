@@ -9,8 +9,7 @@ def parse_args():
     parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
     parser.add_argument('-t', '--type', help='input data type',
         choices=['file-input', 'file-bam', 'file-vcf', 'file-fasta', 'file-fastq',
-        'file-bed', 'file-py', 'directory-rw', 'directory-r'],
-        default='file-input')
+        'file-bed', 'file-py', 'directory-rw', 'directory-r'])
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
 
     parser.set_defaults(func=run_validate)
