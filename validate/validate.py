@@ -10,6 +10,7 @@ from validate.files import (
     path_readable,
     path_writable
 )
+from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
 DIR_TYPES = ['directory-r', 'directory-rw']
@@ -35,6 +36,7 @@ def validate_file(path:Path, detected_file_type:str, file_extension:str):
     if detected_file_type in CHECK_COMPRESSED:
         check_compressed(path, file_extension)
 
+    validate_checksums(path)
     CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: None)(path)
 
 def validate_dir(path:Path, dir_type:str):
