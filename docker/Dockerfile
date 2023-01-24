@@ -1,4 +1,7 @@
-FROM blcdsdockerregistry/bl-base:1.1.0 AS builder
+ARG MINIFORGE_VERSION=22.9.0-2
+ARG UBUNTU_VERSION=20.04
+
+FROM condaforge/mambaforge:${MINIFORGE_VERSION} AS builder
 
 # Use conda to install tools and dependencies into /usr/local
 ARG PYTHON_VERSION=3.10
@@ -13,7 +16,7 @@ RUN mamba create -qy -p /usr/local \
     pip
 
 # Deploy the target tools into a base image
-FROM ubuntu:20.04
+FROM ubuntu:${UBUNTU_VERSION} AS final
 COPY --from=builder /usr/local /usr/local
 
 # create directory for python script
