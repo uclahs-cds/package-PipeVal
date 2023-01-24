@@ -27,6 +27,7 @@ RUN mkdir -p /tool/validate/
 COPY setup.py /tool
 COPY setup.cfg /tool
 COPY pyproject.toml /tool
+COPY /generate_checksum /tool/generate_checksum
 COPY /validate/ /tool/validate/
 WORKDIR /tool
 RUN pip install build && \
