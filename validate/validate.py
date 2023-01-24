@@ -59,7 +59,7 @@ def detect_extension(path:Path):
     # resulting extension
     full_extension = ''
     for suffix in path.suffixes[::-1]:
-        full_extension = suffix + full_extension
+        full_extension = suffix.lower() + full_extension
         if full_extension not in COMPRESSION_TYPES:
             return full_extension
     # No matching extension found so return unknown type and full extension
