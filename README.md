@@ -96,8 +96,6 @@ validate path/to/file.ext
 ```
 
 ##### Directory Validation
-To run validation for checking basic directory permissions you can run the following
-
 To check for read and write permissions, use `directory-rw`:
 ```
 validate -t directory-rw path/to/directory/
