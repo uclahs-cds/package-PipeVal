@@ -6,7 +6,7 @@ Pipeval is designed to be an easy to use CLI tool that can be used to validate d
 Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
 
 
-**Requirements:**
+**Requirements:**<br>
 When used as a standalone command line tool, the following dependencies must be installed:
 
 |tool|
@@ -14,25 +14,23 @@ When used as a standalone command line tool, the following dependencies must be 
 |python 3.10|
 |vcftools 0.1.16|
 
-Otherwise, it's recommended to use the docker to keep dependencies bundled.
-
-
 ### Execution Options
-_Running the standalone command line tool_
+
+**Running the standalone command line tool:**
 ```
 validate path/to/file.bam
 ```
 
-_Running as interactive docker session_
+**Running as interactive docker session:**
 ```
 docker run -it pipeval:3.0.0 /bin/bash
 (bash): validate path/to/file.bam
 ```
+_Note: Update the tag to the latest version as necessary._
 
-_Running as Nextflow process with docker_
-```
-check the example under /example/ or the pipeline-align-DNA repository
-```
+**Running as Nextflow process with docker:**<br>
+See the example under [/example/](https://github.com/uclahs-cds/public-tool-PipeVal/tree/main/example) or the pipeline-align-DNA repository
+
 
 
 ## Functions
@@ -41,23 +39,22 @@ check the example under /example/ or the pipeline-align-DNA repository
 The tool will try to automatically detect the file type and do file specific validation. 
 If the file type is unsupported, it will just do a simple existence check.
 
-Note: All input types will be checked for existence.
+_Note: All input types will be checked for existence._
 
 **Supported Inputs**
 
-| file type | description |
-| -------| ------ |
-| bam | Validate bam/cram/sam using `pysam`. Check for index file in same directory as BAM |
+| File Type | Description |
+| :-------: | ------ |
+| bam | Validate bam/cram/sam using `pysam`. <br>Check for index file in same directory as BAM. |
 | vcf | Validate vcf using `vcftools` |
 | fasta |  |
 | bed | |
 | py | |
 
-directory checks
-| type name | description |
-| -------| ------------ |
-|directory-r | check if directory is readable |
-|directory-rw | check if directory is readable and writeable |
+| Directory Check Name | Description |
+| :-------: | ------------ |
+|directory-r | Check if directory is readable |
+|directory-rw | Check if directory is readable and writeable |
 
 
 **Expected Output**
