@@ -1,41 +1,12 @@
 # PipeVal
-> An easy to use CLI tool that can be used to validate different parameters in your NF script/pipeline. Can be used standalone or using a Docker container.
 
-## specs
+## Overview
+Pipeval is designed to be an easy to use CLI tool that can be used to validate different parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
 
-### function:
-> A. Validates your input files and directories for the following characteristics.
+Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
 
-Files (bam, vcf, fasta, bed, python)
-- Existence of file at given path
-- If BAM, existence of index file in same directory as BAM file
-- File extension type
-- Validity of file for specific file type (i.e. a vcf file is a vcf file)
-- Checksums (generates checksum comparison if .md5 or .sha512 file exists)
 
-Directories (read or read-write)
-- Existence of directory at given path
-- Readability, writability
-
-> B. Generates checksum files and compares checksum files.
-
-### input types:
-The validation action can be specified using the `-t` tag. If not specified, it defaults to `file-input`.
-
-|file types|directory types|
-|----------|---------------|
-|file-bam| directory-r |
-|file-vcf| directory-rw |
-|file-fasta|
-|file-bed|
-|file-py|
-|file-input|
-
-If an input type is specified as "file-input", it will automatically try to match the file type or simply check for existence/readability.
-If an input type is one of the checksum types, it will create a new checksum file based on the input file path.
-All input types regardless will be checked for existence.
-
-### requirements:
+**Requirements:**
 When used as a standalone command line tool, the following dependencies must be installed:
 
 |tool|
@@ -45,55 +16,43 @@ When used as a standalone command line tool, the following dependencies must be 
 
 Otherwise, it's recommended to use the docker to keep dependencies bundled.
 
-## usage
+## Functions
 
-### parameters:
+### Validation
 
-Required arg
-- _path_ path of one or more files or directories to validate or generate checksum for
+**Supported Inputs**
 
-Optional args
-- _-t, --type_ specific input type
-- _-h, --help_ show this help message and exit
 
-### how to use:
+Note: All input types will be checked for existence.
 
-_Running the standalone command line tool_
-```
-validate -t file-bam path/to/file.bam
-```
+| file type | description |
+| -------| ------ |
+| bam | Validate bam/cram/sam using `pysam`. Check for index file in same directory as BAM |
+| vcf | Validate vcf using `vcftools` |
+| fasta |  |
+| bed | |
+| py | |
 
-_Running as interactive docker session_
-```
-docker run -it validate:1.0.0 /bin/bash
-(bash): validate -t file-input path/to/file.bam
-```
 
-_Running as Nextflow process with docker_
-```
-check the example under /example/ or the pipeline-align-DNA repository
-```
 
-### usage commands:
-#### file specific validation
-Currently file type specific validation is supported for the following:
-| type | tool |
-|------|------|
-| bam | pysam |
-| vcf | vcftools |
+directory checks
+| type name | description |
+| -------| ------------ |
+|directory-r | check if directory is readable |
+|directory-rw | check if directory is readable and writeable |
 
-To explicitly check a single file type, run
-```
-validate -t file-py path/to/file.py
-```
-Where file-py can be replaced with any file type listed in the input types table.
+#### How To Run
+The validation action can be specified using the `-t` tag. If not specified, it defaults to `file`. If an input type is specified as "file" (default), it will automatically try to match the file type.
+
+##### File Validation
+
 To automatically detect any or multiple file types, run
 ```
-validate -t file-input path/to/file.ext
+validate path/to/file.ext
 ```
 The tool will try to automatically detect the file type and do file specific validation, and if the file type is unsupported, will just do a simple existence check.
 
-#### directory specific validation
+##### Directory Validation
 To run validation for checking basic directory permissions you can run the following
 
 ```
@@ -105,7 +64,31 @@ validate -t directory-r path/to/directory/
 
 Using "directory-r" for read permissions, and "directory-rw" for read and write permissions.
 
-#### checksum generation (beta)
+
+
+### Commands
+
+
+### Generate Checksum
+Generate a new checksum file based on the input file path. Or generates checksum comparison if .md5 or .sha512 file exists.
+
+
+
+
+## Usage
+
+### Parameters
+
+Required arg
+- _path_ path of one or more files or directories to validate or generate checksum for
+
+Optional args
+- _-t, --type_ specific input type
+- _-h, --help_ show this help message and exit
+
+
+
+#### Checksum Generation (beta)
 To generate a sha512 or md5 checksum file using this tool, run the following
 
 ```
@@ -122,7 +105,7 @@ It should create a checksum file at the path/to/file.ext.{checksum_ext}
 
 (TBD: Checksum comparison function still under development)
 
-### output:
+### Output
 Valid input
 ```
 Input: path/to/input is valid
@@ -135,17 +118,34 @@ Error: path/to/input Error Message
 If the input is invalid in any way, `validate` will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
 If a BAM input is missing an accompanying BAM index file in the same directory, `validate` will not throw an exception but will print a warning.
 
-## references:
+### Execution Options
+_Running the standalone command line tool_
+```
+validate path/to/file.bam
+```
+
+_Running as interactive docker session_
+```
+docker run -it pipeval:3.0.0 /bin/bash
+(bash): validate path/to/file.bam
+```
+
+_Running as Nextflow process with docker_
+```
+check the example under /example/ or the pipeline-align-DNA repository
+```
+
+## References
 Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
 
-## license:
+## License
 Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
 PipeVal is a tool which can be used to validate the inputs and outputs of various bioinformatic pipelines.
 
-Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2023 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
