@@ -1,7 +1,7 @@
 # PipeVal
 
 ## Overview
-Pipeval is designed to be an easy to use CLI tool that can be used to validate different parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
+Pipeval is an easy to use CLI tool that can be used to validate different inputs and parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
 
 Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
 
@@ -37,15 +37,15 @@ See the example under [/example/](https://github.com/uclahs-cds/public-tool-Pipe
 
 ### Validation
 The tool will try to automatically detect the file type and do file specific validation. 
-If the file type is unsupported, it will just do a simple existence check.
+If the file type is unsupported, it will just do a simple existence and checksum (if MD5 or SHA512 checksums exist) check.
 
-_Note: All input types will be checked for existence._
+_Note: All input types will be checked for existence and checksum matching._
 
 **Supported Inputs**
 
 | File Type | Description |
 | :-------: | ------ |
-| bam | Validate bam/cram/sam using `pysam`. <br>Check for index file in same directory as BAM. |
+| bam | Validate bam/cram/sam using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
 | vcf | Validate vcf using `vcftools` |
 | fasta |  |
 | bed | |
@@ -68,8 +68,7 @@ Invalid input or error
 Error: path/to/input Error Message
 ```
 
-If the input is invalid in any way, `validate` will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
-If a BAM input is missing an accompanying BAM index file in the same directory, `validate` will not throw an exception but will print a warning.
+If the input is invalid in any way, `validate` will exit with a non-zero status code.
 
 
 #### How To Run
@@ -107,7 +106,7 @@ validate -t directory-r path/to/directory/
 ```
 
 ### Generate Checksum
-Generate a new checksum file based on the input file path. Or generates checksum comparison if .md5 or .sha512 file exists.
+Generate a new checksum file based on the input file path. Or generates checksum comparison if `.md5` or `.sha512` file exists.
 
 #### How To Run
 
@@ -117,7 +116,7 @@ Required arg
 - _path_ path of one or more files or directories to validate
 
 Optional args
-- _-t, --type_ specific input type
+- _-t, --type_ checksum type
 - _-h, --help_ show this help message and exit
 
 
@@ -135,7 +134,6 @@ generate-checksum -t sha512 path/to/file.ext
 ```
 
 ## References
-[Initial design doc on Box](https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp)
 
 ## License
 Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
