@@ -56,6 +56,8 @@ _Note: All input types will be checked for existence and checksum matching._
 |directory-r | Check if directory is readable |
 |directory-rw | Check if directory is readable and writeable |
 
+_Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
+
 
 **Expected Output**
 
@@ -67,9 +69,6 @@ Invalid input or error
 ```
 Error: path/to/input Error Message
 ```
-
-If the input is invalid in any way, `validate` will exit with a non-zero status code.
-
 
 #### How To Run
 
