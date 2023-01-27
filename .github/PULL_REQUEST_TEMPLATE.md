@@ -1,61 +1,98 @@
-<!--- Please read each of the following items and confirm by replacing the [ ] with a [X] --->
-## Checklist 
+# Description
+<!--- Briefly describe the changes included in this pull request  --->
 
-### Formatting
+### Closes #...  <!-- edit if this PR closes an Issue -->
+
+---
+## Test Results
+
+### Validation Test
+
+#### BAM
+
+Case 1 - test type: <!-- e.g. fail on invalid, fail on empty, pass on valid, etc.  -->
+- input file(s):
+   ````
+   path/to/input
+   ```
+- command: 
+  ```
+  <command used>
+  ```
+- output: 
+  ```
+  path/to/output
+  ```
+
+#### VCF
+Case 1 - test: <!-- e.g. fail on invalid, fail on empty, pass on valid, etc.  -->
+- input file(s):
+   ```
+   path/to/input
+   ```
+- command: 
+  ```
+  <command used>
+  ```
+- output: 
+  ```
+  path/to/output
+  ```
+
+Case 2 - test: <!-- e.g. pass on valid, fail on invalid, fail on empty, etc.  -->
+- input file(s):
+   ```
+   path/to/input
+   ```
+- command: 
+  ```
+  <command used>
+  ```
+- output: 
+  ```
+  path/to/output
+  ```
+--- 
+### Checksum Test
+
+Case 1 - test: <!-- e.g. pass on valid checksum, fail on missing checksum, etc.  -->
+- input file(s):
+   ```
+   path/to/input
+   ```
+- command: 
+  ```
+  <command used>
+  ```
+- output: 
+  ```
+  path/to/output
+  ```
+
+---
+
+# Checklist
+<!--- Please read each of the following items and confirm by replacing the [ ] with a [X] --->
+
+- [ ] This PR **does *NOT* contain** Protected Health Information [(PHI)](https://ohrpp.research.ucla.edu/hipaa/). A repo may ***need to be deleted*** if such data is uploaded. <br> Disclosing PHI is a ***major problem***[^1] - Even ***a small leak can be costly***[^2].
+  
+- [ ] This PR **does *NOT* contain** germline genetic data[^3], RNA-Seq, DNA methylation, microbiome or other molecular data[^4].
+
+[^1]: [UCLA Health reaches $7.5m settlement over 2015 breach of 4.5m patient records](https://healthitsecurity.com/news/ucla-health-reaches-7.5m-settlement-over-2015-breach-of-4.5m)
+[^2]: [The average healthcare data breach costs $2.2 million, despite the majority of breaches releasing fewer than 500 records.](https://www.ponemon.org/local/upload/file/Sixth%20Annual%20Patient%20Privacy%20%26%20Data%20Security%20Report%20FINAL%206.pdf)
+[^3]: [Genetic information is considered PHI.](https://www.genome.gov/about-genomics/policy-issues/Privacy#:~:text=In%202013%2C%20as%20required%20by,genetic%20information%20for%20underwriting%20purposes.)
+  [Forensic assays can identify patients with as few as 21 SNPs](https://www.sciencedirect.com/science/article/pii/S1525157817305962)
+[^4]: [RNA-Seq](https://www.nature.com/articles/ng.2248), [DNA methylation](https://ieeexplore.ieee.org/document/7958619), [microbiome](https://www.pnas.org/doi/pdf/10.1073/pnas.1423854112), or other molecular data can be used to predict genotypes (PHI) and reveal a patient's identity.
+
+
+- [ ] This PR **does *NOT* contain** other non-plain text files, such as: compressed files, images (*e.g.* `.png`, .`jpeg`), `.pdf`, `.RData`, `.xlsx`, `.doc`, `.ppt`, or other output files.
+
+_&emsp; To automatically exclude such files using a [.gitignore](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files) file, see [here](https://github.com/uclahs-cds/template-base/blob/main/.gitignore) for example._
 
 - [ ] I have read the [code review guidelines](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Guidelines) and the [code review best practice on GitHub check-list](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Best+Practice+on+GitHub+-+Check+List).
 
+- [ ] I have set up or verified the `main` branch protection rule following the [github standards](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=GitHub+Standards#GitHubStandards-Branchprotectionrule) before opening this pull request.
+
 - [ ] The name of the branch is meaningful and well formatted following the [standards](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Best+Practice+on+GitHub+-+Check+List), using [AD_username (or 5 letters of AD if AD is too long)]-[brief_description_of_branch].
-
-- [ ] I have set up or verified the branch protection rule following the [github standards](https://confluence.mednet.ucla.edu/pages/viewpage.action?spaceKey=BOUTROSLAB&title=GitHub+Standards#GitHubStandards-Branchprotectionrule) before opening this pull request.
-
-### File Updates
-
-- [ ] I have ensured that the version number update follows the [versioning standards](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Docker+image+versioning+standardization).
-
-- [ ] I have updated the version number/dependencies and added my name to the maintainer list in the `Dockerfile`.
-
-- [ ] I have updated the version number/feature changes in the `README.md`.
-
-<!--- This acknowledgement is optional if you do not want to be listed--->
-- [ ] I have updated the version number and added my name to the contributors list in the `metadata.yaml`.
-
-- [ ] I have added the changes included in this pull request to the `CHANGELOG.md` under the next release version or unreleased, and updated the date.
-
-<!---If any previous versions have bugs, add "deprecated" in the version tag and list the bug in the corresponding release--->
-- [ ] I have drafted the new version release with any additions/changes and have linked the `CHANGELOG.md` in the release. 
-
-### Docker Hub Auto Build Rules
-
-- [ ] I have created automated build rules following [this page](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/How+to+set+up+automated+builds+for+Docker+Hub) and I have not manually pushed this Docker image to the `blcdsdockerregistry` on [Docker Hub](https://hub.docker.com).
-
-### Docker Image Testing
-
-- [ ] I have tested the Docker image with the `docker run` command as described below.
-
-#### Test the Docker image with at least one sample. Verify the new Docker image works using:
-
-```docker run -u $(id -u):$(id -g) –w <working-directory> -v <directory-you-want-to-mount>:<how-you-want-to-mount-it-within-the-docker> --rm <docker-image-name> <command-to-the-docker-with-all-parameters>```
-
-#### My command: 
-
-```Provide the command you ran here```
-
-## Description
-
-<!--- Briefly describe the changes included in this pull request
- !--- starting with 'Closes #...' if approriate --->
-
-Closes #...
-    
-<!--- Fill out the results section below with the specific test(s) conducted for this docker image.
- !--- Add additional cases as necessary.
- !--- Remove irrelevant points (depending on the docker image being tested.
- !--- Add points as necessary to completely describe the test. --->
-## Testing Results
-
-- Case 1
-    - sample: <!-- e.g. A-mini S2.T-1, A-mini S2.T-n1 -->
-    - input files: <!--path to input file(s) (if more than one, list in indented bullet points below this line)-->
-    - config: <!--path to config file-->
-    - output: <!--path to output directory-->
+  
+- [ ] I have added the major changes included in this pull request to the `CHANGELOG.md` under the next release version or unreleased, and updated the date.
