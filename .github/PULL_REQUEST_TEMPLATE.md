@@ -12,7 +12,7 @@
 
 Case 1 - test type: <!-- e.g. fail on invalid, fail on empty, pass on valid, etc.  -->
 - input file(s):
-   ````
+   ```
    path/to/input
    ```
 - command: 
