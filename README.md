@@ -14,7 +14,7 @@ When used as a standalone command line tool, the following dependencies must be 
 |python 3.10|
 |vcftools 0.1.16|
 
-### Execution Options
+## Execution Options
 
 **Running the standalone command line tool:**
 ```
@@ -31,17 +31,13 @@ _Note: Update the tag to the latest version as necessary._
 **Running as Nextflow process with docker:**<br>
 See the example under [/example/](https://github.com/uclahs-cds/public-tool-PipeVal/tree/main/example) or the pipeline-align-DNA repository
 
-
-
-## Functions
-
-### Validation
-The tool will try to automatically detect the file type and do file specific validation. 
+## Validation
+The tool will attempt to automatically detect the file type and do file specific validation. 
 If the file type is unsupported, it will just do a simple existence and checksum (if MD5 or SHA512 checksums exist) check.
 
 _Note: All input types will be checked for existence and checksum matching._
 
-**Supported Inputs**
+### Supported Inputs
 
 | File Type | Description |
 | :-------: | ------ |
@@ -51,15 +47,10 @@ _Note: All input types will be checked for existence and checksum matching._
 | bed | |
 | py | |
 
-| Directory Check Name | Description |
-| :-------: | ------------ |
-|directory-r | Check if directory is readable |
-|directory-rw | Check if directory is readable and writeable |
-
 _Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
 
 
-**Expected Output**
+### Expected Output
 
 Valid input
 ```
@@ -70,44 +61,29 @@ Invalid input or error
 Error: path/to/input Error Message
 ```
 
-#### How To Run
+### How To Run
 
 **Parameters**
 
 Required args:<br>
 - _`path`_ 
-   - path of one or more files or directories to validate
+   - path of one or more files to validate
 
 Optional args
-- _`-t`, `--type`_
-   - specific input type
 - _`-h`, `--help`_ 
    - show the help message and exit
 
-The validation action can be specified using the `-t` tag. If not specified, it defaults to `file`. If an input type is specified as "file" (default), it will automatically try to match the file type.
-
-##### File Validation
+#### File Validation
 
 To automatically detect any or multiple file types, run
 ```
 validate path/to/file.ext
 ```
 
-##### Directory Validation
-To check for read and write permissions, use `directory-rw`:
-```
-validate -t directory-rw path/to/directory/
-```
-
-To check for read permissions, use `directory-r`:
-```
-validate -t directory-r path/to/directory/
-```
-
-### Generate Checksum
+## Generate Checksum
 Generate a new checksum file based on the input file path. Or generates checksum comparison if `.md5` or `.sha512` file exists.
 
-#### How To Run
+### How To Run
 
 **Parameters**
 
