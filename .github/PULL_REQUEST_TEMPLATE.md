@@ -6,6 +6,9 @@
 ---
 ## Test Results
 
+<!--- Please test the following in a built docker image.  --->
+
+
 ### Validation Test
 
 #### BAM
