@@ -134,6 +134,28 @@ generate-checksum -t sha512 path/to/file.ext
 
 ## References
 
+### Pysam
+
+1. Repository: [pysam-developers/pysam](https://github.com/pysam-developers/pysam)
+
+#### Publications
+
+2.	[Heng Li, Bob Handsaker, Alec Wysoker, Tim Fennell, Jue Ruan, Nils Homer, Gabor Marth, Goncalo Abecasis, Richard Durbin, 1000 Genome Project Data Processing Subgroup, The Sequence Alignment/Map format and SAMtools, Bioinformatics, Volume 25, Issue 16, 15 August 2009, Pages 2078–2079, https://doi.org/10.1093/bioinformatics/btp352](https://academic.oup.com/bioinformatics/article/25/16/2078/204688)
+
+3. [James K Bonfield, John Marshall, Petr Danecek, Heng Li, Valeriu Ohan, Andrew Whitwham, Thomas Keane, Robert M Davies, HTSlib: C library for reading/writing high-throughput sequencing data, GigaScience, Volume 10, Issue 2, February 2021, giab007, https://doi.org/10.1093/gigascience/giab007](https://academic.oup.com/gigascience/article/10/2/giab007/6139334)
+
+4. [Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: 10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7931819/)
+
+### vcftools
+
+5. Repository: [vcftools/vcftools](https://github.com/vcftools/vcftools)
+
+#### Publications
+
+
+6. [Danecek P, Auton A, Abecasis G, Albers CA, Banks E, DePristo MA, Handsaker RE, Lunter G, Marth GT, Sherry ST, McVean G, Durbin R; 1000 Genomes Project Analysis Group. The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PMID: 21653522; PMCID: PMC3137218.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137218/)
+
+
 ## License
 Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
 
