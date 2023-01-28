@@ -1,41 +1,12 @@
 # PipeVal
-> An easy to use CLI tool that can be used to validate different parameters in your NF script/pipeline. Can be used standalone or using a Docker container.
 
-## specs
+## Overview
+Pipeval is an easy to use CLI tool that can be used to validate different inputs and parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
 
-### function:
-> A. Validates your input files and directories for the following characteristics.
+Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
 
-Files (bam, vcf, fasta, bed, python)
-- Existence of file at given path
-- If BAM, existence of index file in same directory as BAM file
-- File extension type
-- Validity of file for specific file type (i.e. a vcf file is a vcf file)
-- Checksums (generates checksum comparison if .md5 or .sha512 file exists)
 
-Directories (read or read-write)
-- Existence of directory at given path
-- Readability, writability
-
-> B. Generates checksum files and compares checksum files.
-
-### input types:
-The validation action can be specified using the `-t` tag. If not specified, it defaults to `file-input`.
-
-|file types|directory types|
-|----------|---------------|
-|file-bam| directory-r |
-|file-vcf| directory-rw |
-|file-fasta|
-|file-bed|
-|file-py|
-|file-input|
-
-If an input type is specified as "file-input", it will automatically try to match the file type or simply check for existence/readability.
-If an input type is one of the checksum types, it will create a new checksum file based on the input file path.
-All input types regardless will be checked for existence.
-
-### requirements:
+**Requirements:**<br>
 When used as a standalone command line tool, the following dependencies must be installed:
 
 |tool|
@@ -43,86 +14,44 @@ When used as a standalone command line tool, the following dependencies must be 
 |python 3.10|
 |vcftools 0.1.16|
 
-Otherwise, it's recommended to use the docker to keep dependencies bundled.
+## Execution Options
 
-## usage
-
-### parameters:
-
-Required arg
-- _path_ path of one or more files or directories to validate or generate checksum for
-
-Optional args
-- _-t, --type_ specific input type
-- _-h, --help_ show this help message and exit
-
-### how to use:
-
-_Running the standalone command line tool_
+**Running the standalone command line tool:**
 ```
-validate -t file-bam path/to/file.bam
+validate path/to/file.bam
 ```
 
-_Running as interactive docker session_
+**Running as interactive docker session:**
 ```
-docker run -it validate:1.0.0 /bin/bash
-(bash): validate -t file-input path/to/file.bam
+docker run -it pipeval:3.0.0 /bin/bash
+(bash): validate path/to/file.bam
 ```
+_Note: Update the tag to the latest version as necessary._
 
-_Running as Nextflow process with docker_
-```
-check the example under /example/ or the pipeline-align-DNA repository
-```
+**Running as Nextflow process with docker:**<br>
+See the example under [/example/](https://github.com/uclahs-cds/public-tool-PipeVal/tree/main/example) or the pipeline-align-DNA repository
 
-### usage commands:
-#### file specific validation
-Currently file type specific validation is supported for the following:
-| type | tool |
-|------|------|
-| bam | pysam |
-| vcf | vcftools |
+## Validation
+The tool will attempt to automatically detect the file type and do file specific validation. 
+If the file type is unsupported, it will just do a simple existence and checksum (if MD5 or SHA512 checksums exist) check.
 
-To explicitly check a single file type, run
-```
-validate -t file-py path/to/file.py
-```
-Where file-py can be replaced with any file type listed in the input types table.
-To automatically detect any or multiple file types, run
-```
-validate -t file-input path/to/file.ext
-```
-The tool will try to automatically detect the file type and do file specific validation, and if the file type is unsupported, will just do a simple existence check.
+_Note: All input types will be checked for existence and checksum matching._
 
-#### directory specific validation
-To run validation for checking basic directory permissions you can run the following
+### Supported Inputs
 
-```
-validate -t directory-rw path/to/directory/
-```
-```
-validate -t directory-r path/to/directory/
-```
+| File Type | Description |
+| :-------: | ------ |
+| bam | Validate bam/cram/sam using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
+| vcf | Validate vcf using `vcftools` |
+| fasta |  |
+| bed | |
+| py | |
 
-Using "directory-r" for read permissions, and "directory-rw" for read and write permissions.
+_Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
 
-#### checksum generation (beta)
-To generate a sha512 or md5 checksum file using this tool, run the following
 
-```
-generate-checksum -t md5 path/to/file.ext
-```
+### Expected Output
 
-```
-generate-checksum -t sha512 path/to/file.ext
-```
-
-Available types: `md5`, `sha512`
-
-It should create a checksum file at the path/to/file.ext.{checksum_ext}
-
-(TBD: Checksum comparison function still under development)
-
-### output:
 Valid input
 ```
 Input: path/to/input is valid
@@ -132,20 +61,85 @@ Invalid input or error
 Error: path/to/input Error Message
 ```
 
-If the input is invalid in any way, `validate` will sys.exit and throw an exception which can be detected by Nextflow and handled accordingly.
-If a BAM input is missing an accompanying BAM index file in the same directory, `validate` will not throw an exception but will print a warning.
+### How To Run
 
-## references:
-Initial design: https://uclahs.box.com/s/eejwmwmdky7wsfcrs8a3jijy70rh6atp
+**Parameters**
 
-## license:
+Required args:<br>
+- _`path`_ 
+   - path of one or more files to validate
+
+Optional args
+- _`-h`, `--help`_ 
+   - show the help message and exit
+
+#### File Validation
+
+To automatically detect any or multiple file types, run
+```
+validate path/to/file.ext
+```
+
+## Generate Checksum
+Generate a new checksum file based on the input file path. Or generates checksum comparison if `.md5` or `.sha512` file exists.
+
+### How To Run
+
+**Parameters**
+
+Required arg
+- _path_ path of one or more files or directories to validate
+
+Optional args
+- _-t, --type_ checksum type
+- _-h, --help_ show this help message and exit
+
+
+#### Checksum Generation (beta)
+Generate a checksum file for the specified file in the same directory. Available types: `md5`, `sha512`
+
+for `md5`:
+```
+generate-checksum -t md5 path/to/file.ext
+```
+
+for `sha512`:
+```
+generate-checksum -t sha512 path/to/file.ext
+```
+
+## References
+
+### Pysam
+
+1. Repository: [pysam-developers/pysam](https://github.com/pysam-developers/pysam)
+
+#### Publications
+
+2.	[Heng Li, Bob Handsaker, Alec Wysoker, Tim Fennell, Jue Ruan, Nils Homer, Gabor Marth, Goncalo Abecasis, Richard Durbin, 1000 Genome Project Data Processing Subgroup, The Sequence Alignment/Map format and SAMtools, Bioinformatics, Volume 25, Issue 16, 15 August 2009, Pages 2078–2079, https://doi.org/10.1093/bioinformatics/btp352](https://academic.oup.com/bioinformatics/article/25/16/2078/204688)
+
+3. [James K Bonfield, John Marshall, Petr Danecek, Heng Li, Valeriu Ohan, Andrew Whitwham, Thomas Keane, Robert M Davies, HTSlib: C library for reading/writing high-throughput sequencing data, GigaScience, Volume 10, Issue 2, February 2021, giab007, https://doi.org/10.1093/gigascience/giab007](https://academic.oup.com/gigascience/article/10/2/giab007/6139334)
+
+4. [Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: 10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7931819/)
+
+### VCFtools
+
+5. Repository: [vcftools/vcftools](https://github.com/vcftools/vcftools)
+
+#### Publications
+
+
+6. [Danecek P, Auton A, Abecasis G, Albers CA, Banks E, DePristo MA, Handsaker RE, Lunter G, Marth GT, Sherry ST, McVean G, Durbin R; 1000 Genomes Project Analysis Group. The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PMID: 21653522; PMCID: PMC3137218.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137218/)
+
+
+## License
 Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
 PipeVal is a tool which can be used to validate the inputs and outputs of various bioinformatic pipelines.
 
-Copyright (C) 2020-2022 University of California Los Angeles ("Boutros Lab") All rights reserved.
+Copyright (C) 2020-2023 University of California Los Angeles ("Boutros Lab") All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
