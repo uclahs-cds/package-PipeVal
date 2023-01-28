@@ -13,15 +13,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add auto-build workflow to push image to `uclahs-cds` registry
 - Add repo source label to Dockerfile
 - Add check for existence of index file
+- Add references for VCFtools and Pysam in README
+
 ### Changed
 - Make `-t` optional, default to `file-input`
 - Explicitly set python version to `3.10`
 - Split validation and checksum generation into different CLI commands
 - Re-organize functions
 - Change builder image to mambaforge in Dockerfile
+- Update README input tables and command examples
 
 ### Fixed
 
+### Removed 
+- Remove deprecated parameter options from README
+- Remove inaccessible design doc link from README
 ---
 
 ## [3.0.0] - 2022-08-03
