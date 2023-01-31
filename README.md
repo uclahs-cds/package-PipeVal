@@ -39,13 +39,13 @@ _Note: All input types will be checked for existence and checksum matching._
 
 ### Supported Inputs
 
-| File Type | Description |
-| :-------: | ------ |
-| BAM | Validate bam/cram/sam using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
-| VCF | Validate vcf using `vcftools` |
-| FASTA |  |
-| BED | |
-| py | |
+| File Type     | Description |
+| :-------:     | :---------: |
+| BAM           | Validate bam/cram/sam using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
+| VCF           | Validate vcf using `vcftools` |
+| FASTA         | |
+| BED           | |
+| Python script | |
 
 _Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
 
