@@ -109,4 +109,6 @@ _&emsp; To automatically exclude such files using a [.gitignore](https://docs.gi
 
 - [ ] I modified the integration test(s) to include the new feature.
 
-- [ ] All existing tests for [this tool] passed locally and/or on the cluster.
+- [ ] All new and previously existing tests passed locally and/or on the cluster.
+
+- [ ] The docker image built successfully on the cluster.
