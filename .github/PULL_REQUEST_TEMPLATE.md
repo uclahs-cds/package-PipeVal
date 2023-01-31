@@ -77,6 +77,8 @@ Case 1 - test: <!-- e.g. pass on valid checksum, fail on missing checksum, etc. 
 # Checklist
 <!--- Please read each of the following items and confirm by replacing the [ ] with a [X] --->
 
+### File Commits
+
 - [ ] This PR **does *NOT* contain** Protected Health Information [(PHI)](https://ohrpp.research.ucla.edu/hipaa/). A repo may ***need to be deleted*** if such data is uploaded. <br> Disclosing PHI is a ***major problem***[^1] - Even ***a small leak can be costly***[^2].
   
 - [ ] This PR **does *NOT* contain** germline genetic data[^3], RNA-Seq, DNA methylation, microbiome or other molecular data[^4].
@@ -87,10 +89,11 @@ Case 1 - test: <!-- e.g. pass on valid checksum, fail on missing checksum, etc. 
   [Forensic assays can identify patients with as few as 21 SNPs](https://www.sciencedirect.com/science/article/pii/S1525157817305962)
 [^4]: [RNA-Seq](https://www.nature.com/articles/ng.2248), [DNA methylation](https://ieeexplore.ieee.org/document/7958619), [microbiome](https://www.pnas.org/doi/pdf/10.1073/pnas.1423854112), or other molecular data can be used to predict genotypes (PHI) and reveal a patient's identity.
 
-
 - [ ] This PR **does *NOT* contain** other non-plain text files, such as: compressed files, images (*e.g.* `.png`, .`jpeg`), `.pdf`, `.RData`, `.xlsx`, `.doc`, `.ppt`, or other output files.
 
 _&emsp; To automatically exclude such files using a [.gitignore](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files) file, see [here](https://github.com/uclahs-cds/template-base/blob/main/.gitignore) for example._
+
+### Code Review Best Practices
 
 - [ ] I have read the [code review guidelines](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Guidelines) and the [code review best practice on GitHub check-list](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Best+Practice+on+GitHub+-+Check+List).
 
@@ -99,3 +102,11 @@ _&emsp; To automatically exclude such files using a [.gitignore](https://docs.gi
 - [ ] The name of the branch is meaningful and well formatted following the [standards](https://confluence.mednet.ucla.edu/display/BOUTROSLAB/Code+Review+Best+Practice+on+GitHub+-+Check+List), using [AD_username (or 5 letters of AD if AD is too long)]-[brief_description_of_branch].
   
 - [ ] I have added the major changes included in this pull request to the `CHANGELOG.md` under the next release version or unreleased, and updated the date.
+
+### Testing
+
+- [ ] I have added unit tests for the new feature(s).
+
+- [ ] I modified the integration test(s) to include the new feature.
+
+- [ ] All existing tests for [this tool] passed locally and/or on the cluster.
