@@ -17,7 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 - Make `-t` optional, default to `file-input`
-- Explicitly set python version to `3.10`
+- Explicitly set Python version to `3.10`
 - Split validation and checksum generation into different CLI commands
 - Re-organize functions
 - Change builder image to mambaforge in Dockerfile

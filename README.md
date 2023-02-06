@@ -11,8 +11,8 @@ When used as a standalone command line tool, the following dependencies must be 
 
 |tool|
 |----|
-|python 3.10|
-|vcftools 0.1.16|
+|Python 3.10|
+|VCFtools 0.1.16|
 
 ## Execution Options
 
@@ -39,13 +39,13 @@ _Note: All input types will be checked for existence and checksum matching._
 
 ### Supported Inputs
 
-| File Type | Description |
-| :-------: | ------ |
-| bam | Validate bam/cram/sam using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
-| vcf | Validate vcf using `vcftools` |
-| fasta |  |
-| bed | |
-| py | |
+| File Type     | Validation |
+| :-------:     | :---------: |
+| BAM           | Validate BAM/CRAM/SAM using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
+| VCF           | Validate VCF using `VCFtools` |
+| FASTA         | |
+| BED           | |
+| Python script | |
 
 _Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
 
@@ -133,7 +133,7 @@ generate-checksum -t sha512 path/to/file.ext
 
 
 ## License
-Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu)
+Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Yash Patel (YashPatel@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
