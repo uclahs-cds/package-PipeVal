@@ -58,7 +58,7 @@ Case 2 - test: <!-- e.g. pass on valid, fail on invalid, fail on empty, etc.  --
 --- 
 ### Checksum Test
 
-Case 1 - test: <!-- e.g. pass on valid checksum, fail on missing checksum, etc.  -->
+Case 1 - test: <!-- e.g. pass on valid checksum, fail on invalid checksum, checksum generation, etc.  -->
 - input file(s):
    ```
    path/to/input
