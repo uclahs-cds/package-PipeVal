@@ -24,7 +24,7 @@ Case 1 - test type: <!-- e.g. fail on invalid, fail on empty, pass on valid, etc
   ```
 - output: 
   ```
-  path/to/output
+  path/to/output OR output-message
   ```
 
 #### VCF
@@ -39,7 +39,7 @@ Case 1 - test: <!-- e.g. fail on invalid, fail on empty, pass on valid, etc.  --
   ```
 - output: 
   ```
-  path/to/output
+  path/to/output OR output-message
   ```
 
 Case 2 - test: <!-- e.g. pass on valid, fail on invalid, fail on empty, etc.  -->
@@ -53,7 +53,7 @@ Case 2 - test: <!-- e.g. pass on valid, fail on invalid, fail on empty, etc.  --
   ```
 - output: 
   ```
-  path/to/output
+  path/to/output OR output-message
   ```
 --- 
 ### Checksum Test
@@ -69,7 +69,7 @@ Case 1 - test: <!-- e.g. pass on valid checksum, fail on missing checksum, etc. 
   ```
 - output: 
   ```
-  path/to/output
+  path/to/output OR output-message
   ```
 
 ---
