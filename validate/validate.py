@@ -6,9 +6,7 @@ from validate.validators.bam import check_bam
 from validate.validators.vcf import check_vcf
 from validate.files import (
     check_compressed,
-    path_exists,
-    path_readable,
-    path_writable
+    path_exists
 )
 from generate_checksum.checksum import validate_checksums
 
@@ -46,12 +44,6 @@ def validate_file(path:Path, file_type:str):
 
     CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: None)(path)
 
-def validate_dir(path:Path, dir_type:str):
-    ''' Validate directory '''
-    path_readable(path)
-    if dir_type == 'directory-rw':
-        path_writable(path)
-
 def print_error(path:Path, err:BaseException):
     ''' Prints error message '''
     print(f'Error: {str(path)} {str(err)}')
@@ -88,13 +80,9 @@ def run_validate(args):
 
     all_files_pass = True
 
-    validation_function = validate_file
-    if args.type in DIR_TYPES:
-        validation_function = validate_dir
-
     for path in [Path(pathname) for pathname in args.path]:
         try:
-            validation_function(path, args.type)
+            validate_file(path, args.type)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
