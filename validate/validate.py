@@ -11,11 +11,9 @@ from validate.files import (
 from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
-DIR_TYPES = ['directory-r', 'directory-rw']
 FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
     'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
     'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
-GENERIC_FILE_TYPE = 'file-input' # file type needs to be detected
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECK_FUNCTION_SWITCH = {
     'file-bam': check_bam,
@@ -23,19 +21,13 @@ CHECK_FUNCTION_SWITCH = {
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
 
-def validate_file(path:Path, file_type:str):
+def validate_file(path:Path):
     ''' Validate a single file '''
     path_exists(path)
 
     detected_file_type, file_extension = detect_file_type_and_extension(path)
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
-    if (detected_file_type != UNKNOWN_FILE_TYPE and
-        file_type != GENERIC_FILE_TYPE and
-        detected_file_type != file_type):
-        raise ValueError(f'Indicated and detected file types do not match. '\
-            f'Indicated: {file_type}, detected: {detected_file_type}'
-        )
 
     if detected_file_type in CHECK_COMPRESSION_TYPES:
         check_compressed(path, file_extension)
@@ -58,7 +50,7 @@ def detect_file_type_and_extension(path:Path):
     # resulting extension
     full_extension = ''
     for suffix in path.suffixes[::-1]:
-        full_extension = suffix + full_extension
+        full_extension = suffix.lower() + full_extension
         extension_type = check_extension(full_extension)
 
         if extension_type != UNKNOWN_FILE_TYPE:
@@ -82,7 +74,7 @@ def run_validate(args):
 
     for path in [Path(pathname) for pathname in args.path]:
         try:
-            validate_file(path, args.type)
+            validate_file(path)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
