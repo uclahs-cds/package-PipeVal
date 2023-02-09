@@ -5,8 +5,9 @@ import warnings
 
 def check_compressed(path:Path, file_extension:str):
     ''' Check file is compressed '''
-    if not file_extension.endswith('.gz'):
-        warnings.warn(f'Warning: file {path} is not zipped.')
+    compression_extensions = ['.gz']
+    if not any([file_extension.endswith(ext) for ext in compression_extensions]):
+        warnings.warn(f'Warning: file {path} is not compressed.')
 
 def path_exists(path:Path):
     ''' Check if path exists '''
