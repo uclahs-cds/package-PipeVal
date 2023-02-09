@@ -21,20 +21,19 @@ CHECK_FUNCTION_SWITCH = {
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
 
-def validate_file(path:Path):
+def validate_file(path:Path, file_type:str, file_extension:str):
     ''' Validate a single file '''
     path_exists(path)
 
-    detected_file_type, file_extension = detect_file_type_and_extension(path)
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
 
-    if detected_file_type in CHECK_COMPRESSION_TYPES:
+    if file_type in CHECK_COMPRESSION_TYPES:
         check_compressed(path, file_extension)
 
     validate_checksums(path)
 
-    CHECK_FUNCTION_SWITCH.get(detected_file_type, lambda p: None)(path)
+    CHECK_FUNCTION_SWITCH.get(file_type, lambda p: None)(path)
 
 def print_error(path:Path, err:BaseException):
     ''' Prints error message '''
@@ -74,7 +73,8 @@ def run_validate(args):
 
     for path in [Path(pathname) for pathname in args.path]:
         try:
-            validate_file(path)
+            file_type, file_extension = detect_file_type_and_extension(path)
+            validate_file(path, file_type, file_extension)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
@@ -82,7 +82,7 @@ def run_validate(args):
             print_error(path, err)
             continue
 
-        print_success(path, args.type)
+        print_success(path, file_type)
 
     if not all_files_pass:
         sys.exit(1)
