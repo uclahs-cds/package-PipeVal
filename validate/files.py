@@ -12,15 +12,3 @@ def path_exists(path:Path):
     ''' Check if path exists '''
     if not path.exists():
         raise IOError('File or directory does not exist.')
-
-def path_readable(path:Path):
-    '''Checks if path is readable'''
-    if os.access(path, os.R_OK):
-        return True
-    raise IOError('File or directory is not readable.')
-
-def path_writable(path:Path):
-    '''Checks if path is writable'''
-    if os.access(path, os.W_OK):
-        return True
-    raise IOError('File or directory is not writable.')
