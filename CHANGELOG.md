@@ -28,6 +28,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Removed 
 - Remove deprecated parameter options from README
 - Remove inaccessible design doc link from README
+- Remove directory checking
+- Remove user-specified file type option
+
 ---
 
 ## [3.0.0] - 2022-08-03
