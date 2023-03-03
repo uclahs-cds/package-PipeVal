@@ -61,3 +61,11 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
         path_exists(mock_path)
 
     assert str(io_error.value) == 'File or directory does not exist.'
+
+@mock.patch('validate.files.Path', autospec=True)
+def test__check_compressed__raises_warning_for_uncompressed_path(mock_path)
+    mock_path.return_value = 'mypath'
+    test_extension = '.vcf'
+
+    with pytest.warns():
+        check_compressed(mock_path, test_extension)
