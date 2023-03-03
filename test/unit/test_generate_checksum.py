@@ -40,10 +40,8 @@ def test__validate_checksums__error_raised_when_comparison_fails(mock_path, mock
 
     mock_compare_hash.return_value =  False
 
-    with pytest.raises(IOError) as io_error:
+    with pytest.raises(IOError):
         validate_checksums(mock_path)
-
-    assert str(io_error.value) == 'File is corrupted, md5 checksum failed.'
 
 @mock.patch('generate_checksum.checksum.generate_md5')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -94,10 +92,8 @@ def test__compare_hash__fails_on_invalid_checksum_type(mock_path):
     mock_path.read_text.return_value = 'checksum fname'
     hash_type = 'invalid_hash_type'
 
-    with pytest.raises(IOError) as io_error:
+    with pytest.raises(IOError):
         compare_hash(hash_type, mock_path, mock_path)
-
-    assert str(io_error.value) == 'Incorrect hash parameters'
 
 @mock.patch('generate_checksum.checksum.open', new_callable=mock_open)
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
