@@ -47,4 +47,17 @@ def test__check_extension__correct_unknown_file_type():
 
     assert file_type == expected_type
 
+@mock.patch('validate.files.Path', autospec=True)
+def test__path_exists__returns_true_for_existing_path(mock_path):
+    mock_path.exists.return_value = True
 
+    path_exists(mock_path)
+
+@mock.patch('validate.files.Path', autospec=True)
+def test__path_exists__errors_for_non_existing_path(mock_path):
+    mock_path.exists.return_value = False
+
+    with pytest.raises(IOError) as io_error:
+        path_exists(mock_path)
+
+    assert str(io_error.value) == 'File or directory does not exist.'
