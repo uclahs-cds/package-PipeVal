@@ -133,5 +133,11 @@ def test__validate_vcf_file__fails_vcf_validation(mock_call):
     mock_call.return_value = 1
 
     with pytest.raises(ValueError) as ve_error:
-        validate_vcf_file('aa')
+        validate_vcf_file('some/file')
     assert str(ve_error.value).startswith('vcftools validation check failed.')
+
+@mock.patch('validate.validators.vcf.subprocess.call')
+def test__validate_vcf_file__passes_vcf_validation(mock_call):
+    mock_call.return_value = 0
+
+    validate_vcf_file('some/file')
