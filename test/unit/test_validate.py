@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import mock
 import pytest
 import warnings
-import pysam
+import subprocess
 
 from validate.validate import (
     detect_file_type_and_extension,
@@ -16,6 +16,9 @@ from validate.files import (
 from validate.validators.bam import (
     validate_bam_file,
     check_bam_index
+)
+from validate.validators.vcf import (
+    validate_vcf_file
 )
 
 def test__detect_file_type_and_extension__detects_correct_file_type():
@@ -124,3 +127,11 @@ def test__check_bam_index__index_check_pass(mock_pysam):
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
     check_bam_index('/some/file')
+
+@mock.patch('validate.validators.vcf.subprocess.call')
+def test__validate_vcf_file__fails_vcf_validation(mock_call):
+    mock_call.return_value = 1
+
+    with pytest.raises(ValueError) as ve_error:
+        validate_vcf_file('aa')
+    assert str(ve_error.value).startswith('vcftools validation check failed.')
