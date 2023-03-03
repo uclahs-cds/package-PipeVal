@@ -1,6 +1,7 @@
 from pathlib import Path
 import mock
 import pytest
+import warnings
 
 from validate.validate import (
     detect_file_type_and_extension,
@@ -63,9 +64,16 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
     assert str(io_error.value) == 'File or directory does not exist.'
 
 @mock.patch('validate.files.Path', autospec=True)
-def test__check_compressed__raises_warning_for_uncompressed_path(mock_path)
-    mock_path.return_value = 'mypath'
+def test__check_compressed__raises_warning_for_uncompressed_path(mock_path):
     test_extension = '.vcf'
 
-    with pytest.warns():
+    with pytest.warns(UserWarning) as wr:
+        check_compressed(mock_path, test_extension)
+
+@mock.patch('validate.files.Path', autospec=True)
+def test__check_compressed__raises_warning_for_uncompressed_path(mock_path):
+    test_extension = '.vcf.gz'
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error")
         check_compressed(mock_path, test_extension)
