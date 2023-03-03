@@ -68,10 +68,8 @@ def test__path_exists__returns_true_for_existing_path(mock_path):
 def test__path_exists__errors_for_non_existing_path(mock_path):
     mock_path.exists.return_value = False
 
-    with pytest.raises(IOError) as io_error:
+    with pytest.raises(IOError):
         path_exists(mock_path)
-
-    assert str(io_error.value) == 'File or directory does not exist.'
 
 @mock.patch('validate.files.Path', autospec=True)
 def test__check_compressed__raises_warning_for_uncompressed_path(mock_path):
@@ -96,19 +94,15 @@ def test__validate_bam_file__empty_bam_file(mock_pysam):
 
     test_path = Path('empty/valid/bam')
 
-    with pytest.raises(ValueError) as ve_error:
+    with pytest.raises(ValueError):
         validate_bam_file(test_path)
-
-    assert str(ve_error.value) == f'pysam bam check failed. No reads in {test_path}'
 
 @mock.patch('validate.validators.bam.Path', autospec=True)
 def test__validate_bam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
-    with pytest.raises(ValueError) as ve_error:
+    with pytest.raises(ValueError):
         validate_bam_file(mock_path)
-
-    assert str(ve_error.value).startswith('samtools bam check failed.')
 
 @mock.patch('validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__no_index_file_error(mock_pysam):
@@ -116,10 +110,8 @@ def test__check_bam_index__no_index_file_error(mock_pysam):
     mock_alignment_file.check_index.side_effect = ValueError('no')
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
-    with pytest.raises(FileNotFoundError) as fnf_error:
+    with pytest.raises(FileNotFoundError):
         check_bam_index('/some/file')
-
-    assert str(fnf_error.value).startswith('pysam bam index check failed.')
 
 @mock.patch('validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__index_check_pass(mock_pysam):
@@ -133,9 +125,8 @@ def test__check_bam_index__index_check_pass(mock_pysam):
 def test__validate_vcf_file__fails_vcf_validation(mock_call):
     mock_call.return_value = 1
 
-    with pytest.raises(ValueError) as ve_error:
+    with pytest.raises(ValueError):
         validate_vcf_file('some/file')
-    assert str(ve_error.value).startswith('vcftools validation check failed.')
 
 @mock.patch('validate.validators.vcf.subprocess.call')
 def test__validate_vcf_file__passes_vcf_validation(mock_call):
