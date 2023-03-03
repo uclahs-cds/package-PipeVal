@@ -106,4 +106,21 @@ def test__validate_bam_file__quickcheck_fails(mock_path):
 
     assert str(ve_error.value).startswith('samtools bam check failed.')
 
+@mock.patch('validate.validators.bam.pysam', autospec=True)
+def test__check_bam_index__no_index_file_error(mock_pysam):
+    mock_alignment_file = Mock()
+    mock_alignment_file.check_index.side_effect = ValueError('no')
+    mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
+    with pytest.raises(FileNotFoundError) as fnf_error:
+        check_bam_index('/some/file')
+
+    assert str(fnf_error.value).startswith('pysam bam index check failed.')
+
+@mock.patch('validate.validators.bam.pysam', autospec=True)
+def test__check_bam_index__index_check_pass(mock_pysam):
+    mock_alignment_file = Mock()
+    mock_alignment_file.check_index.return_value = True
+    mock_pysam.AlignmentFile.return_value = mock_alignment_file
+
+    check_bam_index('/some/file')
