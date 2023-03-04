@@ -23,13 +23,13 @@ from validate.validators.vcf import (
 )
 
 def test__detect_file_type_and_extension__detects_correct_file_type():
-    test_path = Path('a.vcf.gz')
+    expected_extension = '.vcf.gz'
+    test_path = Path(f'a{expected_extension}')
     expected_file_type = 'file-vcf'
-    expected_extensions = ['.vcf', '.gz']
 
     file_type, extension = detect_file_type_and_extension(test_path)
 
-    assert extension == ''.join(expected_extensions)
+    assert extension == expected_extension
     assert file_type == expected_file_type
 
 def test__detect_file_type_and_extension__detects_correct_unknown_file_type():
