@@ -44,7 +44,13 @@ def test__validate_checksums__error_raised_when_comparison_fails(mock_path, mock
     with pytest.raises(IOError):
         validate_checksums(mock_path)
 
-@pytest.mark.parametrize('hash_type', [('md5'), ('sha512')])
+@pytest.mark.parametrize(
+    'hash_type',
+    [
+        ('md5'),
+        ('sha512')
+    ]
+)
 @mock.patch('generate_checksum.checksum.generate_sha512')
 @mock.patch('generate_checksum.checksum.generate_md5')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -61,7 +67,13 @@ def test__compare_hash__compares_correct_checksums(
 
     assert compare_hash(hash_type, mock_path, mock_path)
 
-@pytest.mark.parametrize('hash_type', [('md5'), ('sha512')])
+@pytest.mark.parametrize(
+    'hash_type',
+    [
+        ('md5'),
+        ('sha512')
+    ]
+)
 @mock.patch('generate_checksum.checksum.generate_sha512')
 @mock.patch('generate_checksum.checksum.generate_md5')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
