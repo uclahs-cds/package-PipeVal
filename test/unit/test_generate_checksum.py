@@ -3,6 +3,7 @@
 from unittest.mock import mock_open
 import mock
 import pytest
+import hashlib
 
 from generate_checksum.checksum import (
     validate_checksums,
@@ -105,18 +106,19 @@ def test__write_checksum_file__writes_proper_checksum(mock_path, mock_write_open
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 @mock.patch('generate_checksum.checksum.iter')
 def test__generate_md5__return_correct_checksum(mock_iter, mock_path, mock_read_open):
-    md5_checksum = 'd41d8cd98f00b204e9800998ecf8427e'
+    md5_checksum = hashlib.md5()
+    md5_checksum.update(b'')
     mock_iter.return_value = iter([b''])
 
-    assert generate_md5(mock_path) == md5_checksum
+    assert generate_md5(mock_path) == md5_checksum.hexdigest()
 
 # pylint: disable=W0613
 @mock.patch('generate_checksum.checksum.open', new_callable=mock_open)
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 @mock.patch('generate_checksum.checksum.iter')
 def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_read_open):
-    # pylint: disable=C0301
-    sha512_checksum = 'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
+    sha512_checksum = hashlib.sha512()
+    sha512_checksum.update(b'')
     mock_iter.return_value = iter([b''])
 
-    assert generate_sha512(mock_path) == sha512_checksum
+    assert generate_sha512(mock_path) == sha512_checksum.hexdigest()
