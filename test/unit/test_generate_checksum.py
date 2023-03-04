@@ -1,9 +1,9 @@
 # pylint: disable=C0116
 # pylint: disable=C0114
 from unittest.mock import mock_open
+import hashlib
 import mock
 import pytest
-import hashlib
 
 from generate_checksum.checksum import (
     validate_checksums,
