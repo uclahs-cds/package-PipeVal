@@ -71,11 +71,9 @@ def generate_checksum(args):
         except KeyError as key_err:
             all_checksums_generated = False
             print(f'Invalid checksum type. {str(key_err)}')
-            continue
         except (IOError, PermissionError, OSError, FileNotFoundError) as err:
             all_checksums_generated = False
             print(f'Failed to write checksum for {str(path)}: {str(err)}')
-            continue
 
         if not all_checksums_generated:
             sys.exit(1)
