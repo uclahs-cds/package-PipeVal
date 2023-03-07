@@ -130,8 +130,7 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
     validate_vcf_file('some/file')
 
 @mock.patch('validate.validate.print_success')
-@mock.patch('validate.validate.Path', autospec=True)
-def test__run_validate__passes_validation_no_files(mock_print_success, mock_path):
+def test__run_validate__passes_validation_no_files(mock_print_success):
     test_args = SimpleNamespace(path=[])
     mock_print_success.return_value = ''
     run_validate(test_args)
@@ -148,9 +147,7 @@ def test__run_validate__passes_validation_no_files(mock_print_success, mock_path
 @mock.patch('validate.validate.detect_file_type_and_extension')
 @mock.patch('validate.validate.validate_file')
 @mock.patch('validate.validate.print_error')
-@mock.patch('validate.validate.Path', autospec=True)
 def test__run_validate__fails_with_failing_checks(
-    mock_path,
     mock_print_error,
     mock_validate_file,
     mock_detect_file_type_and_extension,
