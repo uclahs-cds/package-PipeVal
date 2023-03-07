@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add repo source label to Dockerfile
 - Add check for existence of index file
 - Add references for VCFtools and Pysam in README
+- Unit tests for existing functions
 
 ### Changed
 - Make `-t` optional, default to `file-input`
