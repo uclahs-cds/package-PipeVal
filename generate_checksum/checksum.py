@@ -75,5 +75,5 @@ def generate_checksum(args):
             all_checksums_generated = False
             print(f'Failed to write checksum for {str(path)}: {str(err)}')
 
-        if not all_checksums_generated:
-            sys.exit(1)
+    if not all_checksums_generated:
+        sys.exit(1)

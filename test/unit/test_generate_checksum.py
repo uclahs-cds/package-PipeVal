@@ -145,7 +145,7 @@ def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_re
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
-def test__generate_checksum__calls_passes_generation_no_files(mock_path, test_args):
+def test__generate_checksum__passes_generation_no_files(mock_path, test_args):
     generate_checksum(test_args)
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
