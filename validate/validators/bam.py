@@ -1,4 +1,4 @@
-'''Helper methods for bam file validation'''
+'''Helper methods for SAM file validation'''
 
 from pathlib import Path
 

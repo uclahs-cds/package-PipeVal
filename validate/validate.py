@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 
 from validate.validators.bam import check_bam
+from validate.validators.sam import check_sam
 from validate.validators.vcf import check_vcf
 from validate.files import (
     check_compressed,
@@ -11,12 +12,19 @@ from validate.files import (
 from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
-FILE_TYPES_DICT = {'file-bam': ['.bam', '.cram', '.sam'], 'file-vcf': ['.vcf', '.vcf.gz'],
-    'file-fasta': ['.fasta', '.fa'], 'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
-    'file-bed': ['.bed', '.bed.gz'], 'file-py': ['.py']}
+FILE_TYPES_DICT = {
+    'file-bam': ['.bam', '.cram'],
+    'file-sam': ['.sam'],
+    'file-vcf': ['.vcf', '.vcf.gz'],
+    'file-fasta': ['.fasta', '.fa'],
+    'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
+    'file-bed': ['.bed', '.bed.gz'],
+    'file-py': ['.py']
+    }
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECK_FUNCTION_SWITCH = {
     'file-bam': check_bam,
+    'file-sam': check_sam,
     'file-vcf': check_vcf
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
