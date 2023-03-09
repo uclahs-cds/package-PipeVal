@@ -1,6 +1,7 @@
 '''Helper methods for vcf file validation'''
 
 from pathlib import Path
+import argparse
 
 import subprocess
 
@@ -15,6 +16,6 @@ def validate_vcf_file(path):
 
     return True
 
-def check_vcf(path:Path):
+def check_vcf(path:Path, args:argparse.Namespace):
     ''' Validation for VCFs '''
     validate_vcf_file(path)
