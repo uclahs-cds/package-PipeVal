@@ -8,6 +8,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
+    parser.add_argument('-r', '--cram-reference', default=None, help='Path to reference file for CRAM')
 
     parser.set_defaults(func=run_validate)
 
