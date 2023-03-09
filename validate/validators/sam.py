@@ -1,6 +1,7 @@
 '''Helper methods for SAM file validation'''
 
 from pathlib import Path
+import argparse
 
 import pysam
 
@@ -17,6 +18,6 @@ def validate_sam_file(path):
 
     return True
 
-def check_sam(path:Path):
+def check_sam(path:Path, args:argparse.Namespace):
     ''' Validation for SAMs '''
     validate_sam_file(path)
