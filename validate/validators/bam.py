@@ -1,6 +1,7 @@
-'''Helper methods for SAM file validation'''
+'''Helper methods for BAM file validation'''
 
 from pathlib import Path
+import argparse
 
 import pysam
 
@@ -27,7 +28,7 @@ def check_bam_index(path):
 
     return True
 
-def check_bam(path:Path):
+def check_bam(path:Path, args:argparse.Namespace):
     ''' Validation for BAMs '''
     validate_bam_file(path)
     check_bam_index(path)
