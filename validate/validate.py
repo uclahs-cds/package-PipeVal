@@ -44,7 +44,7 @@ def validate_file(path:Path, file_type:str, file_extension:str, args:argparse.Na
         check_compressed(path, file_extension)
 
     validate_checksums(path)
-    print('checking')
+
     CHECK_FUNCTION_SWITCH.get(file_type, lambda p, a: None)(path, args)
 
 def print_error(path:Path, err:BaseException):
