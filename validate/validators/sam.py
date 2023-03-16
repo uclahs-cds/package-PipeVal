@@ -18,6 +18,7 @@ def validate_sam_file(path):
 
     return True
 
+# pylint: disable=W0613
 def check_sam(path:Path, args:argparse.Namespace):
     ''' Validation for SAMs '''
     validate_sam_file(path)

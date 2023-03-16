@@ -28,6 +28,7 @@ def check_bam_index(path):
 
     return True
 
+# pylint: disable=W0613
 def check_bam(path:Path, args:argparse.Namespace):
     ''' Validation for BAMs '''
     validate_bam_file(path)
