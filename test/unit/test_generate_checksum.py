@@ -12,7 +12,8 @@ from generate_checksum.checksum import (
     write_checksum_file,
     generate_md5,
     generate_sha512,
-    generate_checksum
+    generate_checksum,
+    CHECKSUM_ARGS
 )
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -140,8 +141,8 @@ def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_re
 @pytest.mark.parametrize(
     'test_args',
     [
-        (SimpleNamespace(path=[], type='md5')),
-        (SimpleNamespace(path=[], type='sha512'))
+        (CHECKSUM_ARGS(path=[], type='md5')),
+        (CHECKSUM_ARGS(path=[], type='sha512'))
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -160,8 +161,8 @@ def test__generate_checksum__fails_with_invalid_type(mock_path):
 @pytest.mark.parametrize(
     'test_args',
     [
-        (SimpleNamespace(path=['some/path'], type='md5')),
-        (SimpleNamespace(path=['some/path'], type='sha512'))
+        (CHECKSUM_ARGS(path=['some/path'], type='md5')),
+        (CHECKSUM_ARGS(path=['some/path'], type='sha512'))
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)

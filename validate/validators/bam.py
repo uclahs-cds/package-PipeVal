@@ -1,5 +1,5 @@
 '''Helper methods for BAM file validation'''
-
+from typing import Union
 from pathlib import Path
 import argparse
 
@@ -29,7 +29,7 @@ def check_bam_index(path):
     return True
 
 # pylint: disable=W0613
-def check_bam(path:Path, args:argparse.Namespace):
+def check_bam(path:Path, args:Union[argparse.Namespace,None]):
     ''' Validation for BAMs '''
     validate_bam_file(path)
     check_bam_index(path)

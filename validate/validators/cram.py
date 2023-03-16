@@ -1,9 +1,14 @@
 '''Helper methods for CRAM file validation'''
-
+from typing import Dict, Union
 from pathlib import Path
-import argparse
+from collections import namedtuple
 
 import pysam
+
+CRAM_ARGS = namedtuple(
+    'args',
+    'cram_reference'
+)
 
 def validate_cram_file(path, reference=None):
     '''Validates cram file'''
@@ -34,7 +39,10 @@ def check_cram_index(path):
 
     return True
 
-def check_cram(path:Path, args:argparse.Namespace):
-    ''' Validation for CRAMs '''
+def check_cram(path:Path, args:Union[CRAM_ARGS,Dict[str, Union[str,None]]]):
+    ''' Validation for CRAMs
+        `args` must contains the following:
+        `cram_reference` is a required key with either a string value or None
+    '''
     validate_cram_file(path, args.cram_reference)
     check_cram_index(path)

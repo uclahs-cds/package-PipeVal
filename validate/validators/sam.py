@@ -1,5 +1,5 @@
 '''Helper methods for SAM file validation'''
-
+from typing import Union
 from pathlib import Path
 import argparse
 
@@ -19,6 +19,6 @@ def validate_sam_file(path):
     return True
 
 # pylint: disable=W0613
-def check_sam(path:Path, args:argparse.Namespace):
+def check_sam(path:Path, args:Union[argparse.Namespace,None]):
     ''' Validation for SAMs '''
     validate_sam_file(path)
