@@ -2,7 +2,6 @@
 # pylint: disable=C0114
 from unittest.mock import mock_open
 import hashlib
-from types import SimpleNamespace
 import mock
 import pytest
 
@@ -151,7 +150,7 @@ def test__generate_checksum__passes_generation_with_no_files(mock_path, test_arg
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__generate_checksum__fails_with_invalid_type(mock_path):
-    test_args = SimpleNamespace(path=['some/path'], type='bad_type')
+    test_args = CHECKSUM_ARGS(path=['some/path'], type='bad_type')
     expected_code = 1
 
     with pytest.raises(SystemExit) as pytest_exit:
