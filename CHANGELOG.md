@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Add references for VCFtools and Pysam in README
 - Unit tests for existing functions
 - Unit tests for main runner functions
+- Add separate checks for SAM and CRAM files
 
 ### Changed
 - Make `-t` optional, default to `file-input`
