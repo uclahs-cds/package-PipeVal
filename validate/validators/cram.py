@@ -19,7 +19,7 @@ def validate_cram_file(path, reference=None):
     else:
         cram_head: pysam.IteratorRowHead = pysam.AlignmentFile(
             str(path), reference_filename=reference).head(1)
-    if next(cram_head, None) is None: #if the iterator is exhausted, next() returns None
+    if next(cram_head, None) is None:
         raise ValueError("pysam cram check failed. No reads in " + str(path))
 
     return True

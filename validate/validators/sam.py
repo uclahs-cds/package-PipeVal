@@ -13,7 +13,7 @@ def validate_sam_file(path):
         raise ValueError("samtools sam check failed. " + str(err)) from err
 
     sam_head: pysam.IteratorRowHead = pysam.AlignmentFile(str(path)).head(1)
-    if next(sam_head, None) is None: #if the iterator is exhausted, next() returns None
+    if next(sam_head, None) is None:
         raise ValueError("pysam sam check failed. No reads in " + str(path))
 
     return True
