@@ -5,7 +5,7 @@ from collections import namedtuple
 from typing import Dict, Union
 from pathlib import Path
 
-CHECKSUM_ARGS = namedtuple(
+ChecksumArgs = namedtuple(
     'args',
     'path, type'
 )
@@ -61,7 +61,7 @@ def write_checksum_file(path:Path, hash_type:str, computed_hash:str):
 
     print(f'{hash_type} checksum generated for {str(path)}')
 
-def generate_checksum(args:Union[CHECKSUM_ARGS,Dict[str, Union[str,list]]]):
+def generate_checksum(args:Union[ChecksumArgs,Dict[str, Union[str,list]]]):
     ''' Function to generate checksum(s)
         `args` must contain the following:
         `path` is a required argument with a value of list of files

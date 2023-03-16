@@ -12,7 +12,7 @@ from generate_checksum.checksum import (
     generate_md5,
     generate_sha512,
     generate_checksum,
-    CHECKSUM_ARGS
+    ChecksumArgs
 )
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -140,8 +140,8 @@ def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_re
 @pytest.mark.parametrize(
     'test_args',
     [
-        (CHECKSUM_ARGS(path=[], type='md5')),
-        (CHECKSUM_ARGS(path=[], type='sha512'))
+        (ChecksumArgs(path=[], type='md5')),
+        (ChecksumArgs(path=[], type='sha512'))
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -150,7 +150,7 @@ def test__generate_checksum__passes_generation_with_no_files(mock_path, test_arg
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__generate_checksum__fails_with_invalid_type(mock_path):
-    test_args = CHECKSUM_ARGS(path=['some/path'], type='bad_type')
+    test_args = ChecksumArgs(path=['some/path'], type='bad_type')
     expected_code = 1
 
     with pytest.raises(SystemExit) as pytest_exit:
@@ -160,8 +160,8 @@ def test__generate_checksum__fails_with_invalid_type(mock_path):
 @pytest.mark.parametrize(
     'test_args',
     [
-        (CHECKSUM_ARGS(path=['some/path'], type='md5')),
-        (CHECKSUM_ARGS(path=['some/path'], type='sha512'))
+        (ChecksumArgs(path=['some/path'], type='md5')),
+        (ChecksumArgs(path=['some/path'], type='sha512'))
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)

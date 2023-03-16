@@ -5,7 +5,7 @@ from collections import namedtuple
 
 import pysam
 
-CRAM_ARGS = namedtuple(
+CramArgs = namedtuple(
     'args',
     'cram_reference'
 )
@@ -39,7 +39,7 @@ def check_cram_index(path):
 
     return True
 
-def check_cram(path:Path, args:Union[CRAM_ARGS,Dict[str, Union[str,None]]]):
+def check_cram(path:Path, args:Union[CramArgs,Dict[str, Union[str,None]]]):
     ''' Validation for CRAMs
         `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
