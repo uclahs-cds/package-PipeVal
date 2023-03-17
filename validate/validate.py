@@ -2,7 +2,6 @@
 from pathlib import Path
 import sys
 from typing import Dict, Union
-import argparse
 
 from validate.validators.bam import check_bam
 from validate.validators.sam import check_sam
