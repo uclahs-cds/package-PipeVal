@@ -1,7 +1,5 @@
 '''Helper methods for BAM file validation'''
-from typing import Union
 from pathlib import Path
-import argparse
 from typing import Dict, Union
 
 import pysam
