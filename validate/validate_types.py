@@ -1,3 +1,4 @@
+'''Type definitions for validation functions'''
 from collections import namedtuple
 
 ValidateArgs = namedtuple(
