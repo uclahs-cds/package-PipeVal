@@ -2,17 +2,10 @@
 # pylint: disable=C0114
 from pathlib import Path
 from unittest.mock import Mock
-from collections import namedtuple
 import warnings
 import mock
 import pytest
 
-from validate.validate import (
-    detect_file_type_and_extension,
-    check_extension,
-    run_validate,
-    validate_file
-)
 from validate.files import (
     check_compressed,
     path_exists
@@ -31,6 +24,13 @@ from validate.validators.cram import (
     validate_cram_file,
     check_cram_index
 )
+from validate.validate import (
+    detect_file_type_and_extension,
+    check_extension,
+    run_validate,
+    validate_file
+)
+from validate.validate_types import ValidateArgs
 
 @pytest.mark.parametrize(
     'expected_extension, expected_file_type',
@@ -199,7 +199,7 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
 
 @mock.patch('validate.validate.print_success')
 def test__run_validate__passes_validation_no_files(mock_print_success):
-    test_args = namedtuple('test_args', 'path')(path=[])
+    test_args = ValidateArgs(path=[], cram_reference=None)
     mock_print_success.return_value = ''
     run_validate(test_args)
 
@@ -220,7 +220,7 @@ def test__run_validate__fails_with_failing_checks(
     mock_validate_file,
     mock_detect_file_type_and_extension,
     test_exception):
-    test_args = namedtuple('test_args', 'path')(path=['some/path'])
+    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
     mock_validate_file.side_effect = test_exception
     mock_detect_file_type_and_extension.return_value = ('', '')
     mock_print_error.return_value = ''

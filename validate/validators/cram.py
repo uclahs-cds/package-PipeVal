@@ -1,16 +1,13 @@
 '''Helper methods for CRAM file validation'''
 from typing import Dict, Union
 from pathlib import Path
-from collections import namedtuple
+from typing import Dict, Union, Optional
 
 import pysam
 
-CramArgs = namedtuple(
-    'args',
-    'cram_reference'
-)
+from validate.validate_types import ValidateArgs
 
-def validate_cram_file(path, reference=None):
+def validate_cram_file(path:Path, reference:str=None):
     '''Validates cram file'''
     try:
         pysam.quickcheck(str(path))
@@ -29,7 +26,7 @@ def validate_cram_file(path, reference=None):
 
     return True
 
-def check_cram_index(path):
+def check_cram_index(path:Path):
     '''Checks if index file is present and can be opened'''
     try:
         pysam.AlignmentFile(str(path)).check_index()
@@ -39,7 +36,7 @@ def check_cram_index(path):
 
     return True
 
-def check_cram(path:Path, args:Union[CramArgs,Dict[str, Union[str,None]]]):
+def check_cram(path:Path, args:Union[ValidateArgs,Dict[str, Optional[str]]]):
     ''' Validation for CRAMs
         `args` must contains the following:
         `cram_reference` is a required key with either a string value or None

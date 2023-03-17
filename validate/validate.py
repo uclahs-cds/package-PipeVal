@@ -1,6 +1,7 @@
 ''' File validation functions '''
 from pathlib import Path
 import sys
+from typing import Dict, Union
 import argparse
 
 from validate.validators.bam import check_bam
@@ -11,6 +12,7 @@ from validate.files import (
     check_compressed,
     path_exists
 )
+from validate.validate_types import ValidateArgs
 from generate_checksum.checksum import validate_checksums
 
 # Currently supported data types
@@ -33,8 +35,15 @@ CHECK_FUNCTION_SWITCH = {
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
 
-def validate_file(path:Path, file_type:str, file_extension:str, args:argparse.Namespace):
-    ''' Validate a single file '''
+def validate_file(
+    path:Path, file_type:str,
+    file_extension:str,
+    args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
+    ''' Validate a single file
+        `args` must contain the following:
+        `path` is a required argument with a value of list of files
+        `cram_reference` is a required argument with either a string value or None
+    '''
     path_exists(path)
 
     if not file_extension:
@@ -78,8 +87,12 @@ def check_extension(extension:str):
 
     return UNKNOWN_FILE_TYPE
 
-def run_validate(args):
-    ''' Function to validate file(s) '''
+def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
+    ''' Function to validate file(s)
+        `args` must contain the following:
+        `path` is a required argument with a value of list of files
+        `cram_reference` is a required argument with either a string value or None
+    '''
 
     all_files_pass = True
 
