@@ -1,7 +1,5 @@
 '''Helper methods for SAM file validation'''
-from typing import Union
 from pathlib import Path
-import argparse
 from typing import Dict, Union
 
 import pysam
@@ -23,7 +21,7 @@ def validate_sam_file(path:Path):
 
 # pylint: disable=W0613
 def check_sam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
-    ''' Validation for SAMs 
+    ''' Validation for SAMs
     `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
     '''
