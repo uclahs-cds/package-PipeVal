@@ -1,5 +1,4 @@
 '''Helper methods for CRAM file validation'''
-from typing import Dict, Union
 from pathlib import Path
 from typing import Dict, Union, Optional
 
