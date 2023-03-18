@@ -1,7 +1,14 @@
 ''' Checksum generation and validation functions '''
 import hashlib
 import sys
+from collections import namedtuple
+from typing import Dict, Union
 from pathlib import Path
+
+ChecksumArgs = namedtuple(
+    'args',
+    'path, type'
+)
 
 def validate_checksums(path:Path):
     ''' Validate MD5 and/or SHA512 checksums '''
@@ -54,8 +61,12 @@ def write_checksum_file(path:Path, hash_type:str, computed_hash:str):
 
     print(f'{hash_type} checksum generated for {str(path)}')
 
-def generate_checksum(args):
-    ''' Function to generate checksum(s) '''
+def generate_checksum(args:Union[ChecksumArgs,Dict[str, Union[str,list]]]):
+    ''' Function to generate checksum(s)
+        `args` must contain the following:
+        `path` is a required argument with a value of list of files
+        `type` is a required argument with a value of string indicating type of checksum
+    '''
 
     checksum_gen_functions = {
         'md5': generate_md5,
@@ -71,11 +82,9 @@ def generate_checksum(args):
         except KeyError as key_err:
             all_checksums_generated = False
             print(f'Invalid checksum type. {str(key_err)}')
-            continue
         except (IOError, PermissionError, OSError, FileNotFoundError) as err:
             all_checksums_generated = False
             print(f'Failed to write checksum for {str(path)}: {str(err)}')
-            continue
 
-        if not all_checksums_generated:
-            sys.exit(1)
+    if not all_checksums_generated:
+        sys.exit(1)

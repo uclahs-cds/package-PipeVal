@@ -10,7 +10,9 @@ from generate_checksum.checksum import (
     compare_hash,
     write_checksum_file,
     generate_md5,
-    generate_sha512
+    generate_sha512,
+    generate_checksum,
+    ChecksumArgs
 )
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -134,3 +136,49 @@ def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_re
     mock_iter.return_value = iter([b''])
 
     assert generate_sha512(mock_path) == sha512_checksum.hexdigest()
+
+@pytest.mark.parametrize(
+    'test_args',
+    [
+        (ChecksumArgs(path=[], type='md5')),
+        (ChecksumArgs(path=[], type='sha512'))
+    ]
+)
+@mock.patch('generate_checksum.checksum.Path', autospec=True)
+def test__generate_checksum__passes_generation_with_no_files(mock_path, test_args):
+    generate_checksum(test_args)
+
+@mock.patch('generate_checksum.checksum.Path', autospec=True)
+def test__generate_checksum__fails_with_invalid_type(mock_path):
+    test_args = ChecksumArgs(path=['some/path'], type='bad_type')
+    expected_code = 1
+
+    with pytest.raises(SystemExit) as pytest_exit:
+        generate_checksum(test_args)
+    assert pytest_exit.value.code == expected_code
+
+@pytest.mark.parametrize(
+    'test_args',
+    [
+        (ChecksumArgs(path=['some/path'], type='md5')),
+        (ChecksumArgs(path=['some/path'], type='sha512'))
+    ]
+)
+@mock.patch('generate_checksum.checksum.Path', autospec=True)
+@mock.patch('generate_checksum.checksum.generate_md5')
+@mock.patch('generate_checksum.checksum.generate_sha512')
+@mock.patch('generate_checksum.checksum.write_checksum_file')
+def test__generate_checksum__fails_with_failed_write(
+    mock_write_checksum_file,
+    mock_generate_sha512,
+    mock_generate_md5,
+    mock_path,
+    test_args):
+    mock_generate_md5.return_value = ''
+    mock_generate_sha512.return_value = ''
+    mock_write_checksum_file.side_effect = IOError('fail write')
+    expected_code = 1
+
+    with pytest.raises(SystemExit) as pytest_exit:
+        generate_checksum(test_args)
+    assert pytest_exit.value.code == expected_code
