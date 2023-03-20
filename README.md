@@ -1,23 +1,36 @@
 # PipeVal
 
 - [Overview](#overview)
+- [Docker](#docker)
 - [Installation](#installation)
-    - [From GitHub](#from-github)
-    - [From local](#from-local)
+    - [From GitHub](#install-directly-from-github)
+    - [From local](#install-from-cloned-repository)
 
 ## Overview
 PipeVal is an easy to use CLI tool that can be used to validate different inputs and parameters in various settings, including Nextflow scripts/pipelines. It can be used standalone or using a Docker container.
 
 Its primary functions are to generate and/or compare checksum files and validate input files.
 
+## Docker
+The tool can be used via the docker image [`ghcr.io/uclahs-cds/pipeval:<tag>`](https://github.com/orgs/uclahs-cds/packages/container/package/pipeval)
 
-**Requirements:**<br>
-When used as a standalone command line tool, the following dependencies must be installed:
+## Installation
+The tool can be installed as a standalone command line tool. The following dependencies must be installed for this option:
+|Tool|Version|
+|:---:|:---:|
+|Python|3.10|
+|VCFtools|0.1.16|
 
-|tool|
-|----|
-|Python 3.10|
-|VCFtools 0.1.16|
+### Install directly from GitHub
+```Bash
+pip install git+ssh://git@github.com/uclahs-cds/public-tool-PipeVal.git
+```
+
+### Install from cloned repository
+```Bash
+cd </path/to/cloned/repository>
+pip install .
+```
 
 ## Execution Options
 
