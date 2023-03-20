@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Re-organize functions
 - Change builder image to mambaforge in Dockerfile
 - Update README input tables and command examples
+- Re-structure README with details of current tool
 
 ### Fixed
 
