@@ -1,9 +1,14 @@
 # PipeVal
 
-## Overview
-Pipeval is an easy to use CLI tool that can be used to validate different inputs and parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
+- [Overview](#overview)
+- [Installation](#installation)
+    - [From GitHub](#from-github)
+    - [From local](#from-local)
 
-Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
+## Overview
+PipeVal is an easy to use CLI tool that can be used to validate different inputs and parameters in various settings, including Nextflow scripts/pipelines. It can be used standalone or using a Docker container.
+
+Its primary functions are to generate and/or compare checksum files and validate input files.
 
 
 **Requirements:**<br>
