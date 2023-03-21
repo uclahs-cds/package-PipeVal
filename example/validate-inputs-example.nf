@@ -37,7 +37,6 @@ process do_something {
 
 workflow {
     input_channel = Channel.of('</path/to/input>')
-    input_channel = Channel.of('/hot/user/yashpatel/public-tool-PipeVal/public-tool-PipeVal/example/a.txt')
     validate_file(input_channel)
     do_something(input_channel, validate_file.out.validation_success)
 }
