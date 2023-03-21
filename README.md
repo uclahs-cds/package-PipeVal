@@ -138,7 +138,7 @@ pytest
 Please see list of [Contributors](https://github.com/uclahs-cds/public-tool-PipeVal/graphs/contributors) at GitHub.
 
 ## License
-Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Yash Patel (YashPatel@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu)
+Author: Yash Patel (YashPatel@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu), Gina Kim (ginakim@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
