@@ -62,7 +62,7 @@ The tool will attempt to automatically detect the file type based on extension a
 #### Supported Types
 
 | File Type     | Validation |
-| :-------:     | :---------: |
+| ---------     | ---------- |
 | BAM           | Validate BAM/CRAM/SAM using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
 | SAM           | Validate SAM file using `pysam`. |
 | CRAM          | Validate CRAM file using `pysam`. <br> Check for existence of an index file in the same directory as the CRAM. <br> Accept an optional reference genome parameter for use with CRAM. <br> In the absence of the parameter, the reference URL from the CRAM header will be used. <br><br>_Note: If a CRAM input is missing an accompanying CRAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
