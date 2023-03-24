@@ -1,111 +1,106 @@
 # PipeVal
 
+- [Overview](#overview)
+- [Docker](#docker)
+- [Installation](#installation)
+    - [From GitHub](#install-directly-from-github)
+    - [From local](#install-from-cloned-repository)
+- [Usage](#usage)
+    - [validate](#validate)
+        - [Supported Types](#supported-types)
+        - [Expected Output](#expected-output)
+    - [generate-checksum](#generate-checksum)
+- [Development](#development)
+- [References](#references)
+- [Discussions](#discussions)
+- [Contributors](#contributors)
+- [License](#license)
+
 ## Overview
-Pipeval is an easy to use CLI tool that can be used to validate different inputs and parameters in your Nextflow script/pipeline. It can be used standalone or using a Docker container.
+PipeVal is an easy to use CLI tool that can be used to validate different inputs and parameters in various settings, including Nextflow scripts/pipelines. It can be used standalone or using a Docker container.
 
-Its primary functions are to generate and/or compare checksum files and validate your input files and directories.
+Its primary functions are to generate and/or compare checksum files and validate input files.
 
+## Docker
+The tool can be used via the docker image [`ghcr.io/uclahs-cds/pipeval:<tag>`](https://github.com/orgs/uclahs-cds/packages/container/package/pipeval)
 
-**Requirements:**<br>
-When used as a standalone command line tool, the following dependencies must be installed:
+## Installation
+The tool can be installed as a standalone command line tool. The following dependencies must be installed for this option:
+|Tool|Version|
+|:---:|:---:|
+|Python|3.10|
+|VCFtools|0.1.16|
 
-|tool|
-|----|
-|Python 3.10|
-|VCFtools 0.1.16|
-
-## Execution Options
-
-**Running the standalone command line tool:**
+### Install directly from GitHub
+```Bash
+pip install git+ssh://git@github.com/uclahs-cds/public-tool-PipeVal.git
 ```
-validate path/to/file.bam
+
+### Install from cloned repository
+```Bash
+cd </path/to/cloned/repository>
+pip install .
 ```
 
-**Running as interactive docker session:**
+## Usage
+### `validate`
 ```
-docker run -it pipeval:3.0.0 /bin/bash
-(bash): validate path/to/file.bam
+usage: validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
+
+positional arguments:
+  path                  one or more paths of files to validate
+
+options:
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+  -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
+                        Path to reference file for CRAM
 ```
-_Note: Update the tag to the latest version as necessary._
 
-**Running as Nextflow process with docker:**<br>
-See the example under [/example/](https://github.com/uclahs-cds/public-tool-PipeVal/tree/main/example) or the pipeline-align-DNA repository
+The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
 
-## Validation
-The tool will attempt to automatically detect the file type and do file specific validation. 
-If the file type is unsupported, it will just do a simple existence and checksum (if MD5 or SHA512 checksums exist) check.
-
-_Note: All input types will be checked for existence and checksum matching._
-
-### Supported Inputs
+#### Supported Types
 
 | File Type     | Validation |
-| :-------:     | :---------: |
+| ---------     | ---------- |
 | BAM           | Validate BAM/CRAM/SAM using `pysam`. <br> Check for an index file in same directory as the BAM.<br><br>_Note: If a BAM input is missing an accompanying BAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
+| SAM           | Validate SAM file using `pysam`. |
+| CRAM          | Validate CRAM file using `pysam`. <br> Check for existence of an index file in the same directory as the CRAM. <br> Accept an optional reference genome parameter for use with CRAM. <br> In the absence of the parameter, the reference URL from the CRAM header will be used. <br><br>_Note: If a CRAM input is missing an accompanying CRAM index file in the same directory,<br> `validate` will not throw an exception but will print a warning._|
 | VCF           | Validate VCF using `VCFtools` |
-| FASTA         | |
-| BED           | |
-| Python script | |
+
 
 _Note: If the input is invalid in any way, `validate` will exit with a non-zero status code._
 
+#### Expected Output
 
-### Expected Output
-
-Valid input
+- Valid input:
 ```
-Input: path/to/input is valid
+Input: path/to/input is valid <file-type>
 ```
-Invalid input or error
+- Invalid input or failed validation
 ```
-Error: path/to/input Error Message
-```
-
-### How To Run
-
-**Parameters**
-
-Required args:<br>
-- _`path`_ 
-   - path of one or more files to validate
-
-Optional args
-- _`-h`, `--help`_ 
-   - show the help message and exit
-
-#### File Validation
-
-To automatically detect any or multiple file types, run
-```
-validate path/to/file.ext
+Error: path/to/input <error message>
 ```
 
-## Generate Checksum
-Generate a new checksum file based on the input file path. Or generates checksum comparison if `.md5` or `.sha512` file exists.
-
-### How To Run
-
-**Parameters**
-
-Required arg
-- _path_ path of one or more files or directories to validate
-
-Optional args
-- _-t, --type_ checksum type
-- _-h, --help_ show this help message and exit
-
-
-#### Checksum Generation (beta)
-Generate a checksum file for the specified file in the same directory. Available types: `md5`, `sha512`
-
-for `md5`:
+### `generate-checksum`
 ```
-generate-checksum -t md5 path/to/file.ext
+usage: generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
+
+positional arguments:
+  path                  one or more paths of files to validate
+
+options:
+  -h, --help            show this help message and exit
+  -t {md5,sha512}, --type {md5,sha512}
+                        Checksum type
+  -v, --version         show program's version number and exit
 ```
 
-for `sha512`:
-```
-generate-checksum -t sha512 path/to/file.ext
+## Development
+
+Testing for PipeVal itself can be done through `pytest` by running the following:
+```Bash
+pytest
 ```
 
 ## References
@@ -132,8 +127,18 @@ generate-checksum -t sha512 path/to/file.ext
 6. [Danecek P, Auton A, Abecasis G, Albers CA, Banks E, DePristo MA, Handsaker RE, Lunter G, Marth GT, Sherry ST, McVean G, Durbin R; 1000 Genomes Project Analysis Group. The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PMID: 21653522; PMCID: PMC3137218.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137218/)
 
 
+## Discussions
+
+- [Issue tracker](https://github.com/uclahs-cds/public-tool-PipeVal/issues) to report errors and enhancement ideas.
+- Discussions can take place in [tool-NF-test Discussions](https://github.com/uclahs-cds/public-tool-PipeVal/discussions)
+- [tool-NF-test pull requests](https://github.com/uclahs-cds/public-tool-PipeVal/pulls) are also open for discussion
+
+## Contributors
+
+Please see list of [Contributors](https://github.com/uclahs-cds/public-tool-PipeVal/graphs/contributors) at GitHub.
+
 ## License
-Author: Gina Kim (ginakim@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Yash Patel (YashPatel@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu)
+Author: Yash Patel (YashPatel@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu), Gina Kim (ginakim@mednet.ucla.edu)
 
 PipeVal is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
 
