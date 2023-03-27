@@ -77,7 +77,6 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
 @mock.patch('validate.files.magic.from_file')
 @mock.patch('validate.files.Path', autospec=True)
 def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock_magic):
-    test_extension = '.vcf'
     mock_magic.return_value = 'text/plain'
 
     with pytest.warns(UserWarning):
