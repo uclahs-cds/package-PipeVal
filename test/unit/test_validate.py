@@ -74,20 +74,30 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
     with pytest.raises(IOError):
         path_exists(mock_path)
 
+@mock.patch('validate.files.magic.from_file')
 @mock.patch('validate.files.Path', autospec=True)
-def test__check_compressed__raises_warning_for_uncompressed_path(mock_path):
+def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock_magic):
     test_extension = '.vcf'
+    mock_magic.return_value = 'text/plain'
 
     with pytest.warns(UserWarning):
-        check_compressed(mock_path, test_extension)
+        check_compressed(mock_path)
 
+@pytest.mark.parametrize(
+    'compression_mime',
+    [
+        ('application/x-gzip'),
+        ('application/x-bzip2')
+    ]
+)
+@mock.patch('validate.files.magic.from_file')
 @mock.patch('validate.files.Path', autospec=True)
-def test__check_compressed__passes_compression_check(mock_path):
-    test_extension = '.vcf.gz'
+def test__check_compressed__passes_compression_check(mock_path, mock_magic, compression_mime):
+    mock_magic.return_value = compression_mime
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error")
-        check_compressed(mock_path, test_extension)
+        check_compressed(mock_path)
 
 @mock.patch('validate.validators.bam.pysam')
 def test__validate_bam_file__empty_bam_file(mock_pysam):
