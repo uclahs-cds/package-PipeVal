@@ -1,11 +1,15 @@
 ''' File checking functions '''
 from pathlib import Path
 import warnings
+import magic
 
-def check_compressed(path:Path, file_extension:str):
+def check_compressed(path:Path):
     ''' Check file is compressed '''
-    compression_extensions = ['.gz']
-    if not any(file_extension.endswith(ext) for ext in compression_extensions):
+    compression_mimes = [
+        'application/x-gzip',
+        'application/x-bzip2'
+    ]
+    if magic.from_file(path.resolve(), mime=True) not in compression_mimes:
         warnings.warn(f'Warning: file {path} is not compressed.')
 
 def path_exists(path:Path):
