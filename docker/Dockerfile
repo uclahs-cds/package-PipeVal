@@ -21,7 +21,7 @@ COPY --from=builder /usr/local /usr/local
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagic1 && \
-    rm -rf /var/lib/apt/lists/ && \
+    rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # create directory for python script
