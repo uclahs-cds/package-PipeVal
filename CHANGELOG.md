@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Unit tests for existing functions
 - Unit tests for main runner functions
 - Add separate checks for SAM and CRAM files
+- Compression validation and detection through `python-magic`
 
 ### Changed
 - Make `-t` optional, default to `file-input`
