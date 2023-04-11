@@ -3,7 +3,7 @@ category: 'tool'
 description: 'PipeVal'
 maintainers: ['yashpatel@mednet.ucla.edu']
 languages: ['Python', 'Dockerfile']
-version: ['3.0.0']
+version: ['4.0.0-rc.1']
 purpose_of_tool: 'Validates different parameters in NF scripts/pipelines'
 references: 'https://github.com/uclahs-cds/public-tool-PipeVal/'
 image_name: 'pipeval'
