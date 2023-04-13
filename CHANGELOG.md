@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ---
 
 ## [Unreleased]
+
+---
+
+## [4.0.0-rc.1] - 2023-04-11
 ### Added
 - Add check for empty BAM files (valid header but no reads).
 - Add auto-build workflow to push image to `uclahs-cds` registry
