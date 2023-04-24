@@ -6,7 +6,7 @@ import pysam
 
 from validate.validate_types import ValidateArgs
 
-def validate_sam_file(path:Path):
+def _validate_sam_file(path:Path):
     '''Validates sam file'''
     try:
         pysam.quickcheck(str(path))
@@ -25,4 +25,4 @@ def check_sam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
     `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
     '''
-    validate_sam_file(path)
+    _validate_sam_file(path)
