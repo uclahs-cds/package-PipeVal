@@ -224,12 +224,15 @@ def test__run_validate__passes_validation_no_files(mock_print_success):
 @mock.patch('validate.validate._detect_file_type_and_extension')
 @mock.patch('validate.validate._validate_file')
 @mock.patch('validate.validate._print_error')
+@mock.patch('validate.validate.Path.resolve')
 def test__run_validate__fails_with_failing_checks(
+    mock_path_resolve,
     mock_print_error,
     mock_validate_file,
     mock_detect_file_type_and_extension,
     test_exception):
     test_args = ValidateArgs(path=['some/path'], cram_reference=None)
+    mock_path_resolve.return_value = 'some/path'
     mock_validate_file.side_effect = test_exception
     mock_detect_file_type_and_extension.return_value = ('', '')
     mock_print_error.return_value = ''
@@ -271,3 +274,31 @@ def test__validate_file__checks_compression(
     _validate_file('', test_file_types, 'ext', None)
 
     mock_check_compressed.assert_called_once()
+
+@mock.patch('validate.validate.Path.resolve', autospec=True)
+def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
+    expected_error = FileNotFoundError
+    mock_path_resolve.side_effect = expected_error
+
+    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
+
+    with pytest.raises(expected_error):
+        run_validate(test_args)
+
+@mock.patch('validate.validate.Path.resolve', autospec=True)
+@mock.patch('validate.validate._detect_file_type_and_extension')
+@mock.patch('validate.validate._validate_file')
+@mock.patch('validate.validate._print_success')
+def test__run_validate__passes_proper_validation(
+    mock_print_success,
+    mock_validate_file,
+    mock_detect_file_type_and_extension,
+    mock_path_resolve):
+    mock_print_success.return_value = None
+    mock_detect_file_type_and_extension.return_value = (None, None)
+    mock_validate_file.return_value = None
+    mock_path_resolve.return_value = None
+
+    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
+
+    run_validate(test_args)

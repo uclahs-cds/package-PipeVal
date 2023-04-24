@@ -95,7 +95,7 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
 
     all_files_pass = True
 
-    for path in [Path(pathname).resolve() for pathname in args.path]:
+    for path in [Path(pathname).resolve(strict=True) for pathname in args.path]:
         try:
             file_type, file_extension = _detect_file_type_and_extension(path)
             _validate_file(path, file_type, file_extension, args)
