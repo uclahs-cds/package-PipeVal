@@ -17,6 +17,6 @@ def _validate_vcf_file(path):
     return True
 
 # pylint: disable=W0613
-def check_vcf(path:Path, args:argparse.Namespace):
+def _check_vcf(path:Path, args:argparse.Namespace):
     ''' Validation for VCFs '''
     _validate_vcf_file(path)

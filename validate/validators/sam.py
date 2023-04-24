@@ -20,7 +20,7 @@ def _validate_sam_file(path:Path):
     return True
 
 # pylint: disable=W0613
-def check_sam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
+def _check_sam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
     ''' Validation for SAMs
     `args` must contains the following:
         `cram_reference` is a required key with either a string value or None

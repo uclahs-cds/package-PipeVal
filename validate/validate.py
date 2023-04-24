@@ -27,10 +27,10 @@ FILE_TYPES_DICT = {
     }
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECK_FUNCTION_SWITCH = {
-    'file-bam': check_bam,
-    'file-sam': check_sam,
-    'file-cram': check_cram,
-    'file-vcf': check_vcf
+    'file-bam': _check_bam,
+    'file-sam': _check_sam,
+    'file-cram': _check_cram,
+    'file-vcf': _check_vcf
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
 
@@ -97,16 +97,16 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
 
     for path in [Path(pathname).resolve() for pathname in args.path]:
         try:
-            file_type, file_extension = detect_file_type_and_extension(path)
-            validate_file(path, file_type, file_extension, args)
+            file_type, file_extension = _detect_file_type_and_extension(path)
+            _validate_file(path, file_type, file_extension, args)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
             all_files_pass = False
-            print_error(path, err)
+            _print_error(path, err)
             continue
 
-        print_success(path, file_type)
+        _print_success(path, file_type)
 
     if not all_files_pass:
         sys.exit(1)

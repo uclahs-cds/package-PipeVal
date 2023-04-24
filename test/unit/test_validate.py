@@ -7,28 +7,28 @@ import mock
 import pytest
 
 from validate.files import (
-    check_compressed,
-    path_exists
+    _check_compressed,
+    _path_exists
 )
 from validate.validators.bam import (
-    validate_bam_file,
-    check_bam_index
+    _validate_bam_file,
+    _check_bam_index
 )
 from validate.validators.vcf import (
-    validate_vcf_file
+    _validate_vcf_file
 )
 from validate.validators.sam import (
-    validate_sam_file
+    _validate_sam_file
 )
 from validate.validators.cram import (
-    validate_cram_file,
-    check_cram_index
+    _validate_cram_file,
+    _check_cram_index
 )
 from validate.validate import (
-    detect_file_type_and_extension,
-    check_extension,
+    _detect_file_type_and_extension,
+    _check_extension,
     run_validate,
-    validate_file
+    _validate_file
 )
 from validate.validate_types import ValidateArgs
 
@@ -44,7 +44,7 @@ def test__detect_file_type_and_extension__detects_correct_file_type(
     expected_file_type):
     test_path = Path(f'a{expected_extension}')
 
-    file_type, extension = detect_file_type_and_extension(test_path)
+    file_type, extension = _detect_file_type_and_extension(test_path)
 
     assert extension == expected_extension
     assert file_type == expected_file_type
@@ -57,7 +57,7 @@ def test__detect_file_type_and_extension__detects_correct_file_type(
     ]
 )
 def test__check_extension__correct_file_type(test_extension, expected_type):
-    file_type = check_extension(test_extension)
+    file_type = _check_extension(test_extension)
 
     assert file_type == expected_type
 
@@ -65,14 +65,14 @@ def test__check_extension__correct_file_type(test_extension, expected_type):
 def test__path_exists__returns_true_for_existing_path(mock_path):
     mock_path.exists.return_value = True
 
-    path_exists(mock_path)
+    _path_exists(mock_path)
 
 @mock.patch('validate.files.Path', autospec=True)
 def test__path_exists__errors_for_non_existing_path(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(IOError):
-        path_exists(mock_path)
+        _path_exists(mock_path)
 
 @mock.patch('validate.files.magic.from_file')
 @mock.patch('validate.files.Path', autospec=True)
@@ -80,7 +80,7 @@ def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock
     mock_magic.return_value = 'text/plain'
 
     with pytest.warns(UserWarning):
-        check_compressed(mock_path)
+        _check_compressed(mock_path)
 
 @pytest.mark.parametrize(
     'compression_mime',
@@ -96,7 +96,7 @@ def test__check_compressed__passes_compression_check(mock_path, mock_magic, comp
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error")
-        check_compressed(mock_path)
+        _check_compressed(mock_path)
 
 @mock.patch('validate.validators.bam.pysam')
 def test__validate_bam_file__empty_bam_file(mock_pysam):
@@ -107,14 +107,14 @@ def test__validate_bam_file__empty_bam_file(mock_pysam):
     test_path = Path('empty/valid/bam')
 
     with pytest.raises(ValueError):
-        validate_bam_file(test_path)
+        _validate_bam_file(test_path)
 
 @mock.patch('validate.validators.bam.Path', autospec=True)
 def test__validate_bam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
-        validate_bam_file(mock_path)
+        _validate_bam_file(mock_path)
 
 @mock.patch('validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__no_index_file_error(mock_pysam):
@@ -123,7 +123,7 @@ def test__check_bam_index__no_index_file_error(mock_pysam):
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
     with pytest.raises(FileNotFoundError):
-        check_bam_index('/some/file')
+        _check_bam_index('/some/file')
 
 @mock.patch('validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__index_check_pass(mock_pysam):
@@ -131,7 +131,7 @@ def test__check_bam_index__index_check_pass(mock_pysam):
     mock_alignment_file.check_index.return_value = True
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
-    check_bam_index('/some/file')
+    _check_bam_index('/some/file')
 
 @mock.patch('validate.validators.bam.pysam')
 def test__validate_sam_file__empty_sam_file(mock_pysam):
@@ -142,14 +142,14 @@ def test__validate_sam_file__empty_sam_file(mock_pysam):
     test_path = Path('empty/valid/sam')
 
     with pytest.raises(ValueError):
-        validate_sam_file(test_path)
+        _validate_sam_file(test_path)
 
 @mock.patch('validate.validators.sam.Path', autospec=True)
 def test__validate_sam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
-        validate_sam_file(mock_path)
+        _validate_sam_file(mock_path)
 
 @pytest.mark.parametrize(
     'test_reference',
@@ -167,14 +167,14 @@ def test__validate_cram_file__empty_cram_file(mock_pysam, test_reference):
     test_path = Path('empty/valid/cram')
 
     with pytest.raises(ValueError):
-        validate_cram_file(test_path, test_reference)
+        _validate_cram_file(test_path, test_reference)
 
 @mock.patch('validate.validators.cram.Path', autospec=True)
 def test__validate_cram_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
-        validate_cram_file(mock_path)
+        _validate_cram_file(mock_path)
 
 @mock.patch('validate.validators.cram.pysam', autospec=True)
 def test__check_cram_index__no_index_file_error(mock_pysam):
@@ -183,7 +183,7 @@ def test__check_cram_index__no_index_file_error(mock_pysam):
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
     with pytest.raises(FileNotFoundError):
-        check_cram_index('/some/file')
+        _check_cram_index('/some/file')
 
 @mock.patch('validate.validators.cram.pysam', autospec=True)
 def test__check_cram_index__index_check_pass(mock_pysam):
@@ -191,22 +191,22 @@ def test__check_cram_index__index_check_pass(mock_pysam):
     mock_alignment_file.check_index.return_value = True
     mock_pysam.AlignmentFile.return_value = mock_alignment_file
 
-    check_cram_index('/some/file')
+    _check_cram_index('/some/file')
 
 @mock.patch('validate.validators.vcf.subprocess.call')
 def test__validate_vcf_file__fails_vcf_validation(mock_call):
     mock_call.return_value = 1
 
     with pytest.raises(ValueError):
-        validate_vcf_file('some/file')
+        _validate_vcf_file('some/file')
 
 @mock.patch('validate.validators.vcf.subprocess.call')
 def test__validate_vcf_file__passes_vcf_validation(mock_call):
     mock_call.return_value = 0
 
-    validate_vcf_file('some/file')
+    _validate_vcf_file('some/file')
 
-@mock.patch('validate.validate.print_success')
+@mock.patch('validate.validate._print_success')
 def test__run_validate__passes_validation_no_files(mock_print_success):
     test_args = ValidateArgs(path=[], cram_reference=None)
     mock_print_success.return_value = ''
@@ -221,9 +221,9 @@ def test__run_validate__passes_validation_no_files(mock_print_success):
         (OSError)
     ]
 )
-@mock.patch('validate.validate.detect_file_type_and_extension')
-@mock.patch('validate.validate.validate_file')
-@mock.patch('validate.validate.print_error')
+@mock.patch('validate.validate._detect_file_type_and_extension')
+@mock.patch('validate.validate._validate_file')
+@mock.patch('validate.validate._print_error')
 def test__run_validate__fails_with_failing_checks(
     mock_print_error,
     mock_validate_file,
@@ -239,12 +239,12 @@ def test__run_validate__fails_with_failing_checks(
         run_validate(test_args)
     assert pytest_exit.value.code == expected_code
 
-@mock.patch('validate.validate.path_exists')
+@mock.patch('validate.validate._path_exists')
 def test__validate_file__errors_with_invalid_extension(mock_path_exists):
     mock_path_exists.return_value = True
 
     with pytest.raises(TypeError):
-        validate_file('', 'file-test', '', None)
+        _validate_file('', 'file-test', '', None)
 
 @pytest.mark.parametrize(
     'test_file_types',
@@ -254,9 +254,9 @@ def test__validate_file__errors_with_invalid_extension(mock_path_exists):
         ('file-bed')
     ]
 )
-@mock.patch('validate.validate.path_exists')
-@mock.patch('validate.validate.check_compressed')
-@mock.patch('validate.validate.validate_checksums')
+@mock.patch('validate.validate._path_exists')
+@mock.patch('validate.validate._check_compressed')
+@mock.patch('validate.validate._validate_checksums')
 @mock.patch('validate.validate.CHECK_FUNCTION_SWITCH')
 def test__validate_file__checks_compression(
     mock_check_function_switch,
@@ -268,6 +268,6 @@ def test__validate_file__checks_compression(
     mock_path_exists.return_value = True
     mock_check_function_switch.return_value = {}
 
-    validate_file('', test_file_types, 'ext', None)
+    _validate_file('', test_file_types, 'ext', None)
 
     mock_check_compressed.assert_called_once()
