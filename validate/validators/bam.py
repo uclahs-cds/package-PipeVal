@@ -6,7 +6,7 @@ import pysam
 
 from validate.validate_types import ValidateArgs
 
-def validate_bam_file(path:Path):
+def _validate_bam_file(path:Path):
     '''Validates bam file'''
     try:
         pysam.quickcheck(str(path))
@@ -19,7 +19,7 @@ def validate_bam_file(path:Path):
 
     return True
 
-def check_bam_index(path:Path):
+def _check_bam_index(path:Path):
     '''Checks if index file is present and can be opened'''
     try:
         pysam.AlignmentFile(str(path)).check_index()
@@ -30,10 +30,10 @@ def check_bam_index(path:Path):
     return True
 
 # pylint: disable=W0613
-def check_bam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
+def _check_bam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
     ''' Validation for BAMs
     `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
     '''
-    validate_bam_file(path)
-    check_bam_index(path)
+    _validate_bam_file(path)
+    _check_bam_index(path)

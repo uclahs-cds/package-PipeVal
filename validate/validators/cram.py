@@ -6,7 +6,7 @@ import pysam
 
 from validate.validate_types import ValidateArgs
 
-def validate_cram_file(path:Path, reference:str=None):
+def _validate_cram_file(path:Path, reference:str=None):
     '''Validates cram file'''
     try:
         pysam.quickcheck(str(path))
@@ -25,7 +25,7 @@ def validate_cram_file(path:Path, reference:str=None):
 
     return True
 
-def check_cram_index(path:Path):
+def _check_cram_index(path:Path):
     '''Checks if index file is present and can be opened'''
     try:
         pysam.AlignmentFile(str(path)).check_index()
@@ -35,10 +35,10 @@ def check_cram_index(path:Path):
 
     return True
 
-def check_cram(path:Path, args:Union[ValidateArgs,Dict[str, Optional[str]]]):
+def _check_cram(path:Path, args:Union[ValidateArgs,Dict[str, Optional[str]]]):
     ''' Validation for CRAMs
         `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
     '''
-    validate_cram_file(path, args.cram_reference)
-    check_cram_index(path)
+    _validate_cram_file(path, args.cram_reference)
+    _check_cram_index(path)

@@ -11,6 +11,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [4.0.0-rc.2] - 2023-04-24
+### Changed
+- Resolve potential symlinks before validation
+
+---
+
 ## [4.0.0-rc.1] - 2023-04-11
 ### Added
 - Add check for empty BAM files (valid header but no reads).

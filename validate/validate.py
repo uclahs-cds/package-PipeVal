@@ -3,16 +3,16 @@ from pathlib import Path
 import sys
 from typing import Dict, Union
 
-from validate.validators.bam import check_bam
-from validate.validators.sam import check_sam
-from validate.validators.cram import check_cram
-from validate.validators.vcf import check_vcf
+from validate.validators.bam import _check_bam
+from validate.validators.sam import _check_sam
+from validate.validators.cram import _check_cram
+from validate.validators.vcf import _check_vcf
 from validate.files import (
-    check_compressed,
-    path_exists
+    _check_compressed,
+    _path_exists
 )
 from validate.validate_types import ValidateArgs
-from generate_checksum.checksum import validate_checksums
+from generate_checksum.checksum import _validate_checksums
 
 # Currently supported data types
 FILE_TYPES_DICT = {
@@ -27,14 +27,14 @@ FILE_TYPES_DICT = {
     }
 UNKNOWN_FILE_TYPE = 'file-unknown' # file type is unlisted
 CHECK_FUNCTION_SWITCH = {
-    'file-bam': check_bam,
-    'file-sam': check_sam,
-    'file-cram': check_cram,
-    'file-vcf': check_vcf
+    'file-bam': _check_bam,
+    'file-sam': _check_sam,
+    'file-cram': _check_cram,
+    'file-vcf': _check_vcf
 }
 CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
 
-def validate_file(
+def _validate_file(
     path:Path, file_type:str,
     file_extension:str,
     args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
@@ -43,34 +43,34 @@ def validate_file(
         `path` is a required argument with a value of list of files
         `cram_reference` is a required argument with either a string value or None
     '''
-    path_exists(path)
+    _path_exists(path)
 
     if not file_extension:
         raise TypeError(f'File {path} does not have a valid extension.')
 
     if file_type in CHECK_COMPRESSION_TYPES:
-        check_compressed(path)
+        _check_compressed(path)
 
-    validate_checksums(path)
+    _validate_checksums(path)
 
     CHECK_FUNCTION_SWITCH.get(file_type, lambda p, a: None)(path, args)
 
-def print_error(path:Path, err:BaseException):
+def _print_error(path:Path, err:BaseException):
     ''' Prints error message '''
     print(f'Error: {str(path)} {str(err)}')
 
-def print_success(path:Path, file_type:str):
+def _print_success(path:Path, file_type:str):
     ''' Prints success message '''
     print(f'Input: {path} is valid {file_type}')
 
-def detect_file_type_and_extension(path:Path):
+def _detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
     # Starting from the end, build up extension with each '.' separated part and try matching
     # resulting extension
     full_extension = ''
     for suffix in path.suffixes[::-1]:
         full_extension = suffix.lower() + full_extension
-        extension_type = check_extension(full_extension)
+        extension_type = _check_extension(full_extension)
 
         if extension_type != UNKNOWN_FILE_TYPE:
             return extension_type, full_extension
@@ -78,7 +78,7 @@ def detect_file_type_and_extension(path:Path):
     # No matching extension found so return unknown type and full extension
     return UNKNOWN_FILE_TYPE, full_extension
 
-def check_extension(extension:str):
+def _check_extension(extension:str):
     ''' Check for matching file type for extension '''
     for file_type in FILE_TYPES_DICT:
         if extension in FILE_TYPES_DICT.get(file_type):
@@ -95,18 +95,18 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
 
     all_files_pass = True
 
-    for path in [Path(pathname) for pathname in args.path]:
+    for path in [Path(pathname).resolve(strict=True) for pathname in args.path]:
         try:
-            file_type, file_extension = detect_file_type_and_extension(path)
-            validate_file(path, file_type, file_extension, args)
+            file_type, file_extension = _detect_file_type_and_extension(path)
+            _validate_file(path, file_type, file_extension, args)
         except FileNotFoundError as file_not_found_err:
             print(f"Warning: {str(path)} {str(file_not_found_err)}")
         except (TypeError, ValueError, IOError, OSError) as err:
             all_files_pass = False
-            print_error(path, err)
+            _print_error(path, err)
             continue
 
-        print_success(path, file_type)
+        _print_success(path, file_type)
 
     if not all_files_pass:
         sys.exit(1)

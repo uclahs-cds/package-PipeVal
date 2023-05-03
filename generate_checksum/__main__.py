@@ -3,7 +3,7 @@ import argparse
 from generate_checksum import __version__
 from generate_checksum.checksum import generate_checksum
 
-def parse_args():
+def _parse_args():
     """ Parse arguments """
     parser = argparse.ArgumentParser()
     parser.add_argument('path', help='one or more paths of files to validate', type=str, nargs='+')
@@ -18,7 +18,7 @@ def parse_args():
 
 def main():
     ''' Main entrance '''
-    args = parse_args()
+    args = _parse_args()
     args.func(args)
 
 if __name__=='__main__':

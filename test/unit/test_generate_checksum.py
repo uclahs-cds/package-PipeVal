@@ -6,11 +6,11 @@ import mock
 import pytest
 
 from generate_checksum.checksum import (
-    validate_checksums,
-    compare_hash,
-    write_checksum_file,
-    generate_md5,
-    generate_sha512,
+    _validate_checksums,
+    _compare_hash,
+    _write_checksum_file,
+    _generate_md5,
+    _generate_sha512,
     generate_checksum,
     ChecksumArgs
 )
@@ -21,9 +21,9 @@ def test__validate_checksums__validate_checksums_passes_with_no_checksum_file(mo
     mock_path.with_suffix.return_value = mock_path
     mock_path.exists.return_value = False
 
-    validate_checksums(mock_path)
+    _validate_checksums(mock_path)
 
-@mock.patch('generate_checksum.checksum.compare_hash')
+@mock.patch('generate_checksum.checksum._compare_hash')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__validate_checksums__validate_checksum_passes(mock_path, mock_compare_hash):
     mock_path.suffix.return_value = ''
@@ -32,9 +32,9 @@ def test__validate_checksums__validate_checksum_passes(mock_path, mock_compare_h
 
     mock_compare_hash.return_value =  True
 
-    validate_checksums(mock_path)
+    _validate_checksums(mock_path)
 
-@mock.patch('generate_checksum.checksum.compare_hash')
+@mock.patch('generate_checksum.checksum._compare_hash')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__validate_checksums__error_raised_when_comparison_fails(mock_path, mock_compare_hash):
     mock_path.suffix.return_value = ''
@@ -44,7 +44,7 @@ def test__validate_checksums__error_raised_when_comparison_fails(mock_path, mock
     mock_compare_hash.return_value =  False
 
     with pytest.raises(IOError):
-        validate_checksums(mock_path)
+        _validate_checksums(mock_path)
 
 @pytest.mark.parametrize(
     'hash_type',
@@ -53,8 +53,8 @@ def test__validate_checksums__error_raised_when_comparison_fails(mock_path, mock
         ('sha512')
     ]
 )
-@mock.patch('generate_checksum.checksum.generate_sha512')
-@mock.patch('generate_checksum.checksum.generate_md5')
+@mock.patch('generate_checksum.checksum._generate_sha512')
+@mock.patch('generate_checksum.checksum._generate_md5')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__compare_hash__compares_correct_checksums(
     mock_path,
@@ -67,7 +67,7 @@ def test__compare_hash__compares_correct_checksums(
     mock_generate_md5.return_value = checksum_to_compare
     mock_generate_sha512.return_value = checksum_to_compare
 
-    assert compare_hash(hash_type, mock_path, mock_path)
+    assert _compare_hash(hash_type, mock_path, mock_path)
 
 @pytest.mark.parametrize(
     'hash_type',
@@ -76,8 +76,8 @@ def test__compare_hash__compares_correct_checksums(
         ('sha512')
     ]
 )
-@mock.patch('generate_checksum.checksum.generate_sha512')
-@mock.patch('generate_checksum.checksum.generate_md5')
+@mock.patch('generate_checksum.checksum._generate_sha512')
+@mock.patch('generate_checksum.checksum._generate_md5')
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__compare_hash__compares_incorrect_checksums(
     mock_path,
@@ -90,7 +90,7 @@ def test__compare_hash__compares_incorrect_checksums(
     mock_generate_md5.return_value = 'wrong'
     mock_generate_sha512.return_value = 'wrong'
 
-    assert not compare_hash(hash_type, mock_path, mock_path)
+    assert not _compare_hash(hash_type, mock_path, mock_path)
 
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
 def test__compare_hash__fails_on_invalid_checksum_type(mock_path):
@@ -98,7 +98,7 @@ def test__compare_hash__fails_on_invalid_checksum_type(mock_path):
     hash_type = 'invalid_hash_type'
 
     with pytest.raises(IOError):
-        compare_hash(hash_type, mock_path, mock_path)
+        _compare_hash(hash_type, mock_path, mock_path)
 
 @mock.patch('generate_checksum.checksum.open', new_callable=mock_open)
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
@@ -108,7 +108,7 @@ def test__write_checksum_file__writes_proper_checksum(mock_path, mock_write_open
     hash_type = 'md5'
     mock_path.__str__.return_value = file_path
 
-    write_checksum_file(mock_path, hash_type, computed_hash)
+    _write_checksum_file(mock_path, hash_type, computed_hash)
 
     mock_write_open.assert_called_once_with(f'{file_path}.{hash_type}', 'w')
 
@@ -124,7 +124,7 @@ def test__generate_md5__return_correct_checksum(mock_iter, mock_path, mock_read_
     md5_checksum.update(b'')
     mock_iter.return_value = iter([b''])
 
-    assert generate_md5(mock_path) == md5_checksum.hexdigest()
+    assert _generate_md5(mock_path) == md5_checksum.hexdigest()
 
 # pylint: disable=W0613
 @mock.patch('generate_checksum.checksum.open', new_callable=mock_open)
@@ -135,7 +135,7 @@ def test__generate_sha512__return_correct_checksum(mock_iter, mock_path, mock_re
     sha512_checksum.update(b'')
     mock_iter.return_value = iter([b''])
 
-    assert generate_sha512(mock_path) == sha512_checksum.hexdigest()
+    assert _generate_sha512(mock_path) == sha512_checksum.hexdigest()
 
 @pytest.mark.parametrize(
     'test_args',
@@ -165,9 +165,9 @@ def test__generate_checksum__fails_with_invalid_type(mock_path):
     ]
 )
 @mock.patch('generate_checksum.checksum.Path', autospec=True)
-@mock.patch('generate_checksum.checksum.generate_md5')
-@mock.patch('generate_checksum.checksum.generate_sha512')
-@mock.patch('generate_checksum.checksum.write_checksum_file')
+@mock.patch('generate_checksum.checksum._generate_md5')
+@mock.patch('generate_checksum.checksum._generate_sha512')
+@mock.patch('generate_checksum.checksum._write_checksum_file')
 def test__generate_checksum__fails_with_failed_write(
     mock_write_checksum_file,
     mock_generate_sha512,
