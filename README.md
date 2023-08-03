@@ -1,6 +1,7 @@
 # PipeVal
 
 - [Overview](#overview)
+    - [Validation Flowchart](#validation-flowchart)
 - [Docker](#docker)
 - [Installation](#installation)
     - [From GitHub](#install-directly-from-github)
@@ -20,6 +21,10 @@
 PipeVal is an easy to use CLI tool that can be used to validate different inputs and parameters in various settings, including Nextflow scripts/pipelines. It can be used standalone or using a Docker container.
 
 Its primary functions are to generate and/or compare checksum files and validate input files.
+
+### Validation Flowchart
+![flowchart](./pipeval_flowchart.png)
+
 
 ## Docker
 The tool can be used via the docker image [`ghcr.io/uclahs-cds/pipeval:<tag>`](https://github.com/orgs/uclahs-cds/packages/container/package/pipeval)
