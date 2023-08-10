@@ -38,7 +38,7 @@ The tool can be installed as a standalone command line tool. The following depen
 
 ### Install directly from GitHub
 ```Bash
-pip install git+ssh://git@github.com/uclahs-cds/public-tool-PipeVal.git
+pip install git+ssh://git@github.com/uclahs-cds/package-PipeVal.git
 ```
 
 ### Install from cloned repository
@@ -134,13 +134,13 @@ pytest
 
 ## Discussions
 
-- [Issue tracker](https://github.com/uclahs-cds/public-tool-PipeVal/issues) to report errors and enhancement ideas.
-- Discussions can take place in [tool-NF-test Discussions](https://github.com/uclahs-cds/public-tool-PipeVal/discussions)
-- [tool-NF-test pull requests](https://github.com/uclahs-cds/public-tool-PipeVal/pulls) are also open for discussion
+- [Issue tracker](https://github.com/uclahs-cds/package-PipeVal/issues) to report errors and enhancement ideas.
+- Discussions can take place in [tool-NF-test Discussions](https://github.com/uclahs-cds/package-PipeVal/discussions)
+- [tool-NF-test pull requests](https://github.com/uclahs-cds/package-PipeVal/pulls) are also open for discussion
 
 ## Contributors
 
-Please see list of [Contributors](https://github.com/uclahs-cds/public-tool-PipeVal/graphs/contributors) at GitHub.
+Please see list of [Contributors](https://github.com/uclahs-cds/package-PipeVal/graphs/contributors) at GitHub.
 
 ## License
 Author: Yash Patel (YashPatel@mednet.ucla.edu), Arpi Beshlikyan (abeshlikyan@mednet.ucla.edu), Madison Jordan (MBJordan@mednet.ucla.edu), Gina Kim (ginakim@mednet.ucla.edu)
