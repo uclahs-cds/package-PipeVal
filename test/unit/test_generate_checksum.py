@@ -110,7 +110,7 @@ def test__write_checksum_file__writes_proper_checksum(mock_path, mock_write_open
 
     _write_checksum_file(mock_path, hash_type, computed_hash)
 
-    mock_write_open.assert_called_once_with(f'{file_path}.{hash_type}', 'w')
+    mock_write_open.assert_called_once_with(f'{file_path}.{hash_type}', 'w', encoding='utf-8')
 
     handle = mock_write_open()
     handle.write.assert_called_once_with(f'{computed_hash}  {file_path}\n')
