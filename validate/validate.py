@@ -4,7 +4,6 @@ import sys
 from typing import Dict, Union
 import multiprocessing
 from itertools import repeat
-from time import sleep
 
 from validate.validators.bam import _check_bam
 from validate.validators.sam import _check_sam
