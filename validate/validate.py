@@ -111,9 +111,9 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
 
     num_parallel = min(args.cpus, multiprocessing.cpu_count())
 
-    parallel_pool = multiprocessing.Pool(num_parallel)
-    validation_results = parallel_pool.starmap(_validation_worker, \
-        zip([Path(pathname).resolve(strict=True) for pathname in args.path], repeat(args)))
+    with multiprocessing.Pool(num_parallel) as parallel_pool:
+        validation_results = parallel_pool.starmap(_validation_worker, \
+            zip([Path(pathname).resolve(strict=True) for pathname in args.path], repeat(args)))
 
     if not all(validation_results):
         sys.exit(1)
