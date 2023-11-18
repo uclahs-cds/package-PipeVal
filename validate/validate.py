@@ -2,6 +2,9 @@
 from pathlib import Path
 import sys
 from typing import Dict, Union
+import multiprocessing
+from itertools import repeat
+from time import sleep
 
 from validate.validators.bam import _check_bam
 from validate.validators.sam import _check_sam
@@ -86,6 +89,20 @@ def _check_extension(extension:str):
 
     return UNKNOWN_FILE_TYPE
 
+def _validation_worker(path: Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
+    ''' Worker function to validate a single file '''
+    try:
+        file_type, file_extension = _detect_file_type_and_extension(path)
+        _validate_file(path, file_type, file_extension, args)
+    except FileNotFoundError as file_not_found_err:
+        print(f"Warning: {str(path)} {str(file_not_found_err)}")
+    except (TypeError, ValueError, IOError, OSError) as err:
+        _print_error(path, err)
+        return False
+
+    _print_success(path, file_type)
+    return True
+
 def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
     ''' Function to validate file(s)
         `args` must contain the following:
@@ -93,20 +110,11 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
         `cram_reference` is a required argument with either a string value or None
     '''
 
-    all_files_pass = True
+    num_parallel = min(args.cpus, multiprocessing.cpu_count())
 
-    for path in [Path(pathname).resolve(strict=True) for pathname in args.path]:
-        try:
-            file_type, file_extension = _detect_file_type_and_extension(path)
-            _validate_file(path, file_type, file_extension, args)
-        except FileNotFoundError as file_not_found_err:
-            print(f"Warning: {str(path)} {str(file_not_found_err)}")
-        except (TypeError, ValueError, IOError, OSError) as err:
-            all_files_pass = False
-            _print_error(path, err)
-            continue
+    parallel_pool = multiprocessing.Pool(num_parallel)
+    validation_results = parallel_pool.starmap(_validation_worker, \
+        zip([Path(pathname).resolve(strict=True) for pathname in args.path], repeat(args)))
 
-        _print_success(path, file_type)
-
-    if not all_files_pass:
+    if not all(validation_results):
         sys.exit(1)
