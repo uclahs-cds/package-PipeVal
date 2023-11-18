@@ -56,7 +56,7 @@ def _generate_sha512(path:Path):
 
 def _write_checksum_file(path:Path, hash_type:str, computed_hash:str):
     ''' Write checksum to file '''
-    with open(str(path) + '.' + hash_type, 'w') as checksum_file:
+    with open(str(path) + '.' + hash_type, 'w', encoding="utf-8") as checksum_file:
         checksum_file.write(computed_hash + '  ' + str(path) + '\n')
 
     print(f'{hash_type} checksum generated for {str(path)}')
