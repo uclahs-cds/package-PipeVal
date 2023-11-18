@@ -1,11 +1,11 @@
 # pylint: disable=C0116
 # pylint: disable=C0114
 from pathlib import Path
+from argparse import Namespace
 from unittest.mock import Mock
 import warnings
 import mock
 import pytest
-from argparse import Namespace
 
 from validate.files import (
     _check_compressed,
@@ -250,7 +250,7 @@ def test__run_validate__passes_on_all_valid_files(
     test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
 
     mock_path_resolve.return_value = None
-    mock_pool.return_value = Namespace(starmap=lambda y, z: [True])
+    mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [True])
 
     run_validate(test_args)
 
@@ -264,7 +264,7 @@ def test__run_validate__fails_with_failing_file(
     expected_code = 1
 
     mock_path_resolve.return_value = None
-    mock_pool.return_value = Namespace(starmap=lambda y, z: [False])
+    mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [False])
 
     with pytest.raises(SystemExit) as pytest_exit:
         run_validate(test_args)
