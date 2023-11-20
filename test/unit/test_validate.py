@@ -229,7 +229,7 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
     _validate_vcf_file('some/file')
 
 def test__run_validate__passes_validation_no_files():
-    test_args = ValidateArgs(path=[], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[], cram_reference=None, processes=1)
     run_validate(test_args)
 
 @pytest.mark.parametrize(
@@ -252,7 +252,7 @@ def test___validation_worker__fails_with_failing_checks(
     mock_detect_file_type_and_extension,
     test_exception):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
     mock_path_resolve.return_value = test_path
     mock_validate_file.side_effect = test_exception
     mock_detect_file_type_and_extension.return_value = ('', '')
@@ -267,7 +267,7 @@ def test__run_validate__passes_on_all_valid_files(
     mock_path_resolve
     ):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
 
     mock_path_resolve.return_value = None
     mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [True])
@@ -280,7 +280,7 @@ def test__run_validate__fails_with_failing_file(
     mock_pool,
     mock_path_resolve):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
     expected_code = 1
 
     mock_path_resolve.return_value = None
@@ -330,7 +330,7 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
 
     test_path = 'some/path'
 
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
 
     with pytest.raises(expected_error):
         run_validate(test_args)
@@ -351,6 +351,6 @@ def test___validation_worker__passes_proper_validation(
 
     test_path = 'some/path'
 
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, cpus=1)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
 
     _validation_worker(test_path, test_args)
