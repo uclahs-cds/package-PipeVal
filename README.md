@@ -82,7 +82,8 @@ options:
   -v, --version         show program's version number and exit
   -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
                         Path to reference file for CRAM
-  -c CPUS, --cpus CPUS  Number of CPUs to parallelize over when validating multiple files
+  -p PROCESSES, --processes PROCESSES
+                        Number of processes to run in parallel when validating multiple files
 ```
 
 The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
