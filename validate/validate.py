@@ -110,7 +110,7 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
         `cram_reference` is a required argument with either a string value or None
     '''
 
-    num_parallel = min(args.cpus, multiprocessing.cpu_count())
+    num_parallel = min(args.processes, multiprocessing.cpu_count())
 
     with multiprocessing.Pool(num_parallel) as parallel_pool:
         validation_results = parallel_pool.starmap(_validation_worker, \
