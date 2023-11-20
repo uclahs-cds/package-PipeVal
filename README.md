@@ -33,6 +33,23 @@ The tool can be installed as a standalone command line tool. The following depen
 
 Additionally, the `libmagic` C library must also be installed on the system.
 
+### Installing `libmagic`
+
+On Debian/Ubuntu, install through:
+```Bash
+sudo apt-get install libmagic-dev
+```
+
+On Mac, install through homebrew (https://brew.sh/):
+```Bash
+brew install libmagic
+```
+
+`libmagic` can also be installed through the `conda` package manager:
+```Bash
+conda install -c conda-forge libmagic
+```
+
 With the dependencies (and the proper versions) installed, install `pipeval` through one of the options below:
 
 ### Install directly from GitHub through SSH
