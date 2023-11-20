@@ -22,8 +22,8 @@ def _parse_args():
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {__version__}')
     parser.add_argument('-r', '--cram-reference', default=None, \
         help='Path to reference file for CRAM')
-    parser.add_argument('-c', '--cpus', type=positive_integer, default=1, \
-        help='Number of CPUs to parallelize over when validating multiple files')
+    parser.add_argument('-p', '--processes', type=positive_integer, default=1, \
+        help='Number of processes to run in parallel when validating multiple files')
 
     parser.set_defaults(func=run_validate)
 
