@@ -1,7 +1,7 @@
 # pylint: disable=C0116
 # pylint: disable=C0114
 from pathlib import Path
-from argparse import Namespace
+from argparse import Namespace, ArgumentTypeError
 from unittest.mock import Mock
 import warnings
 import mock
@@ -32,7 +32,27 @@ from validate.validate import (
     _validate_file,
     _validation_worker
 )
+from validate.__main__ import positive_integer
 from validate.validate_types import ValidateArgs
+
+def test__positive_integer__returns_correct_integer():
+    expected_number = 2
+    number_str = '2'
+    assert expected_number == positive_integer(number_str)
+
+@pytest.mark.parametrize(
+    'number_str',
+    [
+        ('-2'),
+        ('0'),
+        ('1.2'),
+        ('number'),
+        ('')
+    ]
+)
+def test__positive_integer__fails_non_positive_integers(number_str):
+    with pytest.raises(ArgumentTypeError):
+        positive_integer(number_str)
 
 @pytest.mark.parametrize(
     'expected_extension, expected_file_type',
