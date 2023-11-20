@@ -141,8 +141,8 @@ pytest
 ## Discussions
 
 - [Issue tracker](https://github.com/uclahs-cds/package-PipeVal/issues) to report errors and enhancement ideas.
-- Discussions can take place in [tool-NF-test Discussions](https://github.com/uclahs-cds/package-PipeVal/discussions)
-- [tool-NF-test pull requests](https://github.com/uclahs-cds/package-PipeVal/pulls) are also open for discussion
+- Discussions can take place in [package-PipeVal Discussions](https://github.com/uclahs-cds/package-PipeVal/discussions)
+- [package-PipeVal pull requests](https://github.com/uclahs-cds/package-PipeVal/pulls) are also open for discussion
 
 ## Contributors
 
