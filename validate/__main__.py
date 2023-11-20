@@ -10,8 +10,8 @@ def positive_integer(arg):
     except ValueError as value_exception:
         raise argparse.ArgumentTypeError("Must be an integer.") from value_exception
 
-    if i < 0:
-        raise argparse.ArgumentTypeError("Must be an integer greater than or equal to 0.")
+    if i < 1:
+        raise argparse.ArgumentTypeError("Must be an integer greater than 0.")
 
     return i
 
