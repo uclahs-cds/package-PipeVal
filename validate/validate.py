@@ -1,6 +1,7 @@
 ''' File validation functions '''
 from pathlib import Path
 import sys
+import os
 from typing import Dict, Union
 import multiprocessing
 from itertools import repeat
@@ -59,11 +60,11 @@ def _validate_file(
 
 def _print_error(path:Path, err:BaseException):
     ''' Prints error message '''
-    print(f'Error: {str(path)} {str(err)}')
+    print(f'PID:{os.getpid()} - Error: {str(path)} {str(err)}')
 
 def _print_success(path:Path, file_type:str):
     ''' Prints success message '''
-    print(f'Input: {path} is valid {file_type}')
+    print(f'PID:{os.getpid()} - Input: {path} is valid {file_type}')
 
 def _detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
