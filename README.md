@@ -31,13 +31,23 @@ The tool can be installed as a standalone command line tool. The following depen
 |Python|3.10|
 |VCFtools|0.1.16|
 
-### Install directly from GitHub
+Additionally, the `libmagic` C library must also be installed on the system.
+
+With the dependencies (and the proper versions) installed, install `pipeval` through one of the options below:
+
+### Install directly from GitHub through SSH
 ```Bash
 pip install git+ssh://git@github.com/uclahs-cds/package-PipeVal.git
 ```
 
+### Install directly from GitHub through HTTPS
+```Bash
+pip install git+https://git@github.com/uclahs-cds/package-PipeVal.git
+```
+
 ### Install from cloned repository
 ```Bash
+<clone the PipeVal GitHub repository>
 cd </path/to/cloned/repository>
 pip install .
 ```
@@ -55,6 +65,7 @@ options:
   -v, --version         show program's version number and exit
   -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
                         Path to reference file for CRAM
+  -c CPUS, --cpus CPUS  Number of CPUs to parallelize over when validating multiple files
 ```
 
 The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
