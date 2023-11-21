@@ -1,6 +1,7 @@
 # pylint: disable=C0116
 # pylint: disable=C0114
 from pathlib import Path
+from argparse import Namespace, ArgumentTypeError
 from unittest.mock import Mock
 import warnings
 import mock
@@ -28,9 +29,30 @@ from validate.validate import (
     _detect_file_type_and_extension,
     _check_extension,
     run_validate,
-    _validate_file
+    _validate_file,
+    _validation_worker
 )
+from validate.__main__ import positive_integer
 from validate.validate_types import ValidateArgs
+
+def test__positive_integer__returns_correct_integer():
+    expected_number = 2
+    number_str = '2'
+    assert expected_number == positive_integer(number_str)
+
+@pytest.mark.parametrize(
+    'number_str',
+    [
+        ('-2'),
+        ('0'),
+        ('1.2'),
+        ('number'),
+        ('')
+    ]
+)
+def test__positive_integer__fails_non_positive_integers(number_str):
+    with pytest.raises(ArgumentTypeError):
+        positive_integer(number_str)
 
 @pytest.mark.parametrize(
     'expected_extension, expected_file_type',
@@ -206,10 +228,8 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
 
     _validate_vcf_file('some/file')
 
-@mock.patch('validate.validate._print_success')
-def test__run_validate__passes_validation_no_files(mock_print_success):
-    test_args = ValidateArgs(path=[], cram_reference=None)
-    mock_print_success.return_value = ''
+def test__run_validate__passes_validation_no_files():
+    test_args = ValidateArgs(path=[], cram_reference=None, processes=1)
     run_validate(test_args)
 
 @pytest.mark.parametrize(
@@ -225,18 +245,46 @@ def test__run_validate__passes_validation_no_files(mock_print_success):
 @mock.patch('validate.validate._validate_file')
 @mock.patch('validate.validate._print_error')
 @mock.patch('validate.validate.Path.resolve')
-def test__run_validate__fails_with_failing_checks(
+def test___validation_worker__fails_with_failing_checks(
     mock_path_resolve,
     mock_print_error,
     mock_validate_file,
     mock_detect_file_type_and_extension,
     test_exception):
-    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
-    mock_path_resolve.return_value = 'some/path'
+    test_path = 'some/path'
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    mock_path_resolve.return_value = test_path
     mock_validate_file.side_effect = test_exception
     mock_detect_file_type_and_extension.return_value = ('', '')
     mock_print_error.return_value = ''
+
+    assert not _validation_worker(test_path, test_args)
+
+@mock.patch('validate.validate.Path.resolve', autospec=True)
+@mock.patch('validate.validate.multiprocessing.Pool')
+def test__run_validate__passes_on_all_valid_files(
+    mock_pool,
+    mock_path_resolve
+    ):
+    test_path = 'some/path'
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+
+    mock_path_resolve.return_value = None
+    mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [True])
+
+    run_validate(test_args)
+
+@mock.patch('validate.validate.Path.resolve', autospec=True)
+@mock.patch('validate.validate.multiprocessing.Pool')
+def test__run_validate__fails_with_failing_file(
+    mock_pool,
+    mock_path_resolve):
+    test_path = 'some/path'
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
     expected_code = 1
+
+    mock_path_resolve.return_value = None
+    mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [False])
 
     with pytest.raises(SystemExit) as pytest_exit:
         run_validate(test_args)
@@ -280,7 +328,9 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
     expected_error = FileNotFoundError
     mock_path_resolve.side_effect = expected_error
 
-    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
+    test_path = 'some/path'
+
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
 
     with pytest.raises(expected_error):
         run_validate(test_args)
@@ -289,7 +339,7 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
 @mock.patch('validate.validate._detect_file_type_and_extension')
 @mock.patch('validate.validate._validate_file')
 @mock.patch('validate.validate._print_success')
-def test__run_validate__passes_proper_validation(
+def test___validation_worker__passes_proper_validation(
     mock_print_success,
     mock_validate_file,
     mock_detect_file_type_and_extension,
@@ -299,6 +349,8 @@ def test__run_validate__passes_proper_validation(
     mock_validate_file.return_value = None
     mock_path_resolve.return_value = None
 
-    test_args = ValidateArgs(path=['some/path'], cram_reference=None)
+    test_path = 'some/path'
 
-    run_validate(test_args)
+    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+
+    _validation_worker(test_path, test_args)
