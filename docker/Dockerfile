@@ -32,8 +32,7 @@ RUN mkdir -p /tool/validate/
 COPY setup.py /tool
 COPY setup.cfg /tool
 COPY pyproject.toml /tool
-COPY /generate_checksum /tool/generate_checksum
-COPY /validate/ /tool/validate/
+COPY /pipeval /tool/pipeval
 WORKDIR /tool
 RUN pip install build && \
     pip install .
@@ -48,5 +47,5 @@ RUN groupadd -g 500001 bldocker && \
 # Change the default user to bldocker from root
 USER bldocker
 
-LABEL   maintainer="Arpi Beshlikyan <abeshlikyan@mednet.ucla.edu>" \
-        org.opencontainers.image.source=https://github.com/uclahs-cds/public-tool-PipeVal
+LABEL   maintainer="Yash Patel <yashpatel@mednet.ucla.edu>" \
+        org.opencontainers.image.source=https://github.com/uclahs-cds/package-PipeVal
