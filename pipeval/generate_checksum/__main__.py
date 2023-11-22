@@ -5,7 +5,7 @@ from pipeval.generate_checksum.checksum import generate_checksum
 def add_subparser_generate_checksum(subparsers:argparse._SubParsersAction):
     """ Parse arguments """
     parser = subparsers.add_parser(
-        name = 'generate_checksum',
+        name = 'generate-checksum',
         help = 'Generate checksums for one or more file(s)',
         description = 'Generate checksums for one or more file(s)',
         formatter_class = argparse.ArgumentDefaultsHelpFormatter
