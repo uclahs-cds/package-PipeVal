@@ -70,9 +70,9 @@ pip install .
 ```
 
 ## Usage
-### `validate`
+### `pipeval validate`
 ```
-usage: validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
+usage: pipeval validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
@@ -111,9 +111,9 @@ Input: path/to/input is valid <file-type>
 Error: path/to/input <error message>
 ```
 
-### `generate-checksum`
+### `pipeval generate-checksum`
 ```
-usage: generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
+usage: pipeval generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
