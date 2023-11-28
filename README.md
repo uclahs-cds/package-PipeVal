@@ -79,7 +79,6 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
   -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
                         Path to reference file for CRAM
   -p PROCESSES, --processes PROCESSES
@@ -122,7 +121,6 @@ options:
   -h, --help            show this help message and exit
   -t {md5,sha512}, --type {md5,sha512}
                         Checksum type
-  -v, --version         show program's version number and exit
 ```
 
 ## Development
