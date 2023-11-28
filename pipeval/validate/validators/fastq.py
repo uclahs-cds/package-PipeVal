@@ -13,7 +13,7 @@ RECORD_LENGTH = 4
 
 @dataclass
 class FASTQ_RECORD_VALIDATOR:
-    minimim_quality_ordinal: ClassVar[int] = 33
+    minimum_quality_ordinal: ClassVar[int] = 33
     maximum_quality_ordinal: ClassVar[int] = 126
     record_identifier_format: ClassVar[re.Pattern] = re.compile('^@')
     extra_field_format: ClassVar[re.Pattern] = re.compile('^\+')
@@ -54,11 +54,11 @@ class FASTQ_RECORD_VALIDATOR:
         min_quality = min(quality, key=lambda x: ord(x))
         max_quality = max(quality, key=lambda x: ord(x))
 
-        if ord(min_quality) < FASTQ_RECORD_VALIDATOR.minimim_quality_ordinal or \
+        if ord(min_quality) < FASTQ_RECORD_VALIDATOR.minimum_quality_ordinal or \
             ord(max_quality) > FASTQ_RECORD_VALIDATOR.maximum_quality_ordinal:
             invalid_entries.append(
                 f'Quality scores out of valid range. Quality scores must fall between '
-                f'{FASTQ_RECORD_VALIDATOR.minimim_quality_ordinal} and '
+                f'{FASTQ_RECORD_VALIDATOR.minimum_quality_ordinal} and '
                 f'{FASTQ_RECORD_VALIDATOR.maximum_quality_ordinal}. '
                 f'Found min:`{min_quality}` ({ord(min_quality)}) and '
                 f'max:`{max_quality}` ({ord(max_quality)}) in record.'
