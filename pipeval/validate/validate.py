@@ -10,6 +10,7 @@ from pipeval.validate.validators.bam import _check_bam
 from pipeval.validate.validators.sam import _check_sam
 from pipeval.validate.validators.cram import _check_cram
 from pipeval.validate.validators.vcf import _check_vcf
+from pipeval.validate.validators.fastq import _check_fastq
 from pipeval.validate.files import (
     _check_compressed,
     _path_exists
@@ -24,7 +25,7 @@ FILE_TYPES_DICT = {
     'file-cram': ['.cram'],
     'file-vcf': ['.vcf', '.vcf.gz'],
     'file-fasta': ['.fasta', '.fa'],
-    'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
+    'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz', '.fastq.bz2', '.fq.bz2'],
     'file-bed': ['.bed', '.bed.gz'],
     'file-py': ['.py']
     }
