@@ -33,9 +33,10 @@ CHECK_FUNCTION_SWITCH = {
     'file-bam': _check_bam,
     'file-sam': _check_sam,
     'file-cram': _check_cram,
-    'file-vcf': _check_vcf
+    'file-vcf': _check_vcf,
+    'file-fastq': _check_fastq
 }
-CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
+CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed', 'file-fastq']
 
 def _validate_file(
     path:Path, file_type:str,
