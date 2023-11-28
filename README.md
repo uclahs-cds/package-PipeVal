@@ -70,16 +70,15 @@ pip install .
 ```
 
 ## Usage
-### `validate`
+### `pipeval validate`
 ```
-usage: validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
+usage: pipeval validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
 
 options:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
   -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
                         Path to reference file for CRAM
   -p PROCESSES, --processes PROCESSES
@@ -111,9 +110,9 @@ Input: path/to/input is valid <file-type>
 Error: path/to/input <error message>
 ```
 
-### `generate-checksum`
+### `pipeval generate-checksum`
 ```
-usage: generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
+usage: pipeval generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
@@ -122,7 +121,6 @@ options:
   -h, --help            show this help message and exit
   -t {md5,sha512}, --type {md5,sha512}
                         Checksum type
-  -v, --version         show program's version number and exit
 ```
 
 ## Development
