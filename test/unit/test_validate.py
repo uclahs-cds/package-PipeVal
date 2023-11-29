@@ -2,10 +2,12 @@
 # pylint: disable=C0114
 from pathlib import Path
 from argparse import Namespace, ArgumentTypeError
-from unittest.mock import Mock
+from unittest.mock import Mock, mock_open
 import warnings
 import mock
 import pytest
+import gzip
+import bz2
 
 from pipeval.validate.files import (
     _check_compressed,
@@ -24,6 +26,10 @@ from pipeval.validate.validators.sam import (
 from pipeval.validate.validators.cram import (
     _validate_cram_file,
     _check_cram_index
+)
+from pipeval.validate.validators.fastq import (
+    FASTQ,
+    FASTQ_RECORD_VALIDATOR
 )
 from pipeval.validate.validate import (
     _detect_file_type_and_extension,
@@ -354,3 +360,107 @@ def test___validation_worker__passes_proper_validation(
     test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
 
     _validation_worker(test_path, test_args)
+
+@pytest.mark.parametrize(
+    'test_record',
+    [
+        (['badID', 'A', '+', '!']),
+        (['@ID', 'BADSEQ', '+', '!FFFFF']),
+        (['@ID', 'A', 'badextra', '!']),
+        (['@ID', 'A', '+', ' ']),
+        (['@ID', 'AC', '+', '!']),
+        (['badID', 'BADSEQ', 'badextra', '   '])
+    ]
+)
+def test__validate_record__fails_with_invalid_reads(test_record):
+    with pytest.raises(ValueError):
+        FASTQ_RECORD_VALIDATOR.validate_record(test_record)
+
+def test__validate_record__passes_valid_read():
+    valid_record = ['@record1', 'ACTGANAAAC', '+', 'FFF*GH!#FF']
+
+    FASTQ_RECORD_VALIDATOR.validate_record(valid_record)
+
+@pytest.mark.parametrize(
+    'test_file_type, test_handler',
+    [
+        ('application/x-gzip', gzip.open),
+        ('application/x-bzip2', bz2.open),
+        ('text/plain', open)
+    ]
+)
+@mock.patch('pipeval.validate.validators.fastq.magic.from_file')
+def test___get_file_handler__detects_correct_handler(
+    mock_from_file,
+    test_file_type,
+    test_handler):
+    mock_from_file.return_value = test_file_type
+
+    test_fastq = FASTQ(Path('test/path'))
+
+    assert test_handler == test_fastq._file_handler
+
+@mock.patch('pipeval.validate.validators.fastq.magic.from_file')
+def test___get_file_handler__fails_with_invalid_type(mock_from_file):
+    mock_from_file.return_value = 'invalid/type'
+
+    with pytest.raises(TypeError):
+        test_fastq = FASTQ(Path('test/path'))
+
+@pytest.mark.parametrize(
+    'test_num_lines',
+    [
+        (1),
+        (2),
+        (3),
+        (5),
+    ]
+)
+@mock.patch('pipeval.validate.validators.fastq.magic.from_file')
+@mock.patch('pipeval.validate.validators.fastq.FASTQ_RECORD_VALIDATOR.validate_record')
+def test__validate_fastq__fails_with_invalid_number_of_lines(
+    mock_validate_record,
+    mock_from_file,
+    test_num_lines):
+    test_data = '\n'.join([str(i) for i in range(test_num_lines)])
+    mock_from_file.return_value = 'text/plain'
+    mock_validate_record.return_value = lambda x: None
+    with mock.patch("builtins.open", mock_open(read_data=test_data)) as mock_file:
+        test_fastq = FASTQ(Path('test/path'))
+        with pytest.raises(ValueError):
+            test_fastq.validate_fastq()
+
+@mock.patch('pipeval.validate.validators.fastq.magic.from_file')
+@mock.patch('pipeval.validate.validators.fastq.FASTQ_RECORD_VALIDATOR.validate_record')
+def test__validate_fastq__fails_with_invalid_record(
+    mock_validate_record,
+    mock_from_file):
+    test_data = '1\n2\n3\n4'
+    mock_from_file.return_value = 'text/plain'
+    mock_validate_record.side_effect = ValueError('no')
+    with mock.patch("builtins.open", mock_open(read_data=test_data)) as mock_file:
+        test_fastq = FASTQ(Path('test/path'))
+        with pytest.raises(ValueError):
+            test_fastq.validate_fastq()
+
+@pytest.mark.parametrize(
+    'test_num_lines',
+    [
+        (0),
+        (4),
+        (8),
+        (12),
+    ]
+)
+@mock.patch('pipeval.validate.validators.fastq.magic.from_file')
+@mock.patch('pipeval.validate.validators.fastq.FASTQ_RECORD_VALIDATOR.validate_record')
+def test__validate_fastq__passes_valid_fastq(
+    mock_validate_record,
+    mock_from_file,
+    test_num_lines):
+    test_data = '\n'.join([str(i) for i in range(test_num_lines)])
+    mock_from_file.return_value = 'text/plain'
+    mock_validate_record.return_value = lambda x: None
+    with mock.patch("builtins.open", mock_open(read_data=test_data)) as mock_file:
+        test_fastq = FASTQ(Path('test/path'))
+        test_fastq.validate_fastq()
