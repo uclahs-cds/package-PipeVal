@@ -29,6 +29,7 @@ from pipeval.validate.validators.cram import (
 )
 from pipeval.validate.validators.fastq import (
     FASTQ,
+    FASTQ_RECORD,
     FASTQ_RECORD_VALIDATOR
 )
 from pipeval.validate.validate import (
@@ -373,11 +374,22 @@ def test___validation_worker__passes_proper_validation(
     ]
 )
 def test__validate_record__fails_with_invalid_reads(test_record):
+    record = FASTQ_RECORD(
+        identifier = test_record[0],
+        sequence = test_record[1],
+        extra_field = test_record[2],
+        quality = test_record[3]
+    )
     with pytest.raises(ValueError):
-        FASTQ_RECORD_VALIDATOR.validate_record(test_record)
+        FASTQ_RECORD_VALIDATOR.validate_record(record)
 
 def test__validate_record__passes_valid_read():
-    valid_record = ['@record1', 'ACTGANAAAC', '+', 'FFF*GH!#FF']
+    valid_record = FASTQ_RECORD(
+        identifier = '@record1',
+        sequence = 'ACTGANAAAC',
+        extra_field = '+',
+        quality = 'FFF*GH!#FF'
+    )
 
     FASTQ_RECORD_VALIDATOR.validate_record(valid_record)
 
