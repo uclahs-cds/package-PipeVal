@@ -13,6 +13,14 @@ from pipeval.validate.validate_types import ValidateArgs
 RECORD_LENGTH = 4
 
 @dataclass
+class FASTQ_RECORD:
+    ''' FASTQ Record class '''
+    identifier: str = ''
+    sequence: str = ''
+    extra_field: str = ''
+    quality: str = ''
+
+@dataclass
 class FASTQ_RECORD_VALIDATOR:
     ''' FASTQ Record validator class '''
     minimum_quality_ordinal: ClassVar[int] = 33
@@ -22,39 +30,35 @@ class FASTQ_RECORD_VALIDATOR:
     sequence_format: ClassVar[re.Pattern] = re.compile('^[ACTGNactgn]+$')
 
     @staticmethod
-    def validate_record(record:list):
+    def validate_record(record:FASTQ_RECORD):
         '''Validate the given FASTQ read record'''
         invalid_entries = []
-        identifier = record[0]
-        sequence = record[1]
-        extra_field = record[2]
-        quality = record[3]
 
-        if not FASTQ_RECORD_VALIDATOR.record_identifier_format.match(identifier):
+        if not FASTQ_RECORD_VALIDATOR.record_identifier_format.match(record.identifier):
             invalid_entries.append(
-                f'Record identifier `{identifier}` is invalid. It must begin with \'@\''
+                f'Record identifier `{record.identifier}` is invalid. It must begin with \'@\''
             )
 
-        if not FASTQ_RECORD_VALIDATOR.sequence_format.match(sequence):
+        if not FASTQ_RECORD_VALIDATOR.sequence_format.match(record.sequence):
             invalid_entries.append(
-                f'Read sequence `{sequence}` contains invalid characters. '
+                f'Read sequence `{record.sequence}` contains invalid characters. '
                 'Only \'ACTGNactgn\' are allowed'
             )
 
-        if not FASTQ_RECORD_VALIDATOR.extra_field_format.match(extra_field):
+        if not FASTQ_RECORD_VALIDATOR.extra_field_format.match(record.extra_field):
             invalid_entries.append(
-                f'Extra field `{extra_field}` is invalid. It must begin with \'+\''
+                f'Extra field `{record.extra_field}` is invalid. It must begin with \'+\''
             )
 
-        if len(sequence) != len(quality):
+        if len(record.sequence) != len(record.quality):
             invalid_entries.append(
                 f'Sequence and quality must be of the same length:\n'
-                f'Sequence - {len(sequence)} - {sequence}\n'
-                f'Quality - {len(quality)} - {quality}'
+                f'Sequence - {len(record.sequence)} - {record.sequence}\n'
+                f'Quality - {len(record.quality)} - {record.quality}'
             )
 
-        min_quality = min(quality)
-        max_quality = max(quality)
+        min_quality = min(record.quality)
+        max_quality = max(record.quality)
 
         if ord(min_quality) < FASTQ_RECORD_VALIDATOR.minimum_quality_ordinal or \
             ord(max_quality) > FASTQ_RECORD_VALIDATOR.maximum_quality_ordinal:
@@ -105,7 +109,13 @@ class FASTQ():
                 current_record_length = current_record_length + 1
 
                 if current_record_length == RECORD_LENGTH:
-                    FASTQ_RECORD_VALIDATOR.validate_record(current_record)
+                    record = FASTQ_RECORD(
+                        identifier = current_record[0],
+                        sequence = current_record[1],
+                        extra_field = current_record[2],
+                        quality = current_record[3]
+                    )
+                    FASTQ_RECORD_VALIDATOR.validate_record(record)
                     current_record = []
                     current_record_length = 0
 
