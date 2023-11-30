@@ -4,10 +4,10 @@ from pathlib import Path
 from argparse import Namespace, ArgumentTypeError
 from unittest.mock import Mock, mock_open
 import warnings
-import mock
-import pytest
 import gzip
 import bz2
+import mock
+import pytest
 
 from pipeval.validate.files import (
     _check_compressed,
@@ -381,6 +381,7 @@ def test__validate_record__passes_valid_read():
 
     FASTQ_RECORD_VALIDATOR.validate_record(valid_record)
 
+# pylint: disable=W0212
 @pytest.mark.parametrize(
     'test_file_type, test_handler',
     [
@@ -405,8 +406,9 @@ def test___get_file_handler__fails_with_invalid_type(mock_from_file):
     mock_from_file.return_value = 'invalid/type'
 
     with pytest.raises(TypeError):
-        test_fastq = FASTQ(Path('test/path'))
+        _ = FASTQ(Path('test/path'))
 
+# pylint: disable=W0612
 @pytest.mark.parametrize(
     'test_num_lines',
     [
@@ -430,6 +432,7 @@ def test__validate_fastq__fails_with_invalid_number_of_lines(
         with pytest.raises(ValueError):
             test_fastq.validate_fastq()
 
+# pylint: disable=W0612
 @mock.patch('pipeval.validate.validators.fastq.magic.from_file')
 @mock.patch('pipeval.validate.validators.fastq.FASTQ_RECORD_VALIDATOR.validate_record')
 def test__validate_fastq__fails_with_invalid_record(
@@ -443,6 +446,7 @@ def test__validate_fastq__fails_with_invalid_record(
         with pytest.raises(ValueError):
             test_fastq.validate_fastq()
 
+# pylint: disable=W0612
 @pytest.mark.parametrize(
     'test_num_lines',
     [
