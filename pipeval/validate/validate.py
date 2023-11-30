@@ -6,16 +6,16 @@ from typing import Dict, Union
 import multiprocessing
 from itertools import repeat
 
-from validate.validators.bam import _check_bam
-from validate.validators.sam import _check_sam
-from validate.validators.cram import _check_cram
-from validate.validators.vcf import _check_vcf
-from validate.files import (
+from pipeval.validate.validators.bam import _check_bam
+from pipeval.validate.validators.sam import _check_sam
+from pipeval.validate.validators.cram import _check_cram
+from pipeval.validate.validators.vcf import _check_vcf
+from pipeval.validate.files import (
     _check_compressed,
     _path_exists
 )
-from validate.validate_types import ValidateArgs
-from generate_checksum.checksum import _validate_checksums
+from pipeval.validate.validate_types import ValidateArgs
+from pipeval.generate_checksum.checksum import _validate_checksums
 
 # Currently supported data types
 FILE_TYPES_DICT = {

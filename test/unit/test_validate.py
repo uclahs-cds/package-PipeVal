@@ -7,33 +7,33 @@ import warnings
 import mock
 import pytest
 
-from validate.files import (
+from pipeval.validate.files import (
     _check_compressed,
     _path_exists
 )
-from validate.validators.bam import (
+from pipeval.validate.validators.bam import (
     _validate_bam_file,
     _check_bam_index
 )
-from validate.validators.vcf import (
+from pipeval.validate.validators.vcf import (
     _validate_vcf_file
 )
-from validate.validators.sam import (
+from pipeval.validate.validators.sam import (
     _validate_sam_file
 )
-from validate.validators.cram import (
+from pipeval.validate.validators.cram import (
     _validate_cram_file,
     _check_cram_index
 )
-from validate.validate import (
+from pipeval.validate.validate import (
     _detect_file_type_and_extension,
     _check_extension,
     run_validate,
     _validate_file,
     _validation_worker
 )
-from validate.__main__ import positive_integer
-from validate.validate_types import ValidateArgs
+from pipeval.validate.__main__ import positive_integer
+from pipeval.validate.validate_types import ValidateArgs
 
 def test__positive_integer__returns_correct_integer():
     expected_number = 2
@@ -83,21 +83,21 @@ def test__check_extension__correct_file_type(test_extension, expected_type):
 
     assert file_type == expected_type
 
-@mock.patch('validate.files.Path', autospec=True)
+@mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__path_exists__returns_true_for_existing_path(mock_path):
     mock_path.exists.return_value = True
 
     _path_exists(mock_path)
 
-@mock.patch('validate.files.Path', autospec=True)
+@mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__path_exists__errors_for_non_existing_path(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(IOError):
         _path_exists(mock_path)
 
-@mock.patch('validate.files.magic.from_file')
-@mock.patch('validate.files.Path', autospec=True)
+@mock.patch('pipeval.validate.files.magic.from_file')
+@mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock_magic):
     mock_magic.return_value = 'text/plain'
 
@@ -111,8 +111,8 @@ def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock
         ('application/x-bzip2')
     ]
 )
-@mock.patch('validate.files.magic.from_file')
-@mock.patch('validate.files.Path', autospec=True)
+@mock.patch('pipeval.validate.files.magic.from_file')
+@mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__check_compressed__passes_compression_check(mock_path, mock_magic, compression_mime):
     mock_magic.return_value = compression_mime
 
@@ -120,7 +120,7 @@ def test__check_compressed__passes_compression_check(mock_path, mock_magic, comp
         warnings.filterwarnings("error")
         _check_compressed(mock_path)
 
-@mock.patch('validate.validators.bam.pysam')
+@mock.patch('pipeval.validate.validators.bam.pysam')
 def test__validate_bam_file__empty_bam_file(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.head.return_value = iter([])
@@ -131,14 +131,14 @@ def test__validate_bam_file__empty_bam_file(mock_pysam):
     with pytest.raises(ValueError):
         _validate_bam_file(test_path)
 
-@mock.patch('validate.validators.bam.Path', autospec=True)
+@mock.patch('pipeval.validate.validators.bam.Path', autospec=True)
 def test__validate_bam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
         _validate_bam_file(mock_path)
 
-@mock.patch('validate.validators.bam.pysam', autospec=True)
+@mock.patch('pipeval.validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__no_index_file_error(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.check_index.side_effect = ValueError('no')
@@ -147,7 +147,7 @@ def test__check_bam_index__no_index_file_error(mock_pysam):
     with pytest.raises(FileNotFoundError):
         _check_bam_index('/some/file')
 
-@mock.patch('validate.validators.bam.pysam', autospec=True)
+@mock.patch('pipeval.validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__index_check_pass(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.check_index.return_value = True
@@ -155,7 +155,7 @@ def test__check_bam_index__index_check_pass(mock_pysam):
 
     _check_bam_index('/some/file')
 
-@mock.patch('validate.validators.bam.pysam')
+@mock.patch('pipeval.validate.validators.bam.pysam')
 def test__validate_sam_file__empty_sam_file(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.head.return_value = iter([])
@@ -166,7 +166,7 @@ def test__validate_sam_file__empty_sam_file(mock_pysam):
     with pytest.raises(ValueError):
         _validate_sam_file(test_path)
 
-@mock.patch('validate.validators.sam.Path', autospec=True)
+@mock.patch('pipeval.validate.validators.sam.Path', autospec=True)
 def test__validate_sam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
@@ -180,7 +180,7 @@ def test__validate_sam_file__quickcheck_fails(mock_path):
         ('ref')
     ]
 )
-@mock.patch('validate.validators.cram.pysam')
+@mock.patch('pipeval.validate.validators.cram.pysam')
 def test__validate_cram_file__empty_cram_file(mock_pysam, test_reference):
     mock_alignment_file = Mock()
     mock_alignment_file.head.return_value = iter([])
@@ -191,14 +191,14 @@ def test__validate_cram_file__empty_cram_file(mock_pysam, test_reference):
     with pytest.raises(ValueError):
         _validate_cram_file(test_path, test_reference)
 
-@mock.patch('validate.validators.cram.Path', autospec=True)
+@mock.patch('pipeval.validate.validators.cram.Path', autospec=True)
 def test__validate_cram_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
         _validate_cram_file(mock_path)
 
-@mock.patch('validate.validators.cram.pysam', autospec=True)
+@mock.patch('pipeval.validate.validators.cram.pysam', autospec=True)
 def test__check_cram_index__no_index_file_error(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.check_index.side_effect = ValueError('no')
@@ -207,7 +207,7 @@ def test__check_cram_index__no_index_file_error(mock_pysam):
     with pytest.raises(FileNotFoundError):
         _check_cram_index('/some/file')
 
-@mock.patch('validate.validators.cram.pysam', autospec=True)
+@mock.patch('pipeval.validate.validators.cram.pysam', autospec=True)
 def test__check_cram_index__index_check_pass(mock_pysam):
     mock_alignment_file = Mock()
     mock_alignment_file.check_index.return_value = True
@@ -215,14 +215,14 @@ def test__check_cram_index__index_check_pass(mock_pysam):
 
     _check_cram_index('/some/file')
 
-@mock.patch('validate.validators.vcf.subprocess.call')
+@mock.patch('pipeval.validate.validators.vcf.subprocess.call')
 def test__validate_vcf_file__fails_vcf_validation(mock_call):
     mock_call.return_value = 1
 
     with pytest.raises(ValueError):
         _validate_vcf_file('some/file')
 
-@mock.patch('validate.validators.vcf.subprocess.call')
+@mock.patch('pipeval.validate.validators.vcf.subprocess.call')
 def test__validate_vcf_file__passes_vcf_validation(mock_call):
     mock_call.return_value = 0
 
@@ -241,10 +241,10 @@ def test__run_validate__passes_validation_no_files():
         (OSError)
     ]
 )
-@mock.patch('validate.validate._detect_file_type_and_extension')
-@mock.patch('validate.validate._validate_file')
-@mock.patch('validate.validate._print_error')
-@mock.patch('validate.validate.Path.resolve')
+@mock.patch('pipeval.validate.validate._detect_file_type_and_extension')
+@mock.patch('pipeval.validate.validate._validate_file')
+@mock.patch('pipeval.validate.validate._print_error')
+@mock.patch('pipeval.validate.validate.Path.resolve')
 def test___validation_worker__fails_with_failing_checks(
     mock_path_resolve,
     mock_print_error,
@@ -260,8 +260,8 @@ def test___validation_worker__fails_with_failing_checks(
 
     assert not _validation_worker(test_path, test_args)
 
-@mock.patch('validate.validate.Path.resolve', autospec=True)
-@mock.patch('validate.validate.multiprocessing.Pool')
+@mock.patch('pipeval.validate.validate.Path.resolve', autospec=True)
+@mock.patch('pipeval.validate.validate.multiprocessing.Pool')
 def test__run_validate__passes_on_all_valid_files(
     mock_pool,
     mock_path_resolve
@@ -274,8 +274,8 @@ def test__run_validate__passes_on_all_valid_files(
 
     run_validate(test_args)
 
-@mock.patch('validate.validate.Path.resolve', autospec=True)
-@mock.patch('validate.validate.multiprocessing.Pool')
+@mock.patch('pipeval.validate.validate.Path.resolve', autospec=True)
+@mock.patch('pipeval.validate.validate.multiprocessing.Pool')
 def test__run_validate__fails_with_failing_file(
     mock_pool,
     mock_path_resolve):
@@ -290,7 +290,7 @@ def test__run_validate__fails_with_failing_file(
         run_validate(test_args)
     assert pytest_exit.value.code == expected_code
 
-@mock.patch('validate.validate._path_exists')
+@mock.patch('pipeval.validate.validate._path_exists')
 def test__validate_file__errors_with_invalid_extension(mock_path_exists):
     mock_path_exists.return_value = True
 
@@ -305,10 +305,10 @@ def test__validate_file__errors_with_invalid_extension(mock_path_exists):
         ('file-bed')
     ]
 )
-@mock.patch('validate.validate._path_exists')
-@mock.patch('validate.validate._check_compressed')
-@mock.patch('validate.validate._validate_checksums')
-@mock.patch('validate.validate.CHECK_FUNCTION_SWITCH')
+@mock.patch('pipeval.validate.validate._path_exists')
+@mock.patch('pipeval.validate.validate._check_compressed')
+@mock.patch('pipeval.validate.validate._validate_checksums')
+@mock.patch('pipeval.validate.validate.CHECK_FUNCTION_SWITCH')
 def test__validate_file__checks_compression(
     mock_check_function_switch,
     mock_validate_checksums,
@@ -323,7 +323,7 @@ def test__validate_file__checks_compression(
 
     mock_check_compressed.assert_called_once()
 
-@mock.patch('validate.validate.Path.resolve', autospec=True)
+@mock.patch('pipeval.validate.validate.Path.resolve', autospec=True)
 def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
     expected_error = FileNotFoundError
     mock_path_resolve.side_effect = expected_error
@@ -335,10 +335,10 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
     with pytest.raises(expected_error):
         run_validate(test_args)
 
-@mock.patch('validate.validate.Path.resolve', autospec=True)
-@mock.patch('validate.validate._detect_file_type_and_extension')
-@mock.patch('validate.validate._validate_file')
-@mock.patch('validate.validate._print_success')
+@mock.patch('pipeval.validate.validate.Path.resolve', autospec=True)
+@mock.patch('pipeval.validate.validate._detect_file_type_and_extension')
+@mock.patch('pipeval.validate.validate._validate_file')
+@mock.patch('pipeval.validate.validate._print_success')
 def test___validation_worker__passes_proper_validation(
     mock_print_success,
     mock_validate_file,
