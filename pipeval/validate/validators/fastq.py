@@ -1,3 +1,4 @@
+# pylint: disable=C0103
 '''Helper methods for FASTQ file validation'''
 from pathlib import Path
 from typing import Dict, Union, ClassVar
@@ -13,10 +14,11 @@ RECORD_LENGTH = 4
 
 @dataclass
 class FASTQ_RECORD_VALIDATOR:
+    ''' FASTQ Record validator class '''
     minimum_quality_ordinal: ClassVar[int] = 33
     maximum_quality_ordinal: ClassVar[int] = 126
     record_identifier_format: ClassVar[re.Pattern] = re.compile('^@')
-    extra_field_format: ClassVar[re.Pattern] = re.compile('^\+')
+    extra_field_format: ClassVar[re.Pattern] = re.compile(r'^\+')
     sequence_format: ClassVar[re.Pattern] = re.compile('^[ACTGNactgn]+$')
 
     @staticmethod
@@ -51,8 +53,8 @@ class FASTQ_RECORD_VALIDATOR:
                 f'Quality - {len(quality)} - {quality}'
             )
 
-        min_quality = min(quality, key=lambda x: ord(x))
-        max_quality = max(quality, key=lambda x: ord(x))
+        min_quality = min(quality)
+        max_quality = max(quality)
 
         if ord(min_quality) < FASTQ_RECORD_VALIDATOR.minimum_quality_ordinal or \
             ord(max_quality) > FASTQ_RECORD_VALIDATOR.maximum_quality_ordinal:
@@ -68,7 +70,9 @@ class FASTQ_RECORD_VALIDATOR:
             record_errors = '\n'.join(invalid_entries)
             raise ValueError(f'Record {record} is invalid: {record_errors}')
 
+# pylint: disable=R0903
 class FASTQ():
+    ''' FASTQ file handling and validation class '''
     def __init__(self, fastq_file:Path):
         '''Constructor'''
         self._fastq_path = fastq_file
@@ -92,6 +96,7 @@ class FASTQ():
         return handler
 
     def validate_fastq(self):
+        ''' Validate the FASTQ file '''
         with self._file_handler(self._fastq_path, 'rt') as rd:
             current_record = []
             current_record_length = 0
