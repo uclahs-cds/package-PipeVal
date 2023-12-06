@@ -11,6 +11,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [5.0.0-rc.2] - 2023-12-06
+### Added
+- FASTQ validator
+
+---
+
 ## [5.0.0-rc.1] - 2023-11-22
 ### Changed
 - Restructured CLI to have common main command `pipeval`
