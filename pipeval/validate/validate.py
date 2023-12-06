@@ -10,6 +10,7 @@ from pipeval.validate.validators.bam import _check_bam
 from pipeval.validate.validators.sam import _check_sam
 from pipeval.validate.validators.cram import _check_cram
 from pipeval.validate.validators.vcf import _check_vcf
+from pipeval.validate.validators.fastq import _check_fastq
 from pipeval.validate.files import (
     _check_compressed,
     _path_exists
@@ -24,7 +25,7 @@ FILE_TYPES_DICT = {
     'file-cram': ['.cram'],
     'file-vcf': ['.vcf', '.vcf.gz'],
     'file-fasta': ['.fasta', '.fa'],
-    'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz'],
+    'file-fastq':['.fastq', '.fq.gz', '.fq', '.fastq.gz', '.fastq.bz2', '.fq.bz2'],
     'file-bed': ['.bed', '.bed.gz'],
     'file-py': ['.py']
     }
@@ -33,9 +34,10 @@ CHECK_FUNCTION_SWITCH = {
     'file-bam': _check_bam,
     'file-sam': _check_sam,
     'file-cram': _check_cram,
-    'file-vcf': _check_vcf
+    'file-vcf': _check_vcf,
+    'file-fastq': _check_fastq
 }
-CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed']
+CHECK_COMPRESSION_TYPES = ['file-vcf', 'file-fastq', 'file-bed', 'file-fastq']
 
 def _validate_file(
     path:Path, file_type:str,
@@ -60,11 +62,11 @@ def _validate_file(
 
 def _print_error(path:Path, err:BaseException):
     ''' Prints error message '''
-    print(f'PID:{os.getpid()} - Error: {str(path)} {str(err)}')
+    print(f'PID:{os.getpid()} - Error: `{str(path)}` {str(err)}')
 
 def _print_success(path:Path, file_type:str):
     ''' Prints success message '''
-    print(f'PID:{os.getpid()} - Input: {path} is valid {file_type}')
+    print(f'PID:{os.getpid()} - Input: `{path}` is valid {file_type}')
 
 def _detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
