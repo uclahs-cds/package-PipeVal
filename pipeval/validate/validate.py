@@ -54,7 +54,7 @@ def _validate_file(
         raise TypeError(f'File {path} does not have a valid extension.')
 
     if file_type in CHECK_COMPRESSION_TYPES:
-        _check_compressed(path)
+        _check_compressed(path, args.test_integrity)
 
     _validate_checksums(path)
 
