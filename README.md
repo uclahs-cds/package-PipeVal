@@ -83,6 +83,7 @@ options:
                         Path to reference file for CRAM
   -p PROCESSES, --processes PROCESSES
                         Number of processes to run in parallel when validating multiple files
+  -t, --test-integrity  Whether to perform a full integrity test on compressed files
 ```
 
 The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.

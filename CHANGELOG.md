@@ -11,6 +11,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [5.0.0-rc.3] - 2023-12-07
+### Added
+- Integrity test for compressed files
+
+---
+
 ## [5.0.0-rc.2] - 2023-12-06
 ### Added
 - FASTQ validator
