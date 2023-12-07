@@ -27,11 +27,11 @@ def _check_compression_integrity(path:Path, handler:Union[gzip.open,bz2.open]):
             while file_reader.read(read_chunk_size) != b'':
                 pass
         except gzip.BadGzipFile as bad_gzip:
-            integrity_error = f'Invalid Gzip file: {str(bad_gzip)}'
+            integrity_error = f'Invalid Gzip file: {bad_gzip}'
         except EOFError as eof_error:
-            integrity_error = f'Truncated or corrupted file: {str(eof_error)}'
+            integrity_error = f'Truncated or corrupted file: {eof_error}'
         except zlib.error as zlib_error:
-            integrity_error = f'Decompression error: {str(zlib_error)}'
+            integrity_error = f'Decompression error: {zlib_error}'
 
     if integrity_error != '':
         raise TypeError(f'Compression integrity check failed: {integrity_error}')
