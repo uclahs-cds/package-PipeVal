@@ -125,7 +125,11 @@ def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock
 @mock.patch('pipeval.validate.files._check_compression_integrity')
 @mock.patch('pipeval.validate.files.magic.from_file')
 @mock.patch('pipeval.validate.files.Path', autospec=True)
-def test__check_compressed__passes_compression_check(mock_path, mock_magic, mock_integrity, compression_mime):
+def test__check_compressed__passes_compression_check(
+    mock_path,
+    mock_magic,
+    mock_integrity,
+    compression_mime):
     mock_magic.return_value = compression_mime
     mock_integrity.return_value = None
     test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
