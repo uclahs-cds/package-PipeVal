@@ -4,6 +4,7 @@ from pathlib import Path
 from argparse import Namespace, ArgumentTypeError
 from unittest.mock import Mock, mock_open
 import warnings
+import zlib
 import gzip
 import bz2
 import mock
@@ -11,7 +12,9 @@ import pytest
 
 from pipeval.validate.files import (
     _check_compressed,
-    _path_exists
+    _path_exists,
+    _identify_compression,
+    _check_compression_integrity
 )
 from pipeval.validate.validators.bam import (
     _validate_bam_file,
@@ -107,9 +110,10 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
 @mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock_magic):
     mock_magic.return_value = 'text/plain'
+    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
 
     with pytest.warns(UserWarning):
-        _check_compressed(mock_path)
+        _check_compressed(mock_path, test_args)
 
 @pytest.mark.parametrize(
     'compression_mime',
@@ -118,14 +122,17 @@ def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock
         ('application/x-bzip2')
     ]
 )
+@mock.patch('pipeval.validate.files._check_compression_integrity')
 @mock.patch('pipeval.validate.files.magic.from_file')
 @mock.patch('pipeval.validate.files.Path', autospec=True)
-def test__check_compressed__passes_compression_check(mock_path, mock_magic, compression_mime):
+def test__check_compressed__passes_compression_check(mock_path, mock_magic, mock_integrity, compression_mime):
     mock_magic.return_value = compression_mime
+    mock_integrity.return_value = None
+    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error")
-        _check_compressed(mock_path)
+        _check_compressed(mock_path, test_args)
 
 @mock.patch('pipeval.validate.validators.bam.pysam')
 def test__validate_bam_file__empty_bam_file(mock_pysam):
@@ -236,7 +243,7 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
     _validate_vcf_file('some/file')
 
 def test__run_validate__passes_validation_no_files():
-    test_args = ValidateArgs(path=[], cram_reference=None, processes=1)
+    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
     run_validate(test_args)
 
 @pytest.mark.parametrize(
@@ -259,7 +266,11 @@ def test___validation_worker__fails_with_failing_checks(
     mock_detect_file_type_and_extension,
     test_exception):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    test_args = ValidateArgs(
+        path=[test_path],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
     mock_path_resolve.return_value = test_path
     mock_validate_file.side_effect = test_exception
     mock_detect_file_type_and_extension.return_value = ('', '')
@@ -274,7 +285,11 @@ def test__run_validate__passes_on_all_valid_files(
     mock_path_resolve
     ):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    test_args = ValidateArgs(
+        path=[test_path],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
 
     mock_path_resolve.return_value = None
     mock_pool.return_value.__enter__.return_value = Namespace(starmap=lambda y, z: [True])
@@ -287,7 +302,11 @@ def test__run_validate__fails_with_failing_file(
     mock_pool,
     mock_path_resolve):
     test_path = 'some/path'
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    test_args = ValidateArgs(
+        path=[test_path],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
     expected_code = 1
 
     mock_path_resolve.return_value = None
@@ -326,7 +345,13 @@ def test__validate_file__checks_compression(
     mock_path_exists.return_value = True
     mock_check_function_switch.return_value = {}
 
-    _validate_file('', test_file_types, 'ext', None)
+    test_args = ValidateArgs(
+        path=[],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
+
+    _validate_file('', test_file_types, 'ext', test_args)
 
     mock_check_compressed.assert_called_once()
 
@@ -337,7 +362,11 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
 
     test_path = 'some/path'
 
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    test_args = ValidateArgs(
+        path=[test_path],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
 
     with pytest.raises(expected_error):
         run_validate(test_args)
@@ -358,7 +387,11 @@ def test___validation_worker__passes_proper_validation(
 
     test_path = 'some/path'
 
-    test_args = ValidateArgs(path=[test_path], cram_reference=None, processes=1)
+    test_args = ValidateArgs(
+        path=[test_path],
+        cram_reference=None,
+        processes=1,
+        test_integrity=False)
 
     _validation_worker(test_path, test_args)
 
@@ -480,3 +513,52 @@ def test__validate_fastq__passes_valid_fastq(
     with mock.patch("builtins.open", mock_open(read_data=test_data)) as mock_file:
         test_fastq = FASTQ(Path('test/path'))
         test_fastq.validate_fastq()
+
+
+# pylint: disable=W0212
+@pytest.mark.parametrize(
+    'test_file_type, test_handler',
+    [
+        ('application/x-gzip', gzip.open),
+        ('application/x-bzip2', bz2.open),
+        ('any/other', None)
+    ]
+)
+@mock.patch('pipeval.validate.files.magic.from_file')
+def test___identify_compression__identified_correct_handler(
+    mock_from_file,
+    test_file_type,
+    test_handler):
+    mock_from_file.return_value = test_file_type
+
+    identifier_handler = _identify_compression(Path('test/path'))
+
+    assert identifier_handler == test_handler
+
+@pytest.mark.parametrize(
+    'test_handler',
+    [
+        ("gzip.open"),
+        ("bz2.open")
+    ]
+)
+def test___check_compression_integrity__passes_valid_file(test_handler):
+    with mock.patch(test_handler, mock_open(read_data=b'data')) as mock_file:
+        _check_compression_integrity('test/path', mock_file)
+
+@pytest.mark.parametrize(
+    'test_handler, test_exception',
+    [
+        ("gzip.open", gzip.BadGzipFile),
+        ("gzip.open", EOFError),
+        ("gzip.open", zlib.error),
+        ("bz2.open", EOFError),
+        ("bz2.open", zlib.error)
+    ]
+)
+def test___check_compression_integrity__raises_on_exception(test_handler, test_exception):
+    with mock.patch(test_handler, mock_open(read_data=b'data')) as mock_file:
+        mock_file.return_value.read.side_effect = test_exception
+
+        with pytest.raises(TypeError):
+            _check_compression_integrity('test/path', mock_file)
