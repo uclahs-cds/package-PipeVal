@@ -28,5 +28,7 @@ def add_subparser_validate(subparsers:argparse._SubParsersAction):
         help='Path to reference file for CRAM')
     parser.add_argument('-p', '--processes', type=positive_integer, default=1, \
         help='Number of processes to run in parallel when validating multiple files')
+    parser.add_argument('-t', '--test-integrity', action='store_true', \
+        help='Whether to perform a full integrity test on compressed files')
 
     parser.set_defaults(func=run_validate)
