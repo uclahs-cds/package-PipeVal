@@ -1,5 +1,6 @@
 # pylint: disable=C0116
 # pylint: disable=C0114
+# pylint: disable=C0103
 from pipeval.common import skippedValidation
 
 def test__skippedValidation__properly_skips_function_call(monkeypatch, capsys):
