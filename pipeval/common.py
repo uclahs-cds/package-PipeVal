@@ -1,5 +1,6 @@
 """ Common functions for PipeVal """
 import os
+from functools import wraps
 
 # pylint: disable=C0103,W0613
 def skippedValidation(name):
@@ -12,9 +13,12 @@ def skippedValidation(name):
     def decorator(func):
         return func
 
-    def do_nothing(func):
-        return lambda *args, **kwargs: \
+    def print_skip_message(func):
+        @wraps(func)
+        def skip_message(*args, **kwargs):
             print(f'PID:{os.getpid()} - Skipping validation {name.upper()}')
+
+        return skip_message
 
     value = os.environ.get(f"PIPEVAL_SKIP_{name.upper()}")
     should_skip_validate = value is not None and value.lower() == 'true'
@@ -22,4 +26,4 @@ def skippedValidation(name):
     if not should_skip_validate:
         return decorator
 
-    return do_nothing
+    return print_skip_message
