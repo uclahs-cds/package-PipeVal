@@ -111,6 +111,13 @@ Input: path/to/input is valid <file-type>
 Error: path/to/input <error message>
 ```
 
+#### Validation Skipping
+
+Certain validations can be skipped through environment variables.
+|ENV VAR|Notes|
+|:---:|:---:|
+|PIPEVAL_SKIP_CHECKSUM|Flag to disable checksum validation. Set to `true` to disable checksum validation within PipeVal.|
+
 ### `pipeval generate-checksum`
 ```
 usage: pipeval generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]

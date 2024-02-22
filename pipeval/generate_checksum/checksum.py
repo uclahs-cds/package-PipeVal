@@ -5,11 +5,14 @@ from collections import namedtuple
 from typing import Dict, Union
 from pathlib import Path
 
+from pipeval.common import skippedValidation
+
 ChecksumArgs = namedtuple(
     'args',
     'path, type'
 )
 
+@skippedValidation('CHECKSUM')
 def _validate_checksums(path:Path):
     ''' Validate MD5 and/or SHA512 checksums '''
     # Checksum validation
