@@ -4,7 +4,7 @@ from typing import Dict, Union
 
 import pysam
 
-from validate.validate_types import ValidateArgs
+from pipeval.validate.validate_types import ValidateArgs
 
 def _validate_sam_file(path:Path):
     '''Validates sam file'''

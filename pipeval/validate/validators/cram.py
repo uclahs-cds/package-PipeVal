@@ -4,7 +4,7 @@ from typing import Dict, Union, Optional
 
 import pysam
 
-from validate.validate_types import ValidateArgs
+from pipeval.validate.validate_types import ValidateArgs
 
 def _validate_cram_file(path:Path, reference:str=None):
     '''Validates cram file'''

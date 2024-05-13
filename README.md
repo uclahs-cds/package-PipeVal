@@ -36,30 +36,59 @@ The tool can be installed as a standalone command line tool. The following depen
 |Python|3.10|
 |VCFtools|0.1.16|
 
-### Install directly from GitHub
+Additionally, the `libmagic` C library must also be installed on the system.
+
+### Installing `libmagic`
+
+On Debian/Ubuntu, install through:
+```Bash
+sudo apt-get install libmagic-dev
+```
+
+On Mac, install through homebrew (https://brew.sh/):
+```Bash
+brew install libmagic
+```
+
+`libmagic` can also be installed through the `conda` package manager:
+```Bash
+conda install -c conda-forge libmagic
+```
+
+With the dependencies (and the proper versions) installed, install `pipeval` through one of the options below:
+
+### Install directly from GitHub through SSH
 ```Bash
 pip install git+ssh://git@github.com/uclahs-cds/package-PipeVal.git
 ```
 
+### Install directly from GitHub through HTTPS
+```Bash
+pip install git+https://git@github.com/uclahs-cds/package-PipeVal.git
+```
+
 ### Install from cloned repository
 ```Bash
+<clone the PipeVal GitHub repository>
 cd </path/to/cloned/repository>
 pip install .
 ```
 
 ## Usage
-### `validate`
+### `pipeval validate`
 ```
-usage: validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
+usage: pipeval validate [-h] [-v] [-r CRAM_REFERENCE] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
 
 options:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
   -r CRAM_REFERENCE, --cram-reference CRAM_REFERENCE
                         Path to reference file for CRAM
+  -p PROCESSES, --processes PROCESSES
+                        Number of processes to run in parallel when validating multiple files
+  -t, --test-integrity  Whether to perform a full integrity test on compressed files
 ```
 
 The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
@@ -87,9 +116,16 @@ Input: path/to/input is valid <file-type>
 Error: path/to/input <error message>
 ```
 
-### `generate-checksum`
+#### Validation Skipping
+
+Certain validations can be skipped through environment variables.
+|ENV VAR|Notes|
+|:---:|:---:|
+|PIPEVAL_SKIP_CHECKSUM|Flag to disable checksum validation. Set to `true` to disable checksum validation within PipeVal.|
+
+### `pipeval generate-checksum`
 ```
-usage: generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
+usage: pipeval generate-checksum [-h] [-t {md5,sha512}] [-v] path [path ...]
 
 positional arguments:
   path                  one or more paths of files to validate
@@ -98,7 +134,6 @@ options:
   -h, --help            show this help message and exit
   -t {md5,sha512}, --type {md5,sha512}
                         Checksum type
-  -v, --version         show program's version number and exit
 ```
 
 ## Development
@@ -135,8 +170,8 @@ pytest
 ## Discussions
 
 - [Issue tracker](https://github.com/uclahs-cds/package-PipeVal/issues) to report errors and enhancement ideas.
-- Discussions can take place in [tool-NF-test Discussions](https://github.com/uclahs-cds/package-PipeVal/discussions)
-- [tool-NF-test pull requests](https://github.com/uclahs-cds/package-PipeVal/pulls) are also open for discussion
+- Discussions can take place in [package-PipeVal Discussions](https://github.com/uclahs-cds/package-PipeVal/discussions)
+- [package-PipeVal pull requests](https://github.com/uclahs-cds/package-PipeVal/pulls) are also open for discussion
 
 ## Contributors
 

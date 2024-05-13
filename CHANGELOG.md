@@ -13,6 +13,36 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [5.0.0] - 2024-02-16
+### Added
+- Validation skip functionality for checksums
+
+---
+
+## [5.0.0-rc.3] - 2023-12-07
+### Added
+- Integrity test for compressed files
+
+---
+
+## [5.0.0-rc.2] - 2023-12-06
+### Added
+- FASTQ validator
+
+---
+
+## [5.0.0-rc.1] - 2023-11-22
+### Changed
+- Restructured CLI to have common main command `pipeval`
+
+---
+
+## [4.0.0] - 2023-11-22
+### Added
+- Parallelize validation
+
+---
+
 ## [4.0.0-rc.2] - 2023-04-24
 ### Changed
 - Resolve potential symlinks before validation
