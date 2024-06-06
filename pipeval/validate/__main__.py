@@ -16,7 +16,7 @@ def positive_integer(arg):
 
 def add_subparser_validate(subparsers:argparse._SubParsersAction):
     """ Parse arguments """
-    parser = subparsers.add_parser(
+    parser:argparse.ArgumentParser = subparsers.add_parser(
         name = 'validate',
         help = 'Validate one or more file(s)',
         description = 'Validate one or more file(s)',
@@ -26,6 +26,8 @@ def add_subparser_validate(subparsers:argparse._SubParsersAction):
     parser.add_argument('path', help='One or more paths of files to validate', type=str, nargs='+')
     parser.add_argument('-r', '--cram-reference', default=None, \
         help='Path to reference file for CRAM')
+    parser.add_argument('-u', '--unmapped-bam', action='store_true',
+        help='Input is unmmapped BAM.')
     parser.add_argument('-p', '--processes', type=positive_integer, default=1, \
         help='Number of processes to run in parallel when validating multiple files')
     parser.add_argument('-t', '--test-integrity', action='store_true', \

@@ -47,6 +47,7 @@ def _validate_file(
         `args` must contain the following:
         `path` is a required argument with a value of list of files
         `cram_reference` is a required argument with either a string value or None
+        `unmapped_bam` is a required argument of boolean variable
     '''
     _path_exists(path)
 

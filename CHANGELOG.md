@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 ### Added
 - Add validation flowchart
-
+- Add support for unmapped BAM
 ---
 
 ## [5.0.0] - 2024-02-16
@@ -72,7 +72,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
-### Removed 
+### Removed
 - Remove deprecated parameter options from README
 - Remove inaccessible design doc link from README
 - Remove directory checking

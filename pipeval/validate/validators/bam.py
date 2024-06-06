@@ -6,10 +6,13 @@ import pysam
 
 from pipeval.validate.validate_types import ValidateArgs
 
-def _validate_bam_file(path:Path):
+def _validate_bam_file(path:Path, unmapped_bam:bool):
     '''Validates bam file'''
+    args = [str(path)]
+    if unmapped_bam:
+        args.append('-u')
     try:
-        pysam.quickcheck(str(path))
+        pysam.quickcheck(*args)
     except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
@@ -35,5 +38,5 @@ def _check_bam(path:Path, args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
     `args` must contains the following:
         `cram_reference` is a required key with either a string value or None
     '''
-    _validate_bam_file(path)
+    _validate_bam_file(path, args.unmapped_bam)
     _check_bam_index(path)
