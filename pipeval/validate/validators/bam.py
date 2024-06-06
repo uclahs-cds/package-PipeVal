@@ -16,7 +16,12 @@ def _validate_bam_file(path:Path, unmapped_bam:bool):
     except pysam.SamtoolsError as err:
         raise ValueError("samtools bam check failed. " + str(err)) from err
 
-    bam_head: pysam.IteratorRowHead = pysam.AlignmentFile(str(path)).head(1)
+    kwargs = {
+        'filename': str(path)
+    }
+    if unmapped_bam:
+        kwargs['check_sq'] = False
+    bam_head: pysam.IteratorRowHead = pysam.AlignmentFile(**kwargs).head(1)
     if next(bam_head, None) is None:
         raise ValueError("pysam bam check failed. No reads in " + str(path))
 
