@@ -2,7 +2,7 @@
 # pylint: disable=C0114
 from pathlib import Path
 from argparse import Namespace, ArgumentTypeError
-from unittest.mock import Mock, mock_open
+from unittest.mock import Mock, mock_open, MagicMock
 import warnings
 import zlib
 import gzip
@@ -160,6 +160,38 @@ def test__validate_bam_file__empty_bam_file(mock_pysam):
 
     with pytest.raises(ValueError):
         _validate_bam_file(test_path, unmapped_bam=False)
+
+@mock.patch('pipeval.validate.validators.bam.pysam')
+def test__validate_bam_file__quickcheck_called_with_unmapped(mock_pysam):
+    mock_alignment_file = Mock()
+    mock_alignment_file.head.return_value = iter(['read1'])
+    mock_quickcheck = Mock()
+
+    mock_pysam.quickcheck = mock_quickcheck
+    mock_pysam.AlignmentFile.return_value = mock_alignment_file
+
+    test_path = 'empty/valid/bam'
+    test_unmapped_option = '-u'
+
+    _validate_bam_file(test_path, unmapped_bam=True)
+    mock_quickcheck.assert_called_with(test_path, test_unmapped_option)
+
+@mock.patch('pipeval.validate.validators.bam.pysam')
+def test__validate_bam_file__alignmentfile_called_with_unmapped(mock_pysam):
+    mock_alignment_file = MagicMock()
+    mock_alignment_file.__iter__.return_value = ['read1']
+    mock_quickcheck = Mock()
+
+    mock_pysam.quickcheck = mock_quickcheck
+    mock_pysam.AlignmentFile = mock_alignment_file
+
+    test_path = 'empty/valid/bam'
+    test_unmapped_option = False
+
+    _validate_bam_file(test_path, unmapped_bam=True)
+    mock_alignment_file.assert_called_with(
+        **{'filename': test_path, 'check_sq': test_unmapped_option}
+    )
 
 @mock.patch('pipeval.validate.validators.bam.Path', autospec=True)
 def test__validate_bam_file__quickcheck_fails(mock_path):
