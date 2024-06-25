@@ -3,5 +3,5 @@ from collections import namedtuple
 
 ValidateArgs = namedtuple(
     'args',
-    'path, cram_reference, processes, test_integrity'
+    'path, cram_reference, unmapped_bam, processes, test_integrity'
 )

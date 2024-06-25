@@ -2,7 +2,7 @@
 # pylint: disable=C0114
 from pathlib import Path
 from argparse import Namespace, ArgumentTypeError
-from unittest.mock import Mock, mock_open
+from unittest.mock import Mock, mock_open, MagicMock
 import warnings
 import zlib
 import gzip
@@ -110,7 +110,13 @@ def test__path_exists__errors_for_non_existing_path(mock_path):
 @mock.patch('pipeval.validate.files.Path', autospec=True)
 def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock_magic):
     mock_magic.return_value = 'text/plain'
-    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
+    test_args = ValidateArgs(
+        path=[],
+        cram_reference=None,
+        unmapped_bam=False,
+        processes=1,
+        test_integrity=False
+    )
 
     with pytest.warns(UserWarning):
         _check_compressed(mock_path, test_args)
@@ -132,7 +138,13 @@ def test__check_compressed__passes_compression_check(
     compression_mime):
     mock_magic.return_value = compression_mime
     mock_integrity.return_value = None
-    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
+    test_args = ValidateArgs(
+        path=[],
+        cram_reference=None,
+        unmapped_bam=False,
+        processes=1,
+        test_integrity=False
+    )
 
     with warnings.catch_warnings():
         warnings.filterwarnings("error")
@@ -147,14 +159,46 @@ def test__validate_bam_file__empty_bam_file(mock_pysam):
     test_path = Path('empty/valid/bam')
 
     with pytest.raises(ValueError):
-        _validate_bam_file(test_path)
+        _validate_bam_file(test_path, unmapped_bam=False)
+
+@mock.patch('pipeval.validate.validators.bam.pysam')
+def test__validate_bam_file__quickcheck_called_with_unmapped(mock_pysam):
+    mock_alignment_file = Mock()
+    mock_alignment_file.head.return_value = iter(['read1'])
+    mock_quickcheck = Mock()
+
+    mock_pysam.quickcheck = mock_quickcheck
+    mock_pysam.AlignmentFile.return_value = mock_alignment_file
+
+    test_path = 'empty/valid/bam'
+    test_unmapped_option = '-u'
+
+    _validate_bam_file(test_path, unmapped_bam=True)
+    mock_quickcheck.assert_called_with(test_path, test_unmapped_option)
+
+@mock.patch('pipeval.validate.validators.bam.pysam')
+def test__validate_bam_file__alignmentfile_called_with_unmapped(mock_pysam):
+    mock_alignment_file = MagicMock()
+    mock_alignment_file.__iter__.return_value = ['read1']
+    mock_quickcheck = Mock()
+
+    mock_pysam.quickcheck = mock_quickcheck
+    mock_pysam.AlignmentFile = mock_alignment_file
+
+    test_path = 'empty/valid/bam'
+    test_unmapped_option = False
+
+    _validate_bam_file(test_path, unmapped_bam=True)
+    mock_alignment_file.assert_called_with(
+        **{'filename': test_path, 'check_sq': test_unmapped_option}
+    )
 
 @mock.patch('pipeval.validate.validators.bam.Path', autospec=True)
 def test__validate_bam_file__quickcheck_fails(mock_path):
     mock_path.exists.return_value = False
 
     with pytest.raises(ValueError):
-        _validate_bam_file(mock_path)
+        _validate_bam_file(mock_path, unmapped_bam=False)
 
 @mock.patch('pipeval.validate.validators.bam.pysam', autospec=True)
 def test__check_bam_index__no_index_file_error(mock_pysam):
@@ -247,7 +291,13 @@ def test__validate_vcf_file__passes_vcf_validation(mock_call):
     _validate_vcf_file('some/file')
 
 def test__run_validate__passes_validation_no_files():
-    test_args = ValidateArgs(path=[], cram_reference=None, processes=1, test_integrity=False)
+    test_args = ValidateArgs(
+        path=[],
+        cram_reference=None,
+        unmapped_bam=False,
+        processes=1,
+        test_integrity=False
+    )
     run_validate(test_args)
 
 @pytest.mark.parametrize(
@@ -273,6 +323,7 @@ def test___validation_worker__fails_with_failing_checks(
     test_args = ValidateArgs(
         path=[test_path],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
     mock_path_resolve.return_value = test_path
@@ -292,6 +343,7 @@ def test__run_validate__passes_on_all_valid_files(
     test_args = ValidateArgs(
         path=[test_path],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
 
@@ -309,6 +361,7 @@ def test__run_validate__fails_with_failing_file(
     test_args = ValidateArgs(
         path=[test_path],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
     expected_code = 1
@@ -352,6 +405,7 @@ def test__validate_file__checks_compression(
     test_args = ValidateArgs(
         path=[],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
 
@@ -369,6 +423,7 @@ def test__run_validate__fails_on_unresolvable_symlink(mock_path_resolve):
     test_args = ValidateArgs(
         path=[test_path],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
 
@@ -394,6 +449,7 @@ def test___validation_worker__passes_proper_validation(
     test_args = ValidateArgs(
         path=[test_path],
         cram_reference=None,
+        unmapped_bam=False,
         processes=1,
         test_integrity=False)
 
