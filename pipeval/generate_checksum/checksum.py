@@ -29,7 +29,7 @@ def _validate_checksums(path:Path):
 def _compare_hash(hash_type:str, path:Path, hash_path:Path):
     ''' Compares existing hash to generated hash '''
     # Read only the hash and not the filename for comparison
-    existing_hash = hash_path.read_text().split(' ')[0].strip()
+    existing_hash = hash_path.read_text().split()[0].strip()
 
     if hash_type == 'md5':
         return existing_hash == _generate_md5(path)

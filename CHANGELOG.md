@@ -8,9 +8,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ---
 
 ## [Unreleased]
+
+---
+
+## [5.1.0] - 2024-07-08
 ### Added
 - Add validation flowchart
 - Add support for unmapped BAM
+- Add additional MIME type for GZIP compressed files
+- Add support for checksum files formatted with any whitespace separator
+
 ---
 
 ## [5.0.0] - 2024-02-16
