@@ -1,21 +1,29 @@
 # PipeVal
 
-- [Overview](#overview)
+- [PipeVal](#pipeval)
+  - [Overview](#overview)
     - [Validation Flowchart](#validation-flowchart)
-- [Docker](#docker)
-- [Installation](#installation)
-    - [From GitHub](#install-directly-from-github)
-    - [From local](#install-from-cloned-repository)
-- [Usage](#usage)
-    - [validate](#validate)
-        - [Supported Types](#supported-types)
-        - [Expected Output](#expected-output)
-    - [generate-checksum](#generate-checksum)
-- [Development](#development)
-- [References](#references)
-- [Discussions](#discussions)
-- [Contributors](#contributors)
-- [License](#license)
+  - [Docker](#docker)
+  - [Installation](#installation)
+    - [Installing `libmagic`](#installing-libmagic)
+    - [Install directly from GitHub through SSH](#install-directly-from-github-through-ssh)
+    - [Install directly from GitHub through HTTPS](#install-directly-from-github-through-https)
+    - [Install from cloned repository](#install-from-cloned-repository)
+  - [Usage](#usage)
+    - [`pipeval validate`](#pipeval-validate)
+      - [Supported Types](#supported-types)
+      - [Expected Output](#expected-output)
+      - [Validation Skipping](#validation-skipping)
+    - [`pipeval generate-checksum`](#pipeval-generate-checksum)
+  - [Development](#development)
+  - [References](#references)
+    - [Pysam](#pysam)
+      - [Publications](#publications)
+    - [VCFtools](#vcftools)
+      - [Publications](#publications-1)
+  - [Discussions](#discussions)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Overview
 PipeVal is an easy to use CLI tool that can be used to validate different inputs and parameters in various settings, including Nextflow scripts/pipelines. It can be used standalone or using a Docker container.
@@ -91,7 +99,7 @@ options:
   -t, --test-integrity  Whether to perform a full integrity test on compressed files
 ```
 
-The tool will attempt to automatically detect the file type based on extension and perform the approriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
+The tool will attempt to automatically detect the file type based on extension and perform the appropriate validations. The tool will also perform an existence check along with a checksum check if an MD5 or SHA512 checksum exists regardless of file type.
 
 #### Supported Types
 
