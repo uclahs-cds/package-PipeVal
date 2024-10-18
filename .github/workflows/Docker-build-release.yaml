@@ -38,7 +38,7 @@ jobs:
             type=raw,enable=${{github.event_name == 'push'}},value=dev,event=branch
             type=match,pattern=v(.*),group=1
       - name: Log in to the Container registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io/uclahs-cds
           username: ${{ github.actor }}
