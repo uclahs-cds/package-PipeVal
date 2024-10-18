@@ -1,5 +1,7 @@
 # PipeVal
 
+[![GitHub release](https://img.shields.io/github/v/release/uclahs-cds/package-PipeVal)](https://github.com/uclahs-cds/package-PipeVal/actions/workflows/prepare-release.yaml)
+
 - [PipeVal](#pipeval)
   - [Overview](#overview)
     - [Validation Flowchart](#validation-flowchart)
