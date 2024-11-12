@@ -11,7 +11,7 @@ def _identify_compression(path:Path):
     ''' Identify compression type and returns appropriate file handler '''
     compression_handlers = {
         'application/x-gzip': gzip.open,
-        # 'application/gzip': gzip.open,
+        'application/gzip': gzip.open,
         'application/x-bzip2': bz2.open
     }
 

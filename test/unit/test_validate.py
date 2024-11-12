@@ -125,6 +125,7 @@ def test__check_compressed__raises_warning_for_uncompressed_path(mock_path, mock
     'compression_mime',
     [
         ('application/x-gzip'),
+        ('application/gzip'),
         ('application/x-bzip2')
     ]
 )
@@ -491,7 +492,7 @@ def test__validate_record__passes_valid_read():
     'test_file_type, test_handler',
     [
         ('application/x-gzip', gzip.open),
-        # ('application/gzip', gzip.open),
+        ('application/gzip', gzip.open),
         ('application/x-bzip2', bz2.open),
         ('text/plain', open)
     ]
@@ -581,6 +582,7 @@ def test__validate_fastq__passes_valid_fastq(
     'test_file_type, test_handler',
     [
         ('application/x-gzip', gzip.open),
+        ('application/gzip', gzip.open),
         ('application/x-bzip2', bz2.open),
         ('any/other', None)
     ]
