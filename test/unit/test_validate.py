@@ -491,6 +491,7 @@ def test__validate_record__passes_valid_read():
     'test_file_type, test_handler',
     [
         ('application/x-gzip', gzip.open),
+        # ('application/gzip', gzip.open),
         ('application/x-bzip2', bz2.open),
         ('text/plain', open)
     ]

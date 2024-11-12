@@ -63,11 +63,11 @@ def _validate_file(
 
 def _print_error(path:Path, err:BaseException):
     ''' Prints error message '''
-    print(f'PID:{os.getpid()} - Error: `{str(path)}` {str(err)}')
+    print(f'PID:{os.getpid()} - Error: `{str(path)}` {str(err)}', flush=True)
 
 def _print_success(path:Path, file_type:str):
     ''' Prints success message '''
-    print(f'PID:{os.getpid()} - Input: `{path}` is valid {file_type}')
+    print(f'PID:{os.getpid()} - Input: `{path}` is valid {file_type}', flush=True)
 
 def _detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
@@ -98,7 +98,7 @@ def _validation_worker(path: Path, args:Union[ValidateArgs,Dict[str, Union[str,l
         file_type, file_extension = _detect_file_type_and_extension(path)
         _validate_file(path, file_type, file_extension, args)
     except FileNotFoundError as file_not_found_err:
-        print(f"Warning: {str(path)} {str(file_not_found_err)}")
+        print(f"Warning: {str(path)} {str(file_not_found_err)}", flush=True)
     except (TypeError, ValueError, IOError, OSError) as err:
         _print_error(path, err)
         return False

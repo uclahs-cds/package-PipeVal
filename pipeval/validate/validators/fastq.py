@@ -86,6 +86,7 @@ class FASTQ():
         '''Detect file format and return approriate handler to read file'''
         _handler_map = {
             'application/x-gzip': gzip.open,
+#            'application/gzip': gzip.open,
             'application/x-bzip2': bz2.open,
             'text/plain': open
         }
