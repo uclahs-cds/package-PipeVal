@@ -122,4 +122,5 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
             zip([Path(pathname).resolve(strict=True) for pathname in args.path], repeat(args)))
 
     if not all(validation_results):
+        print("hello")
         sys.exit(1)
