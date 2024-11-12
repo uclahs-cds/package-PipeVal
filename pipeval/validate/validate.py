@@ -64,10 +64,12 @@ def _validate_file(
 def _print_error(path:Path, err:BaseException):
     ''' Prints error message '''
     print(f'PID:{os.getpid()} - Error: `{str(path)}` {str(err)}', flush=True)
+    sys.stdout.flush()
 
 def _print_success(path:Path, file_type:str):
     ''' Prints success message '''
     print(f'PID:{os.getpid()} - Input: `{path}` is valid {file_type}', flush=True)
+    sys.stdout.flush()
 
 def _detect_file_type_and_extension(path:Path):
     ''' File type and extension detection '''
@@ -120,5 +122,4 @@ def run_validate(args:Union[ValidateArgs,Dict[str, Union[str,list]]]):
             zip([Path(pathname).resolve(strict=True) for pathname in args.path], repeat(args)))
 
     if not all(validation_results):
-        sys.stdout.flush()
         sys.exit(1)
