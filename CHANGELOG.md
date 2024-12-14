@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 ### Changed
 - Update `pysam` version to `0.22.1`
+### Fixed
+- MIME types to support older designations
+- Error message printing to log
 ---
 
 ## [5.1.0] - 2024-07-08
