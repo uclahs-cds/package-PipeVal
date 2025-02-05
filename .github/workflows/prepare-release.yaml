@@ -29,4 +29,5 @@ jobs:
     with:
       bump_type: ${{ inputs.bump_type }}
       prerelease: ${{ inputs.prerelease }}
+      version_files: pipeval/__init__.py
     secrets: inherit
