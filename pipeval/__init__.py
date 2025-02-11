@@ -1,3 +1,3 @@
 '''Inits pipeval module'''
 
-__version__ = '5.0.0-rc.3'
+__version__ = '5.2.0'
